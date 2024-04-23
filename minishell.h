@@ -27,6 +27,11 @@ typedef enum e_token
 	PIPE_LINE = '|',
 	REDIR_IN = '<',
 	REDIR_OUT = '>',
+	OPEN_PARANTHESE = '(',
+	CLOSE_PARANTHESE = ')',
+	STAR = '*',
+	AND,
+	OR,
 	HERE_DOC,
 	DREDIR_OUT,
 } token;
@@ -35,6 +40,7 @@ typedef enum e_state
 {
 	IN_DQUOTE,
 	IN_QUOTE,
+	IN_PARENTHESES,
 	GENERAL,
 } state;
 

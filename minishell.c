@@ -21,6 +21,8 @@ void get_input()
 
 int main()
 {
+    if(!isatty(0))
+        return 0;
     get_input();
     return 0;
 }

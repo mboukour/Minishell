@@ -61,7 +61,16 @@ int counter(t_lex *current, char c)
 	return (count);
 }
 
-
+bool is_behind_in_para(t_lex *current, char c)
+{
+	while(current)
+	{
+		if (current->len == 1 && current->content[0] == c && current->state == IN_PARENTHESES)
+			return (true);
+		current = current->prev;
+	}
+	return (false);
+}
 void	ft_lstadd_back_lex(t_lex **lst, t_lex *new)
 {
 	t_lex	*last_lex;
@@ -81,6 +90,12 @@ void	ft_lstadd_back_lex(t_lex **lst, t_lex *new)
 		new->state = IN_DQUOTE;
 	else if (new->prev && (new->prev->token == QUOTE || new->prev->state == IN_QUOTE) && (counter(new, '\'') % 2) && new->token != QUOTE)
 		new->state = IN_QUOTE;
+	else if (new->prev && (new->prev->token == OPEN_PARANTHESE || new->prev->state == IN_PARENTHESES) && (counter(new, '(') % 2) && new->token != CLOSE_PARANTHESE)
+		new->state = IN_PARENTHESES;
+	else if (new->prev && new->token == QUOTE && !(counter(new, '\'') % 2) && is_behind_in_para(new->prev, '\''))
+		new->state = IN_PARENTHESES;
+	else if (new->token == DOUBLE_QUOTE && !(counter(new, '"') % 2) && is_behind_in_para(new->prev, '"'))
+		new->state = IN_PARENTHESES;
 	else
 		new->state = GENERAL;
 }
@@ -101,15 +116,22 @@ const char* tokenToString(token t)
         case REDIR_OUT: return "REDIR_OUT";
         case HERE_DOC: return "HERE_DOC";
         case DREDIR_OUT: return "DREDIR_OUT";
+		case STAR: return "STAR";
+		case AND: return "AND";
+		case OR: return "OR";
+		case OPEN_PARANTHESE: return "OPEN PARA";
+		case CLOSE_PARANTHESE: return "CLOSE PARA";
         default: return "UNKNOWN_TOKEN";
     }
 }
 
 const char* stateToString(state s)
 {
-    switch (s) {
+    switch (s) 
+	{
         case IN_DQUOTE: return "IN_DQUOTE";
         case IN_QUOTE: return "IN_QUOTE";
+		case IN_PARENTHESES: return "IN_PARENTHESES";
         case GENERAL: return "GENERAL";
         default: return "UNKNOWN_STATE";
     }

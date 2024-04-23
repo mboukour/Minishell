@@ -4,7 +4,7 @@
 
 bool is_special(char c) 
 {
-    return (c == '\'' || c == '"' || c == '|' || c == '$' || c == '&' || c == ';' || c == '*' || c == '\\' || c == '>' || c == '<' || c == ' ');
+    return (c == '\'' || c == '"' || c == '|' || c == '$' || c == '&' ||  c == '*' || c == '\\' || c == '>' || c == '<' || c == ' ' || c == '*' || c == '(' || c == ')');
 }
 
 
@@ -34,14 +34,28 @@ t_lex *lexer(char *input)
 			else if (input[i] == '>' && input[i + 1] && input[i + 1] == '>')
 			{
 				content = ft_substr(input, i, 2);
-				current_node = ft_lstnew_lex(content, DREDIR_OUT, i - hold);
+				current_node = ft_lstnew_lex(content, DREDIR_OUT, 2);
 				ft_lstadd_back_lex(&head, current_node);
 				i += 2;
 			}
 			else if (input[i] == '<' && input[i + 1] && input[i + 1] == '<')
 			{
 				content = ft_substr(input, i, 2);
-				current_node = ft_lstnew_lex(content, HERE_DOC, i - hold);
+				current_node = ft_lstnew_lex(content, HERE_DOC, 2);
+				ft_lstadd_back_lex(&head, current_node);
+				i += 2;
+			}
+			else if (input[i] == '|' && input[i + 1] && input[i + 1] == '|')
+			{
+				content = ft_substr(input, i, 2);
+				current_node = ft_lstnew_lex(content, OR, 2);
+				ft_lstadd_back_lex(&head, current_node);
+				i += 2;
+			}
+			else if (input[i] == '&' && input[i + 1] && input[i + 1] == '&')
+			{
+				content = ft_substr(input, i, 2);
+				current_node = ft_lstnew_lex(content, AND, 2);
 				ft_lstadd_back_lex(&head, current_node);
 				i += 2;
 			}
