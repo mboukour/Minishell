@@ -52,8 +52,11 @@ typedef struct s_lex
 // LEXER
 t_lex *lexer(char *input);
 token get_token_type(char c);
-
-
+t_lex	*ft_lstnew_lex(char *content, int token, int len);
+t_lex	*ft_lstlast_lex(t_lex *lst);
+t_lex	*ft_lstfirst_lex(t_lex *lst);
+void	ft_lstadd_back_lex(t_lex **lst, t_lex *new);
+void ft_lstiter_lex(t_lex *lex);
 // UTILS
 char	*ft_substr(const char *s, unsigned int start, size_t len);
 char	*ft_strdup(const char *s1);

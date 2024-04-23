@@ -28,24 +28,38 @@ t_lex *lexer(char *input)
 				while(input[i] == ' ')
 					i++;
 				content = ft_substr(input, hold, i - hold);
-				printf("(%s) is %i spaces!\n", content, i - hold);
+				current_node = ft_lstnew_lex(content, WHITE_SPACE, i - hold);
+				ft_lstadd_back_lex(&head, current_node);
 			}
 			else if (input[i] == '>' && input[i + 1] && input[i + 1] == '>')
 			{
 				content = ft_substr(input, i, 2);
-				printf("(%s) is %i\n", content, DREDIR_OUT);
+				current_node = ft_lstnew_lex(content, DREDIR_OUT, i - hold);
+				ft_lstadd_back_lex(&head, current_node);
 				i += 2;
 			}
 			else if (input[i] == '<' && input[i + 1] && input[i + 1] == '<')
 			{
 				content = ft_substr(input, i, 2);
-				printf("(%s) is %i\n", content, HERE_DOC);
+				current_node = ft_lstnew_lex(content, HERE_DOC, i - hold);
+				ft_lstadd_back_lex(&head, current_node);
 				i += 2;
+			}
+			else if (input[i] == '$')
+			{
+				hold = i;
+				i++;
+				while(input[i] && !is_special(input[i]) && input[i] != ' ')
+					i++;
+				content = ft_substr(input, hold, i - hold);
+				current_node = ft_lstnew_lex(content, ENV, i - hold);
+				ft_lstadd_back_lex(&head, current_node);
 			}
 			else
 			{
 				content = ft_substr(input, i, 1);
-				printf("(%s) is %i\n", content, input[i]);
+				current_node = ft_lstnew_lex(content, input[i], 1);
+				ft_lstadd_back_lex(&head, current_node);
 				i++;
 			}
 		}
@@ -55,8 +69,9 @@ t_lex *lexer(char *input)
 			while(input[i] && !is_special(input[i]) && input[i] != ' ')
 				i++;
 			content = ft_substr(input, hold, i - hold);
-			printf("(%s) is a word!\n", content);
+			current_node = ft_lstnew_lex(content, WORD, i - hold);
+			ft_lstadd_back_lex(&head, current_node);
 		}
 	}
-	return (NULL);
+	return (head);
 }
