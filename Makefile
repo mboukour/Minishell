@@ -1,8 +1,13 @@
 NAME = minishell
 SRC = minishell.c lexer/*.c utils/*.c
+LINKREADLINELIB = $(shell brew --prefix readline)/lib
+LINKREADLINEINCLUDE = $(shell brew --prefix readline)/include
+CC = cc
 
-all: 
-	gcc $(SRC) -o minishell -g -I$(shell brew --prefix readline)/include -L$(shell brew --prefix readline)/lib -lreadline
+all: fclean $(NAME)
+
+$(NAME): 
+	$(CC) -I$(LINKREADLINEINCLUDE) -L$(LINKREADLINELIB) -lreadline $(SRC) -o $(NAME)
 
 fclean:
 	rm -f $(NAME)

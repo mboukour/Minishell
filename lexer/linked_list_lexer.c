@@ -10,7 +10,8 @@ t_lex	*ft_lstnew_lex(char *content, int token, int len)
 	new_node->content = content;
 	new_node->len = len;
 	new_node->token = token;
-	new_node->state = -1;
+	new_node->state = GENERAL;
+	new_node->added_to_ast = false;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -86,21 +87,9 @@ void	ft_lstadd_back_lex(t_lex **lst, t_lex *new)
 	last_lex = ft_lstlast_lex(*lst);
 	last_lex->next = new;
 	new->prev = last_lex;
-	if(new->prev && (new->prev->token == DOUBLE_QUOTE || new->prev->state == IN_DQUOTE) && (counter(new, '"') % 2)  && new->token != DOUBLE_QUOTE)
-		new->state = IN_DQUOTE;
-	else if (new->prev && (new->prev->token == QUOTE || new->prev->state == IN_QUOTE) && (counter(new, '\'') % 2) && new->token != QUOTE)
-		new->state = IN_QUOTE;
-	else if (new->prev && (new->prev->token == OPEN_PARANTHESE || new->prev->state == IN_PARENTHESES) && (counter(new, '(') % 2) && new->token != CLOSE_PARANTHESE)
-		new->state = IN_PARENTHESES;
-	else if (new->prev && new->token == QUOTE && !(counter(new, '\'') % 2) && is_behind_in_para(new->prev, '\''))
-		new->state = IN_PARENTHESES;
-	else if (new->token == DOUBLE_QUOTE && !(counter(new, '"') % 2) && is_behind_in_para(new->prev, '"'))
-		new->state = IN_PARENTHESES;
-	else
-		new->state = GENERAL;
 }
 
-const char* tokenToString(token t)
+const char* tokenToString(enum e_token t)
 {
     switch (t) 
 	{
@@ -109,7 +98,6 @@ const char* tokenToString(token t)
         case NEW_LINE: return "NEW_LINE";
         case QUOTE: return "QUOTE";
         case DOUBLE_QUOTE: return "DOUBLE_QUOTE";
-        case ESCAPE: return "ESCAPE";
         case ENV: return "ENV";
         case PIPE_LINE: return "PIPE_LINE";
         case REDIR_IN: return "REDIR_IN";
@@ -125,7 +113,7 @@ const char* tokenToString(token t)
     }
 }
 
-const char* stateToString(state s)
+const char* stateToString(enum e_state s)
 {
     switch (s) 
 	{
@@ -140,15 +128,16 @@ const char* stateToString(state s)
 
 void print_lex(const t_lex *lex) {
 
-    printf("| %-10s | %-15s | %-10d | %-15s |\n", lex->content, tokenToString(lex->token), lex->len, stateToString(lex->state));
-    printf("| %-10s | %-15s | %-10s | %-15s |\n", "", "", "", "");
-    printf("|------------|-----------------|------------|-----------------|\n");
+    // printf("| %-10s | %-15s | %-10d |\n", lex->content, tokenToString(lex->token), lex->len);
+    // printf("| %-10s | %-15s | %-10s |\n", "", "", "");
+    // printf("|------------|-----------------|------------|\n");
+	printf("Content: {%s} // Token: %s // State: %s\n", lex->content, tokenToString(lex->token), stateToString(lex->state));
 }
 
 void ft_lstiter_lex(t_lex *lex)
 {
-    printf("| %-10s | %-15s | %-10s | %-15s |\n", "Content", "Token", "Length", "State");
-    printf("|------------|-----------------|------------|-----------------|\n");
+    // printf("| %-10s | %-15s | %-10s | \n", "Content", "Token", "Length");
+    // printf("|------------|-----------------|------------|\n");
 	while(lex)
 	{
 		print_lex(lex);
