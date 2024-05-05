@@ -42,7 +42,7 @@ void get_input()
         // else
         // {
             rdp(lexed, NULL);
-            ft_lstiter_lex(lexed);
+        //     ft_lstiter_lex(lexed);
         // }
         add_history(input);
         free(input);

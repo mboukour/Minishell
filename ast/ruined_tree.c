@@ -64,23 +64,26 @@ t_treenode *setup_condition(t_lex *lex, int current, int mode)
 
 	condition = NULL;
 	move = lex;
-	if(mode == RIGHT)
+	if(mode == LEFT)
 	{
 		while (lex->condition_count != current)
 			lex = lex->next;
-		while(lex->condition_count == current)
+		while(lex->prev && lex->condition_count == current)
+			lex = lex->prev;
+		while(lex && lex != move)
 		{
 			condition = ft_strjoin(condition, lex->content);
 			lex = lex->next;
 		}
 	}
-	else
+	else if(mode == RIGHT)
 	{
-		move = lex->prev;
+		lex = lex->next;
+		move = lex;
 		hold = current - 1;
-		while (move && move->prev && move->condition_count == hold)
-			move = move->prev;
-		while(lex != move)
+		while (move  && move->condition_count == current + 1)
+			move = move->next;
+		while(lex && lex != move)
 		{
 			condition = ft_strjoin(condition, lex->content);
 			lex = lex->next;
@@ -99,32 +102,50 @@ t_treenode *setup_mini_tree(t_lex *lex)
 	current_root = NULL;
 	while (lex)
 	{
-		if(lex->token == AND || lex->token == OR)
+		if((lex->token == AND || lex->token == OR) && !lex->is_a_para)
 		{
 			current_node = ft_lstnew_treenode(ft_strdup(lex->content), lex->token);
 			hold_current = lex;
 			if(!current_root)
 			{
 				current_root = current_node;
-				setup_condition(lex, lex->condition_count, LEFT);
-				setup_condition(lex, lex->condition_count, RIGHT);
+				current_root->left =  setup_condition(lex, lex->condition_count, LEFT);
+				current_root->right =  setup_condition(lex, lex->condition_count, RIGHT);
 			}
 			else
 			{
 				change_root_to(&current_root, current_node);
-				setup_condition(lex, lex->condition_count, RIGHT);
+				current_root->right = setup_condition(lex, lex->condition_count, RIGHT);
 			}
-		return current_node;
 		}
 		lex = lex->next;
 	}
-	return NULL;
+	return current_root;
 }
+void print_ascii_tree(t_treenode *root, int level) {
+    if (root == NULL)
+        return;
+
+    // Print the right child
+    print_ascii_tree(root->right, level + 1);
+
+    // Print the current node
+    for (int i = 0; i < level; i++)
+        printf("    ");
+    printf("%s\n", root->content);
+
+    // Print the left child
+    print_ascii_tree(root->left, level + 1);
+}
+
+
+
 
 t_treenode *rdp(t_lex *lex, t_treenode *current_root)
 {
 	t_treenode *root;
 	set_condition_count(lex);
 	root = setup_mini_tree(lex);
+	print_ascii_tree(root, 0);
 	return (NULL);
 }
