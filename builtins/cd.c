@@ -10,5 +10,7 @@ void cd(char *path)
 
 int main()
 {
-	printf("%s\n", get_pwd());
+	cd("../..");
+	//printf("%s\n", get_pwd());
+	system("pwd");
 }

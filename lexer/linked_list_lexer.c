@@ -11,7 +11,9 @@ t_lex	*ft_lstnew_lex(char *content, int token, int len)
 	new_node->len = len;
 	new_node->token = token;
 	new_node->state = GENERAL;
-	new_node->added_to_ast = false;
+	new_node->condition_count = 0;
+	new_node->is_a_para = false;
+	new_node->is_visited = false;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -131,7 +133,7 @@ void print_lex(const t_lex *lex) {
     // printf("| %-10s | %-15s | %-10d |\n", lex->content, tokenToString(lex->token), lex->len);
     // printf("| %-10s | %-15s | %-10s |\n", "", "", "");
     // printf("|------------|-----------------|------------|\n");
-	printf("Content: {%s} // Token: %s // State: %s\n", lex->content, tokenToString(lex->token), stateToString(lex->state));
+	printf("Content: {%s} // Token: %s // CC: %d\n", lex->content, tokenToString(lex->token), lex->condition_count);
 }
 
 void ft_lstiter_lex(t_lex *lex)

@@ -1,5 +1,5 @@
 NAME = minishell
-SRC = minishell.c lexer/*.c utils/*.c
+SRC = minishell.c lexer/*.c utils/*.c ast/*.c
 LINKREADLINELIB = $(shell brew --prefix readline)/lib
 LINKREADLINEINCLUDE = $(shell brew --prefix readline)/include
 CC = cc

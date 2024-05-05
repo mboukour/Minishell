@@ -32,15 +32,18 @@ void get_input()
             break;
         }
 		lexed = tokenizer(input);
-        we_check = check_valid_input(lexed);
-        if(we_check)
-        {
-            ft_putstr_fd(2, "Parse error near: ");
-            ft_putstr_fd(2, we_check->content);
-            ft_putstr_fd(2, "\n");
-        }
-        else        
+        // we_check = check_valid_input(lexed);
+        // if(we_check)
+        // {
+        //     ft_putstr_fd(2, "Parse error near: ");
+        //     ft_putstr_fd(2, we_check->content);
+        //     ft_putstr_fd(2, "\n");
+        // }
+        // else
+        // {
+            rdp(lexed, NULL);
             ft_lstiter_lex(lexed);
+        // }
         add_history(input);
         free(input);
     }

@@ -12,7 +12,7 @@ char *free_and_join(char *s1, char *s2)
 	return (ret);
 }
 
-char *handle_star(t_lex *lex)
+char *handle_star(t_lex *lex) // HANDLE STAR MATCHING
 {
 	DIR *current;
     struct dirent *read;
@@ -26,13 +26,13 @@ char *handle_star(t_lex *lex)
 	read = readdir(current);
 	while (read != NULL)
 	{
-		if (read->d_type == DT_REG)
+		if (read->d_type == DT_REG || read->d_type == DT_DIR && read->d_name[0] != '.')
 		{
 			ret = free_and_join(ret, read->d_name);
 			last_type = read->d_type;
 		}
 		read = readdir(current);
-		if(read && last_type == DT_REG)
+		if(read && (last_type == DT_REG || last_type == DT_DIR))
 			ret = free_and_join(ret, " ");
 	}
 	closedir(current);

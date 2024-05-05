@@ -50,15 +50,22 @@ enum e_state
 enum e_treetypes
 {
 	OPERATOR,
-	EXPRESSION
+	CONDITION
 };
 
+enum e_modes
+{
+	LEFT,
+	RIGHT
+};
 
 typedef struct s_lex
 {
 	char *content;
 	int len;
-	bool added_to_ast;
+	bool is_a_para;
+	bool is_visited;
+	int condition_count;
 	enum e_token token;
 	enum e_state state;
 	struct s_lex *prev;
@@ -67,9 +74,10 @@ typedef struct s_lex
 
 typedef struct s_treenode
 {
-	int type;
-	int operator;
-	char * expression;
+	int token;
+	char *content;
+	int len;
+	struct s_lex* hold;
 	struct s_treenode *left;
 	struct s_treenode *right;
 } t_treenode;
@@ -85,7 +93,9 @@ void ft_lstiter_lex(t_lex *lex);
 t_lex *check_valid_input(t_lex *tokens);
 
 // ABSTRACT SYNTAX TREE
-t_treenode		*ft_lstnew_treenode(int type, char *expression, int operator);
+t_treenode		*ft_lstnew_treenode(char *content, int token);
+t_treenode *rdp(t_lex *lex, t_treenode *current_root);
+void change_root_to(t_treenode **from_node, t_treenode *to_node);
 int counter(t_lex *current, char c);
 
 // UTILS
