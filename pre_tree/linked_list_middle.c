@@ -49,3 +49,32 @@ void	ft_lstadd_back_middle(t_middle **lst, t_middle *new)
 	last_middle->next = new;
 	new->prev = last_middle;
 }
+
+
+void print_middle(t_middle *node)
+{
+	int i;
+
+	i = 0;
+	printf("Content: %s // Token: %s // ", node->content, tokenToString(node->token));
+	if(node->args)
+	{
+		while (node->args[i])
+		{
+			printf("Arg %i: %s // ", i, node->args[i]);
+			i++;
+		}
+		printf("\n");
+	}
+	else
+		printf("No args\n");
+}
+
+void ft_lstiter_middle(t_middle *first)
+{
+	while(first)
+	{
+		print_middle(first);
+		first = first->next;
+	}
+}

@@ -34,6 +34,7 @@ void get_input()
         }
 		lexed = tokenizer(input);
         middled = make_middle(lexed);
+        ft_lstiter_middle(middled);
         // we_check = check_valid_input(lexed);
         // if(we_check)
         // {

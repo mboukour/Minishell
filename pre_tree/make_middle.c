@@ -51,33 +51,37 @@ t_middle *make_middle(t_lex *lex)
 {
 	t_middle *head;
 	t_middle *current;
-	bool is_start_of_command;
+	bool in_command;
 	char *command;
 	char **args;
 
 	command = NULL;
+	head = NULL;
 	args = NULL;
 	current = NULL;
-	is_start_of_command = false;
+	in_command = false;
 	while(lex)
 	{
 		if(lex->token == WORD)
 		{
 			{
-			if(!is_start_of_command)
+			if(!in_command)
+			{
 				command = ft_strdup(lex->content);
+				in_command = true;
+			}
 			else
 			{
 				args = make_args(&lex);
 				current = ft_lstnew_middle(command, args, COMMAND);
 				ft_lstadd_back_middle(&head, current);
-				is_start_of_command = false;
+				in_command = false;
 			}
 			}
 		}
 		else if(lex->token != WHITE_SPACE)
 		{
-			current = ft_lstnew_middle(command, args, COMMAND);
+			current = ft_lstnew_middle(command, args, lex->token);
 			ft_lstadd_back_middle(&head, current);
 		}
 		lex = lex->next;

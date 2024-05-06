@@ -105,11 +105,12 @@ t_lex	*ft_lstfirst_lex(t_lex *lst);
 void	ft_lstadd_back_lex(t_lex **lst, t_lex *new);
 void ft_lstiter_lex(t_lex *lex);
 t_lex *check_valid_input(t_lex *tokens);
-
+const char* tokenToString(enum e_token t);
 // MIDDLE MAN
 t_middle	*ft_lstnew_middle(char *content, char **args, int token);
 void	ft_lstadd_back_middle(t_middle **lst, t_middle *new);
 t_middle *make_middle(t_lex *lex);
+void ft_lstiter_middle(t_middle *first);
 
 
 // ABSTRACT SYNTAX TREE
