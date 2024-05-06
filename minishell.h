@@ -22,6 +22,7 @@
 enum e_token
 {
 	WORD = -1,
+	COMMAND = -1,
 	WHITE_SPACE = ' ',
 	NEW_LINE = '\n',
 	QUOTE = '\'',
@@ -38,6 +39,8 @@ enum e_token
 	HERE_DOC,
 	DREDIR_OUT,
 };
+
+
 
 enum e_state
 {
@@ -72,6 +75,16 @@ typedef struct s_lex
 	struct s_lex *next;
 } t_lex;
 
+
+typedef struct s_middle
+{
+	char *content;
+	char **args;
+	int token;
+	struct s_middle *next;
+	struct s_middle *prev;
+} t_middle;
+
 typedef struct s_treenode
 {
 	int token;
@@ -82,6 +95,7 @@ typedef struct s_treenode
 	struct s_treenode *right;
 } t_treenode;
 
+
 // LEXER
 t_lex *tokenizer(char *input);
 char *expand(t_lex *lex); // MALLOCS and can fail
@@ -91,6 +105,12 @@ t_lex	*ft_lstfirst_lex(t_lex *lst);
 void	ft_lstadd_back_lex(t_lex **lst, t_lex *new);
 void ft_lstiter_lex(t_lex *lex);
 t_lex *check_valid_input(t_lex *tokens);
+
+// MIDDLE MAN
+t_middle	*ft_lstnew_middle(char *content, char **args, int token);
+void	ft_lstadd_back_middle(t_middle **lst, t_middle *new);
+t_middle *make_middle(t_lex *lex);
+
 
 // ABSTRACT SYNTAX TREE
 t_treenode		*ft_lstnew_treenode(char *content, int token);
@@ -107,6 +127,7 @@ char	*ft_strjoin(const char *s1, const char *s2);
 
 
 // BUILTINS
-char *get_pwd(void); // MALLOCS, NEEDS FREE !!!!
+char *get_pwd(void); // MALLOCS, NEEDS FREE !!!!endif
+
 
 #endif

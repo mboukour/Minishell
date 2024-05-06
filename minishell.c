@@ -19,6 +19,7 @@ void get_input()
     char *input;
     t_lex *lexed;
     t_lex *we_check;
+    t_middle *middled;
     int erorr_flag;
 
     signal(SIGINT, sigint_handler);
@@ -32,6 +33,7 @@ void get_input()
             break;
         }
 		lexed = tokenizer(input);
+        middled = make_middle(lexed);
         // we_check = check_valid_input(lexed);
         // if(we_check)
         // {
@@ -41,7 +43,7 @@ void get_input()
         // }
         // else
         // {
-            rdp(lexed, NULL);
+            // rdp(lexed, NULL);
         //     ft_lstiter_lex(lexed);
         // }
         add_history(input);

@@ -122,7 +122,9 @@ t_treenode *setup_mini_tree(t_lex *lex)
 	}
 	return current_root;
 }
-void print_ascii_tree(t_treenode *root, int level) {
+
+void print_ascii_tree(t_treenode *root, int level)
+{
     if (root == NULL)
         return;
 
@@ -140,10 +142,10 @@ void print_ascii_tree(t_treenode *root, int level) {
 
 
 
-
 t_treenode *rdp(t_lex *lex, t_treenode *current_root)
 {
 	t_treenode *root;
+
 	set_condition_count(lex);
 	root = setup_mini_tree(lex);
 	print_ascii_tree(root, 0);
