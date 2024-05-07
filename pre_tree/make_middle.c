@@ -47,6 +47,23 @@ char **make_args(t_lex **first_arg)
 	return (args);
 }
 
+bool do_i_have_args(t_lex *command)
+{
+	int word_count;
+
+	word_count = 0;
+	char *cmd = command->content;
+	while(command && (command->token == WORD || command->token == WHITE_SPACE))
+	{
+		if(command->token == WORD)
+			word_count++;
+		command = command->next;
+	}
+	if(word_count > 1)
+		return (true);
+	return (false);
+}
+
 t_middle *make_middle(t_lex *lex)
 {
 	t_middle *head;
@@ -69,6 +86,11 @@ t_middle *make_middle(t_lex *lex)
 			{
 				command = ft_strdup(lex->content);
 				in_command = true;
+				if(!do_i_have_args(lex))
+				{
+					current = ft_lstnew_middle(command, NULL, COMMAND);
+					ft_lstadd_back_middle(&head, current);
+				}
 			}
 			else
 			{
@@ -76,13 +98,16 @@ t_middle *make_middle(t_lex *lex)
 				current = ft_lstnew_middle(command, args, COMMAND);
 				ft_lstadd_back_middle(&head, current);
 				in_command = false;
+				if(!lex)
+					break;
 			}
 			}
 		}
 		else if(lex->token != WHITE_SPACE)
 		{
-			current = ft_lstnew_middle(command, args, lex->token);
+			current = ft_lstnew_middle(ft_strdup(lex->content), NULL, lex->token);
 			ft_lstadd_back_middle(&head, current);
+			in_command = false;
 		}
 		lex = lex->next;
 	}

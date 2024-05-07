@@ -11,7 +11,7 @@ t_middle	*ft_lstnew_middle(char *content, char **args, int token)
 		return (NULL);
 	new_node->token = token;
 	new_node->content = content;
-	new_node->args = NULL;
+	new_node->args = args;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);

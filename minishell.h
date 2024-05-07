@@ -17,7 +17,6 @@
 
 
 # define NONE -1
-# define PATH_MAX 1024
 
 enum e_token
 {
