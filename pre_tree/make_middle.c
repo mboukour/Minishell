@@ -21,27 +21,25 @@ char **make_args(t_lex **first_arg)
 	int arg_count;
 	char **args;
 	int i;
+	t_lex *prev;
 
 	i = 0;
 	arg_count = get_arg_count(*first_arg);
 	args = malloc((arg_count + 1) * sizeof(char *));
-	while(first_arg && i < arg_count)
+	while(i < arg_count)
 	{
 		if((*first_arg)->token == WORD)
 		{
 			args[i] = ft_strdup((*first_arg)->content);
 			i++;
 		}
-		else if((*first_arg)->token != WORD && (*first_arg)->token != WHITE_SPACE)
+		prev = *first_arg;
+		*first_arg = (*first_arg)->next;
+		if(!(*first_arg) || ((*first_arg)->token != WHITE_SPACE && (*first_arg)->token != WORD))
 		{
-			if(i != arg_count - 1) // DEBUGGING IF STATEMENT
-			{
-				printf("ERROR: DIDNT GO OVER EVERYTHING!\n");
-				exit(1);
-			}
+			*first_arg = prev;
 			break;
 		}
-		*first_arg = (*first_arg)->next;
 	}
 	args[i] = NULL;
 	return (args);
@@ -82,29 +80,33 @@ t_middle *make_middle(t_lex *lex)
 		if(lex->token == WORD)
 		{
 			{
-			if(!in_command)
-			{
-				command = ft_strdup(lex->content);
-				in_command = true;
-				if(!do_i_have_args(lex))
+				if(!in_command)
 				{
-					current = ft_lstnew_middle(command, NULL, COMMAND);
-					ft_lstadd_back_middle(&head, current);
+					command = ft_strdup(lex->content);
+					in_command = true;
+					if(!do_i_have_args(lex))
+					{
+						current = ft_lstnew_middle(command, NULL, COMMAND);
+						ft_lstadd_back_middle(&head, current);
+					}
 				}
-			}
-			else
-			{
-				args = make_args(&lex);
-				current = ft_lstnew_middle(command, args, COMMAND);
-				ft_lstadd_back_middle(&head, current);
-				in_command = false;
-				if(!lex)
-					break;
-			}
+				else
+				{
+					args = make_args(&lex);
+					current = ft_lstnew_middle(command, args, COMMAND);
+					ft_lstadd_back_middle(&head, current);
+					in_command = false;
+					if(!lex)
+					{
+						printf("Last before my null: %s\n", command);
+						break;
+					}
+				}
 			}
 		}
 		else if(lex->token != WHITE_SPACE)
 		{
+			// printf("HI: %s\n", lex->content);
 			current = ft_lstnew_middle(ft_strdup(lex->content), NULL, lex->token);
 			ft_lstadd_back_middle(&head, current);
 			in_command = false;

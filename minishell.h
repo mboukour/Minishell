@@ -65,9 +65,6 @@ typedef struct s_lex
 {
 	char *content;
 	int len;
-	bool is_a_para;
-	bool is_visited;
-	int condition_count;
 	enum e_token token;
 	enum e_state state;
 	struct s_lex *prev;
@@ -79,6 +76,7 @@ typedef struct s_middle
 {
 	char *content;
 	char **args;
+	int condition_count;
 	int token;
 	struct s_middle *next;
 	struct s_middle *prev;
@@ -88,7 +86,8 @@ typedef struct s_treenode
 {
 	int token;
 	char *content;
-	int len;
+	char **args;
+	int condition_count;
 	struct s_lex* hold;
 	struct s_treenode *left;
 	struct s_treenode *right;
@@ -114,7 +113,7 @@ void ft_lstiter_middle(t_middle *first);
 
 // ABSTRACT SYNTAX TREE
 t_treenode		*ft_lstnew_treenode(char *content, int token);
-t_treenode *rdp(t_lex *lex, t_treenode *current_root);
+t_treenode *rdp(t_middle *middle, t_treenode *current_root);
 void change_root_to(t_treenode **from_node, t_treenode *to_node);
 int counter(t_lex *current, char c);
 

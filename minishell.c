@@ -34,7 +34,7 @@ void get_input()
         }
 		lexed = tokenizer(input);
         middled = make_middle(lexed);
-        ft_lstiter_middle(middled);
+        // ft_lstiter_middle(middled);
         // we_check = check_valid_input(lexed);
         // if(we_check)
         // {
@@ -44,7 +44,8 @@ void get_input()
         // }
         // else
         // {
-            // rdp(lexed, NULL);
+        rdp(middled, NULL);
+        ft_lstiter_middle(middled);
         //     ft_lstiter_lex(lexed);
         // }
         add_history(input);
