@@ -78,17 +78,21 @@ typedef struct s_middle
 	char **args;
 	int condition_count;
 	int token;
+	bool is_in_para;
 	struct s_middle *next;
 	struct s_middle *prev;
 } t_middle;
 
+
 typedef struct s_treenode
 {
-	int token;
-	char *content;
-	char **args;
+	// int token;
+	// char *content;
+	// char **args;
+	t_middle *first;
+	t_middle *last;
+	bool is_terminal;
 	int condition_count;
-	struct s_lex* hold;
 	struct s_treenode *left;
 	struct s_treenode *right;
 } t_treenode;
@@ -112,7 +116,7 @@ void ft_lstiter_middle(t_middle *first);
 
 
 // ABSTRACT SYNTAX TREE
-t_treenode		*ft_lstnew_treenode(char *content, int token);
+t_treenode		*ft_lstnew_treenode(t_middle *first, t_middle *last, bool is_terminal);
 t_treenode *rdp(t_middle *middle, t_treenode *current_root);
 void change_root_to(t_treenode **from_node, t_treenode *to_node);
 int counter(t_lex *current, char c);
