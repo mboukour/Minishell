@@ -46,15 +46,18 @@ void print_ascii_tree(t_treenode *root, int level)
     // printf("%s\n", root->content);
 	lol = root->first;
 	if(root->is_terminal)
-		printf("%s", root->first->content);
+		printf("<%s>", root->first->content);
 	else
 	{
-		// printf("FISRT: %p // LAST: %p", lol, root->last);
+		printf("<");
 		while(lol != root->last)
 		{
 			printf("%s ", lol->content);
 			lol = lol->next;
 		}
+		printf("%s", lol->content);
+		printf(">");
+
 	}
 
     // Print the left child
@@ -92,13 +95,20 @@ t_treenode *setup_condition(t_middle *current_middle ,int mode)
 		looping_node = king_node;
 		while(looping_node->condition_count == current_cc + 1)
 		{
+			if(!looping_node->is_in_para)
+			{
+				if(looping_node->token == AND || looping_node->token == OR)
+				{
+					looping_node = looping_node->prev;
+					break;
+				}
+			}
 			counter++;
 			if(looping_node->next)
 				looping_node = looping_node->next;
 			else
 				break;
 		}
-
 		if (counter == 1)
 			return (ft_lstnew_treenode(king_node, NULL, true));
 		return (ft_lstnew_treenode(king_node, looping_node, false));

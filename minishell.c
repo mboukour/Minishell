@@ -45,7 +45,7 @@ void get_input()
         // else
         // {
         rdp(middled, NULL);
-        // ft_lstiter_middle(middled);
+        ft_lstiter_middle(middled);
         //     ft_lstiter_lex(lexed);
         // }
         add_history(input);
