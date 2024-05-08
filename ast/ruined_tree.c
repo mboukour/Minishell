@@ -90,7 +90,7 @@ t_treenode *setup_condition(t_middle *current_middle ,int mode)
 	{
 		king_node = current_middle->next;
 		looping_node = king_node;
-		while(looping_node->condition_count == current_cc + 1 && (looping_node->token != AND && looping_node->token != OR))
+		while(looping_node->condition_count == current_cc + 1)
 		{
 			counter++;
 			if(looping_node->next)
