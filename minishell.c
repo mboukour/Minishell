@@ -21,9 +21,11 @@ void get_input()
     t_lex *we_check;
     t_middle *middled;
     int erorr_flag;
+    t_treenode *root;
 
     signal(SIGINT, sigint_handler);
     signal(SIGQUIT, sigquit_handler);
+    root = NULL;
     while (true)
 	{
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
@@ -44,7 +46,8 @@ void get_input()
         // }
         // else
         // {
-        rdp(middled, NULL);
+        // rdp(middled);
+        ruined_tree(middled, NULL, &root);
         ft_lstiter_middle(middled);
         //     ft_lstiter_lex(lexed);
         // }
@@ -52,6 +55,7 @@ void get_input()
         free(input);
     }
 }
+
 
 
 int main(int ac, char **av, char **env)

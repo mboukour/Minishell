@@ -92,7 +92,7 @@ const char* tokenToString(enum e_token t)
 {
     switch (t) 
 	{
-        case WORD: return "WORD";
+        case COMMAND: return "COMMAND";
         case WHITE_SPACE: return "WHITE_SPACE";
         case NEW_LINE: return "NEW_LINE";
         case QUOTE: return "QUOTE";

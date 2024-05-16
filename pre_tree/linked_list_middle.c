@@ -11,6 +11,7 @@ t_middle	*ft_lstnew_middle(char *content, char **args, int token)
 		return (NULL);
 	new_node->token = token;
 	new_node->content = content;
+	new_node->is_in_para = false;
 	new_node->condition_count = 0;
 	new_node->args = args;
 	new_node->next = NULL;
@@ -57,7 +58,12 @@ void print_middle(t_middle *node)
 	int i;
 
 	i = 0;
-	printf("Content: %s // Token: %s // CC: %i //", node->content, tokenToString(node->token), node->condition_count);
+	
+	char *para;
+	para = "False";
+	if(node->is_in_para)
+		para = "True";
+	printf("Content: %s // Token: %s // CC: %i // In Para: %s //", node->content, tokenToString(node->token), node->condition_count, para);
 	if(node->args)
 	{
 		while (node->args[i])
@@ -68,7 +74,7 @@ void print_middle(t_middle *node)
 		printf("\n");
 	}
 	else
-		printf("No args\n");
+		printf(" No args\n");
 }
 
 void ft_lstiter_middle(t_middle *first)
