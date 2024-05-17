@@ -11,7 +11,7 @@ t_treenode		*new_treenode(t_middle *middled)
 	// if(middled->token != COMMAND)
 	// 	printf("NO COMMAND IN NEW: %s\n", middled->content);
 	new_node->token = middled->token;
-	// new_node->content = content;
+	new_node->content = middled->content;
 	new_node->node = middled;
 	new_node->left = NULL;
 	new_node->right = NULL;

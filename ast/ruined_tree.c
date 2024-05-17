@@ -17,20 +17,7 @@ void print_ascii_tree(t_treenode *root, int level)
     for (int i = 0; i < level; i++)
         printf("    ");
     // printf("%s\n", root->content);
-	lol = root->node;
-	if(root->is_terminal)
-		printf("%s ==> Terminal // Root is: %p", root->node->content, root);
-	else
-	{
-		while(lol != root->node)
-		{
-			printf("%s ", lol->content);
-			lol = lol->next;
-		}
-		printf("%s ==> Non-terminal // Root is: %p", lol->content, root);
-
-	}
-
+	printf("%s", root->content);
     // Print the left child
     print_ascii_tree(root->left, level + 1);
 }
@@ -52,7 +39,7 @@ t_treenode *parse_pipeline(t_middle **middled)
 	t_treenode *pipe;
 
 	l_node = parse_cmdlist(middled);
-	if((*middled)->token == PIPE_LINE)
+	if((*middled) && (*middled)->token == PIPE_LINE)
 	{
 		pipe = new_treenode(*middled);
 		(*middled) = (*middled)->next;
@@ -78,7 +65,7 @@ t_treenode *parse_cmdline(t_middle **middled)
 	{
 		op = new_treenode(*middled);
 		(*middled) = (*middled)->next;
-		r_node = new_treenode(*middled);
+		r_node = parse_pipeline(middled);
 		(*middled) = (*middled)->next;
 		op->left = l_node;
 		op->right = r_node;
@@ -92,5 +79,9 @@ t_treenode *parse_cmdline(t_middle **middled)
 
 t_treenode *ruined_tree(t_middle *middled)
 {
-	return (parse_cmdline(&middled));
+	t_treenode *root;
+
+	root = parse_cmdline(&middled);
+	print_ascii_tree(root, 0);
+	return (root);
 }
