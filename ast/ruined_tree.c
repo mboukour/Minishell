@@ -21,14 +21,21 @@ void print_ascii_tree(t_treenode *root, int level)
     // Print the left child
     print_ascii_tree(root->left, level + 1);
 }
-// SINCE I DON'T PLAN ON HANDLING REDIRECTIONS OR NONE OF THAT RN IT WILL JUST RETURN A NODE AND MOVE THE LINKED LIST
+ // TO INCLUDE IN HEADER
+t_treenode *parse_cmdline(t_middle **middled);
 t_treenode *parse_cmdlist(t_middle **middled)
 {
 	t_middle *cmd;
+	t_treenode *result;
 
-	cmd = *middled;
-	(*middled) = (*middled)->next;
-	return (new_treenode(cmd));
+	if((*middled)->token == OPEN_PARANTHESE)
+		result = parse_cmdline(middled);
+	else
+	{
+		result = new_treenode(*middled);
+		(*middled) = (*middled)->next;
+	}
+	return (result);
 }
 
 // <pipeline>  ::= <command> {"|" <command>}

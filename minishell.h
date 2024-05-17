@@ -120,6 +120,7 @@ t_treenode		*new_treenode(t_middle *middled);
 void change_root_to(t_treenode **from_node, t_treenode *to_node);
 int counter(t_lex *current, char c);
 t_treenode *ruined_tree(t_middle *middled);
+t_treenode *parse_pipeline(t_middle **middled);
 // UTILS
 char	*ft_substr(const char *s, unsigned int start, size_t len);
 char	*ft_strdup(const char *s1);
