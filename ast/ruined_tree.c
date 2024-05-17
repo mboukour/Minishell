@@ -38,18 +38,18 @@ t_treenode *parse_pipeline(t_middle **middled)
 	t_treenode *r_node;
 	t_treenode *pipe;
 
+	pipe = NULL;
 	l_node = parse_cmdlist(middled);
-	if((*middled) && (*middled)->token == PIPE_LINE)
+	while((*middled) && (*middled)->token == PIPE_LINE)
 	{
 		pipe = new_treenode(*middled);
 		(*middled) = (*middled)->next;
-		r_node = new_treenode(*middled);
-		(*middled) = (*middled)->next;
+		r_node = parse_pipeline(middled);
 		pipe->left = l_node;
 		pipe->right = r_node;
-		return (pipe);
 	}
-	(*middled) = (*middled)->next;
+	if(pipe)
+		return (pipe);
 	return (l_node);
 }
 
@@ -60,18 +60,18 @@ t_treenode *parse_cmdline(t_middle **middled)
 	t_treenode *op;
 	t_treenode *r_node;
 
+	op = NULL;
 	l_node = parse_pipeline(middled);
-	if((*middled)->token == AND || (*middled)->token == OR)
+	while((*middled) && (*middled)->token == AND || (*middled)->token == OR)
 	{
 		op = new_treenode(*middled);
 		(*middled) = (*middled)->next;
-		r_node = parse_pipeline(middled);
-		(*middled) = (*middled)->next;
+		r_node = parse_cmdline(middled);
 		op->left = l_node;
 		op->right = r_node;
-		return (op);
 	}
-	(*middled) = (*middled)->next;
+	if(op)
+		return (op);
 	return (l_node);
 }
 
