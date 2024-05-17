@@ -29,7 +29,10 @@ t_treenode *parse_cmdlist(t_middle **middled)
 	t_treenode *result;
 
 	if((*middled)->token == OPEN_PARANTHESE)
+	{
+		(*middled) = (*middled)->next;
 		result = parse_cmdline(middled);
+	}
 	else
 	{
 		result = new_treenode(*middled);
@@ -78,6 +81,8 @@ t_treenode *parse_cmdline(t_middle **middled)
 		op->right = r_node;
 		l_node = op;
 	}
+	if((*middled) && (*middled)->token == CLOSE_PARANTHESE)
+		(*middled) = (*middled)->next;
 	if(op)
 		return (op);
 	return (l_node);
