@@ -18,6 +18,15 @@ void print_ascii_tree(t_treenode *root, int level)
         printf("    ");
     // printf("%s\n", root->content);
 	printf("%s", root->content);
+	int j = 0;
+	if(root->args)
+	{
+		while (root->args[j])
+		{
+			printf(" %s", root->args[j]);
+			j++;
+		}
+	}
     // Print the left child
     print_ascii_tree(root->left, level + 1);
 }

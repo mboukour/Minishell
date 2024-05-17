@@ -89,6 +89,7 @@ typedef struct s_treenode
 	t_middle *node;
 	int token;
 	char *content;
+	char **args;
 	bool is_terminal;
 	int condition_count;
 	struct s_treenode *left;
