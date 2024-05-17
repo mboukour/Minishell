@@ -62,13 +62,14 @@ t_treenode *parse_cmdline(t_middle **middled)
 
 	op = NULL;
 	l_node = parse_pipeline(middled);
-	while((*middled) && (*middled)->token == AND || (*middled)->token == OR)
+	while((*middled) && ((*middled)->token == AND || (*middled)->token == OR))
 	{
 		op = new_treenode(*middled);
 		(*middled) = (*middled)->next;
-		r_node = parse_cmdline(middled);
+		r_node = parse_pipeline(middled);
 		op->left = l_node;
 		op->right = r_node;
+		l_node = op;
 	}
 	if(op)
 		return (op);
