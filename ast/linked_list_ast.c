@@ -1,18 +1,18 @@
 #include "../minishell.h"
 
 
-t_treenode		*ft_lstnew_treenode(t_middle *first, t_middle *last, bool is_terminal)
+t_treenode		*new_treenode(t_middle *middled)
 {
 	t_treenode		*new_node;
 
 	new_node = malloc(sizeof(t_treenode));
 	if (!new_node)
 		return (NULL);
-	// new_node->token = token;
+	// if(middled->token != COMMAND)
+	// 	printf("NO COMMAND IN NEW: %s\n", middled->content);
+	new_node->token = middled->token;
 	// new_node->content = content;
-	new_node->first = first;
-	new_node->last = last;
-	new_node->is_terminal = is_terminal;
+	new_node->node = middled;
 	new_node->left = NULL;
 	new_node->right = NULL;
 	return (new_node);

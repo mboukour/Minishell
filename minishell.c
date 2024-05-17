@@ -47,8 +47,8 @@ void get_input()
         // else
         // {
         // rdp(middled);
-        ruined_tree(middled, NULL, &root);
-        ft_lstiter_middle(middled);
+        root = ruined_tree(middled);
+        // ft_lstiter_middle(middled);
         //     ft_lstiter_lex(lexed);
         // }
         add_history(input);

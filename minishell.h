@@ -86,11 +86,8 @@ typedef struct s_middle
 
 typedef struct s_treenode
 {
-	// int token;
-	// char *content;
-	// char **args;
-	t_middle *first;
-	t_middle *last;
+	t_middle *node;
+	int token;
 	bool is_terminal;
 	int condition_count;
 	struct s_treenode *left;
@@ -118,10 +115,10 @@ t_middle	*ft_lstlast_middle(t_middle *lst);
 
 
 // ABSTRACT SYNTAX TREE
-t_treenode		*ft_lstnew_treenode(t_middle *first, t_middle *last, bool is_terminal);
+t_treenode		*new_treenode(t_middle *middled);
 void change_root_to(t_treenode **from_node, t_treenode *to_node);
 int counter(t_lex *current, char c);
-void ruined_tree(t_middle *first, t_middle *last, t_treenode **root);
+t_treenode *ruined_tree(t_middle *middled);
 // UTILS
 char	*ft_substr(const char *s, unsigned int start, size_t len);
 char	*ft_strdup(const char *s1);

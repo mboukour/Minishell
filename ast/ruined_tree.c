@@ -17,12 +17,12 @@ void print_ascii_tree(t_treenode *root, int level)
     for (int i = 0; i < level; i++)
         printf("    ");
     // printf("%s\n", root->content);
-	lol = root->first;
+	lol = root->node;
 	if(root->is_terminal)
-		printf("%s ==> Terminal // Root is: %p", root->first->content, root);
+		printf("%s ==> Terminal // Root is: %p", root->node->content, root);
 	else
 	{
-		while(lol != root->last)
+		while(lol != root->node)
 		{
 			printf("%s ", lol->content);
 			lol = lol->next;
@@ -34,85 +34,63 @@ void print_ascii_tree(t_treenode *root, int level)
     // Print the left child
     print_ascii_tree(root->left, level + 1);
 }
-
-
-// void print_conditions(t_middle *middle)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	while(middle)
-// 	{
-// 		if(middle->token == COMMAND && !middle->is_in_para)
-// 			printf("COMMAND %i: %s\n", middle->content);
-// 		else if(middle->token)
-// 	}
-// }
-
-
-t_treenode *make_mini(t_middle *middle)
+// SINCE I DON'T PLAN ON HANDLING REDIRECTIONS OR NONE OF THAT RN IT WILL JUST RETURN A NODE AND MOVE THE LINKED LIST
+t_treenode *parse_cmdlist(t_middle **middled)
 {
-	t_treenode *root;
-	bool in_para;
+	t_middle *cmd;
 
-
+	cmd = *middled;
+	(*middled) = (*middled)->next;
+	return (new_treenode(cmd));
 }
 
-void atomize_para(t_middle *open, t_middle *close, int cc)
+// <pipeline>  ::= <command> {"|" <command>}
+t_treenode *parse_pipeline(t_middle **middled)
 {
-	while(open != close->next)
+	t_treenode *l_node;
+	t_treenode *r_node;
+	t_treenode *pipe;
+
+	l_node = parse_cmdlist(middled);
+	if((*middled)->token == PIPE_LINE)
 	{
-		open->is_in_para = true;
-		open->condition_count = cc;
-		open = open->next;
+		pipe = new_treenode(*middled);
+		(*middled) = (*middled)->next;
+		r_node = new_treenode(*middled);
+		(*middled) = (*middled)->next;
+		pipe->left = l_node;
+		pipe->right = r_node;
+		return (pipe);
 	}
+	(*middled) = (*middled)->next;
+	return (l_node);
 }
 
-void set_condition_count(t_middle *first, t_middle *last)
+// <cmdline>  ::= <pipeline> {("&&" | "||") <pipeline>
+t_treenode *parse_cmdline(t_middle **middled)
 {
-	int condition_count;
-	t_middle *pre_last;
-	int nesting_level;
+	t_treenode *l_node;
+	t_treenode *op;
+	t_treenode *r_node;
 
-	condition_count = 0;
-	nesting_level = 0;
-	while(first && first != last)
+	l_node = parse_pipeline(middled);
+	if((*middled)->token == AND || (*middled)->token == OR)
 	{
-		first->condition_count = condition_count;
-		if (first->token == OPEN_PARANTHESE)
-		{
-			pre_last = ft_lstlast_middle(first);
-			while(pre_last->token != CLOSE_PARANTHESE)
-				pre_last = pre_last->prev;
-			atomize_para(first, pre_last, condition_count);
-			first = pre_last->next;
-		}
-		else 
-		{
-			if(first->token == AND || first->token == OR)
-				condition_count++;
-			first = first->next;
-		}
-
+		op = new_treenode(*middled);
+		(*middled) = (*middled)->next;
+		r_node = new_treenode(*middled);
+		(*middled) = (*middled)->next;
+		op->left = l_node;
+		op->right = r_node;
+		return (op);
 	}
+	(*middled) = (*middled)->next;
+	return (l_node);
 }
 
-void handle_expression(t_middle *first, t_middle *last, t_treenode **root)
+
+
+t_treenode *ruined_tree(t_middle *middled)
 {
-	while(first && first != last) // Protection, will debug later ig
-	{
-		if (first->token == AND || first->token == OR)
-		{
-
-		}
-	}
-}
-
-void ruined_tree(t_middle *first, t_middle *last, t_treenode **root)
-{
-
-	if(!*root) // FIRST CALL ==> ROOT IS NULL
-		*root = malloc(sizeof(t_treenode));
-	set_condition_count(first, last);
-	
+	return (parse_cmdline(&middled));
 }
