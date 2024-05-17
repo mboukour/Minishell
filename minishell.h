@@ -76,9 +76,10 @@ typedef struct s_middle
 {
 	char *content;
 	char **args;
-	int condition_count;
 	int token;
-	bool is_in_para;
+	char *write_to;
+	char *read_from;
+	char *delimiter;
 	struct s_middle *next;
 	struct s_middle *prev;
 } t_middle;
@@ -86,12 +87,9 @@ typedef struct s_middle
 
 typedef struct s_treenode
 {
-	t_middle *node;
 	int token;
 	char *content;
 	char **args;
-	bool is_terminal;
-	int condition_count;
 	struct s_treenode *left;
 	struct s_treenode *right;
 } t_treenode;

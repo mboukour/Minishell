@@ -62,6 +62,13 @@ bool do_i_have_args(t_lex *command)
 	return (false);
 }
 
+
+void jump_spaces(t_lex **lex)
+{
+	while(*lex && (*lex)->token == WHITE_SPACE)
+		(*lex) = (*lex)->next;
+}
+
 t_middle *make_middle(t_lex *lex)
 {
 	t_middle *head;
@@ -103,6 +110,33 @@ t_middle *make_middle(t_lex *lex)
 					}
 				}
 			}
+		}
+		else if(lex->token == REDIR_IN) // <
+		{
+			current = ft_lstnew_middle(ft_strdup(lex->content), NULL, lex->token);
+			lex = lex->next;
+			jump_spaces(&lex);
+			current->read_from = ft_strdup(lex->content);
+			ft_lstadd_back_middle(&head, current);
+			in_command = false;
+		}
+		else if (lex->token == REDIR_OUT || lex->token == DREDIR_OUT)
+		{
+			current = ft_lstnew_middle(ft_strdup(lex->content), NULL, lex->token);
+			lex = lex->next;
+			jump_spaces(&lex);
+			current->write_to = ft_strdup(lex->content);
+			ft_lstadd_back_middle(&head, current);
+			in_command = false;
+		}
+		else if (lex->token == HERE_DOC)
+		{
+			current = ft_lstnew_middle(ft_strdup(lex->content), NULL, lex->token);
+			lex = lex->next;
+			jump_spaces(&lex);
+			current->delimiter = ft_strdup(lex->content);
+			ft_lstadd_back_middle(&head, current);
+			in_command = false;
 		}
 		else if(lex->token != WHITE_SPACE)
 		{

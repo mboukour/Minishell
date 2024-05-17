@@ -9,14 +9,9 @@ void print_ascii_tree(t_treenode *root, int level)
 		printf("\n");
         return;
 	}
-
-    // Print the right child
     print_ascii_tree(root->right, level + 1);
-
-    // Print the current node
     for (int i = 0; i < level; i++)
         printf("    ");
-    // printf("%s\n", root->content);
 	printf("%s", root->content);
 	int j = 0;
 	if(root->args)
@@ -27,27 +22,48 @@ void print_ascii_tree(t_treenode *root, int level)
 			j++;
 		}
 	}
-    // Print the left child
     print_ascii_tree(root->left, level + 1);
 }
- // TO INCLUDE IN HEADER
-t_treenode *parse_cmdline(t_middle **middled);
-t_treenode *parse_cmdlist(t_middle **middled)
+t_treenode *parse_cmdline(t_middle **middled);  // TO INCLUDE IN HEADER
+
+bool is_redir(t_middle *middle)
+{
+	return(middle->token == REDIR_IN || middle->token == REDIR_OUT || middle->token == DREDIR_OUT || middle->token == HERE_DOC);
+}
+
+// t_treenode *parse_redir(t_middle **middled)
+// {
+// 	t_treenode *result;
+
+// 	while(is_redir(*middled))
+// 	{
+
+// 	}
+// }
+
+// t_treenode *parse_cmdlist(t_middle **middled)
+// {
+
+// 	if((*middled)->token == WORD)
+// 	{
+		
+// 	}
+// }
+
+// <cmdlist>  | "(" <cmdline> ")" <redir>
+t_treenode *parse_command(t_middle **middled)
 {
 	t_middle *cmd;
-	t_treenode *result;
+	t_treenode *l_node;
 
 	if((*middled)->token == OPEN_PARANTHESE)
 	{
 		(*middled) = (*middled)->next;
-		result = parse_cmdline(middled);
+		return (parse_cmdline(middled));
 	}
-	else
-	{
-		result = new_treenode(*middled);
-		(*middled) = (*middled)->next;
-	}
-	return (result);
+	l_node = new_treenode(*middled);
+	(*middled) = (*middled)->next;
+	return (l_node);
 }
 
 // <pipeline>  ::= <command> {"|" <command>}
@@ -58,7 +74,7 @@ t_treenode *parse_pipeline(t_middle **middled)
 	t_treenode *pipe;
 
 	pipe = NULL;
-	l_node = parse_cmdlist(middled);
+	l_node = parse_command(middled);
 	while((*middled) && (*middled)->token == PIPE_LINE)
 	{
 		pipe = new_treenode(*middled);

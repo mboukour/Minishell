@@ -27,11 +27,8 @@ t_treenode		*new_treenode(t_middle *middled)
 	new_node = malloc(sizeof(t_treenode));
 	if (!new_node)
 		return (NULL);
-	// if(middled->token != COMMAND)
-	// 	printf("NO COMMAND IN NEW: %s\n", middled->content);
 	new_node->token = middled->token;
 	new_node->content = ft_strdup(middled->content);
-	// new_node->node = middled;
 	new_node->args = NULL;
 	if(middled->args)
 		new_node->args = copy_args(middled->args);

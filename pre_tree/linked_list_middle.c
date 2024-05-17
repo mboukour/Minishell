@@ -11,9 +11,10 @@ t_middle	*ft_lstnew_middle(char *content, char **args, int token)
 		return (NULL);
 	new_node->token = token;
 	new_node->content = content;
-	new_node->is_in_para = false;
-	new_node->condition_count = 0;
 	new_node->args = args;
+	new_node->write_to = NULL;
+	new_node->read_from = NULL;
+	new_node->write_to = NULL;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -59,11 +60,7 @@ void print_middle(t_middle *node)
 
 	i = 0;
 	
-	char *para;
-	para = "False";
-	if(node->is_in_para)
-		para = "True";
-	printf("Content: %s // Token: %s // CC: %i // In Para: %s //", node->content, tokenToString(node->token), node->condition_count, para);
+	printf("Content: %s // Token: %s  // ", node->content, tokenToString(node->token));
 	if(node->args)
 	{
 		while (node->args[i])
@@ -71,10 +68,14 @@ void print_middle(t_middle *node)
 			printf("Arg %i: %s // ", i, node->args[i]);
 			i++;
 		}
-		printf("\n");
 	}
-	else
-		printf(" No args\n");
+	if(node->read_from)
+		printf("Read from: %s // ", node->read_from);
+	else if (node->write_to)
+		printf("Write to: %s // ", node->write_to);
+	else if (node->delimiter)
+		printf("Delimiter: %s // ", node->delimiter);
+	printf("\n");
 }
 
 void ft_lstiter_middle(t_middle *first)
