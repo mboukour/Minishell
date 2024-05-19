@@ -12,21 +12,21 @@ void print_ascii_tree(t_treenode *root, int level)
     print_ascii_tree(root->right, level + 1);
     for (int i = 0; i < level; i++)
         printf("    ");
-	// if(root->before_redir)
-	// 	ft_lstiter_redir(root->before_redir);
-	printf("%s", root->content);
-	int j = 0;
+	if(root->before_redir)
+		ft_lstiter_redir(root->before_redir);
+	printf("(%s)", root->content);
+	int j = 1;
 	if(root->args)
 	{
 		while (root->args[j])
 		{
-			printf(" %s", root->args[j]);
+			printf(" (%s)", root->args[j]);
 			j++;
 		}
 	}
 	printf(" ");
-	// if(root->after_redir)
-	// 	ft_lstiter_redir(root->after_redir);
+	if(root->after_redir)
+		ft_lstiter_redir(root->after_redir);
     print_ascii_tree(root->left, level + 1);
 }
 

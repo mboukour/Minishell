@@ -33,6 +33,12 @@ t_treenode		*new_treenode(t_middle *middled)
 	new_node->args = NULL;
 	if(middled->args)
 		new_node->args = copy_args(middled->args, new_node->content);
+	else
+	{
+		new_node->args = malloc(2 * sizeof(char *));
+		new_node->args[0] = middled->content;
+		new_node->args[1] = NULL;
+	}
 	new_node->after_redir = NULL;
 	new_node->before_redir = NULL;
 	new_node->left = NULL;

@@ -50,6 +50,7 @@ void get_input(char **envp)
             // {
             // rdp(middled);
             root = ruined_tree(middled);
+            // executioner(root, getenv("PATH"), envp);
             // ft_lstiter_middle(middled);
             //     ft_lstiter_lex(lexed);
             // }

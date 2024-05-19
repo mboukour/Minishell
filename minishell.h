@@ -146,7 +146,7 @@ char	**ft_split(char const *s, char c);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 
 // EXECUTIONER
-bool executioner(t_treenode *command, char *path, char **envp);
+int executioner(t_treenode *command, char *path, char **envp);
 
 
 

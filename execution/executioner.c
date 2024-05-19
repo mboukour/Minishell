@@ -20,7 +20,7 @@ char	**get_paths(char **envp, char *path)
 	slash_paths(binary_paths);
 	return (binary_paths);
 }
-bool executioner(t_treenode *command, char *path, char **envp)
+int executioner(t_treenode *command, char *path, char **envp)
 {
 	int i;
 	int pid;
@@ -44,10 +44,6 @@ bool executioner(t_treenode *command, char *path, char **envp)
 		exit(EXIT_FAILURE);
 	}
 	else
-	{
 		waitpid(pid, &status, 0);
-		if(WIFEXITED(status) && WEXITSTATUS(status) == EXIT_SUCCESS)
-			return (true);
-		return (false);
-	}
+	return (status);
 }
