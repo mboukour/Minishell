@@ -23,9 +23,9 @@ char **make_args(t_lex **first_arg)
 	int i;
 	t_lex *prev;
 
-	i = 0;
 	arg_count = get_arg_count(*first_arg);
 	args = malloc((arg_count + 1) * sizeof(char *));
+	i = 0;
 	while(i < arg_count)
 	{
 		if((*first_arg)->token == WORD)

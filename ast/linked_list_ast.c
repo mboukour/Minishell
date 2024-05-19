@@ -1,7 +1,7 @@
 #include "../minishell.h"
 
 
-char **copy_args(char **args)
+char **copy_args(char **args, char *cmd)
 {
 	char **result;
 	int c;
@@ -9,14 +9,15 @@ char **copy_args(char **args)
 	c = 0;
 	while(args[c])
 		c++;
-	result = malloc((c + 1) * sizeof(char *));
+	result = malloc((c + 2) * sizeof(char *));
 	c = 0;
+	result[0] = cmd;
 	while(args[c])
 	{
-		result[c] = ft_strdup(args[c]);
+		result[c + 1] = ft_strdup(args[c]);
 		c++;
 	}
-	result[c] = NULL;
+	result[c + 1] = NULL;
 	return (result);
 }
 
@@ -31,15 +32,9 @@ t_treenode		*new_treenode(t_middle *middled)
 	new_node->content = ft_strdup(middled->content);
 	new_node->args = NULL;
 	if(middled->args)
-		new_node->args = copy_args(middled->args);
+		new_node->args = copy_args(middled->args, new_node->content);
 	new_node->after_redir = NULL;
 	new_node->before_redir = NULL;
-	// new_node->before_redir.is_redirected = false;
-	// new_node->before_redir.token = NONE;
-	// new_node->before_redir.redir_string = NULL;
-	// new_node->after_redir.is_redirected = false;
-	// new_node->after_redir.token = NONE;
-	// new_node->after_redir.redir_string = NULL;
 	new_node->left = NULL;
 	new_node->right = NULL;
 	return (new_node);
@@ -88,7 +83,7 @@ void ft_lstiter_redir(t_redir *first)
 {
 	while(first)
 	{
-		printf("%s %s ", tokenToString(first->token), first->redir_string);
+		printf("(%s %s) ", tokenToString(first->token), first->redir_string);
 		first = first->next;
 	}
 }

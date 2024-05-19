@@ -14,7 +14,7 @@ void sigquit_handler(int sig)
     rl_redisplay();
 }
 
-void get_input() 
+void get_input(char **envp) 
 {
     char *input;
     t_lex *lexed;
@@ -67,6 +67,7 @@ int main(int ac, char **av, char **env)
     (void)av;
     if(!isatty(0))
         return 0;
-    get_input();
+    get_input(env);
+    
     return 0;
 }

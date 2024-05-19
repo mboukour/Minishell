@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-
+// DEBUG MODE:
 void print_ascii_tree(t_treenode *root, int level)
 {
 	t_middle *lol;
@@ -12,8 +12,8 @@ void print_ascii_tree(t_treenode *root, int level)
     print_ascii_tree(root->right, level + 1);
     for (int i = 0; i < level; i++)
         printf("    ");
-	if(root->before_redir)
-		ft_lstiter_redir(root->before_redir);
+	// if(root->before_redir)
+	// 	ft_lstiter_redir(root->before_redir);
 	printf("%s", root->content);
 	int j = 0;
 	if(root->args)
@@ -25,49 +25,11 @@ void print_ascii_tree(t_treenode *root, int level)
 		}
 	}
 	printf(" ");
-	if(root->after_redir)
-		ft_lstiter_redir(root->after_redir);
+	// if(root->after_redir)
+	// 	ft_lstiter_redir(root->after_redir);
     print_ascii_tree(root->left, level + 1);
 }
 
-bool is_redir(t_middle *middle)
-{
-	return(middle->token == REDIR_IN || middle->token == REDIR_OUT || middle->token == DREDIR_OUT);
-}
-
-// t_treenode *parse_cmdline(t_middle **middled);  // TO INCLUDE IN HEADER
-// t_treenode *parse_redir(t_middle **middled)
-// {
-// 	t_treenode *result;
-
-// 	while(is_redir(*middled))
-// 	{
-
-// 	}
-// }
-
-// t_treenode *parse_cmdlist(t_middle **middled)
-// {
-
-// 	if((*middled)->token == WORD)
-// 	{
-		
-// 	}
-// }
-
-// <cmdlist>  | "(" <cmdline> ")" <redir>
-
-
-// void handle_para_redir(t_treenode *para_tree)
-
-
-
-// t_treenode *parse_redir(t_middle **middled)
-// {
-
-// }
-
-// < // > // >>
 t_redir *handle_after_redirs(t_middle **middled)
 {
 	t_redir *result;
@@ -97,7 +59,7 @@ t_redir *handle_before_redirs(t_middle **middled)
 	}
 	return (result);
 }
-t_treenode *parse_cmdline(t_middle **middled);
+
 t_treenode *parse_command(t_middle **middled)
 {
 	t_redir *before_redir;
@@ -164,8 +126,6 @@ t_treenode *parse_cmdline(t_middle **middled)
 		return (op);
 	return (l_node);
 }
-
-
 
 t_treenode *ruined_tree(t_middle *middled)
 {

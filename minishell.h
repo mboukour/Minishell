@@ -17,6 +17,7 @@
 
 // useful valgrind commands: --leak-check=yes && --track-fds=yes --tools=drd. useful copiilation flags, -Wpedantic, -g -fsanitize=address,undefined x
 # define NONE -1
+# define SECURE_PATH "/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:."
 
 enum e_token
 {
@@ -128,11 +129,11 @@ t_treenode		*new_treenode(t_middle *middled);
 void change_root_to(t_treenode **from_node, t_treenode *to_node);
 int counter(t_lex *current, char c);
 t_treenode *ruined_tree(t_middle *middled);
+t_treenode *parse_cmdline(t_middle **middled);
 t_treenode *parse_pipeline(t_middle **middled);
 t_redir *ft_lstnew_redir(t_middle *middled);
 void ft_lstaddback_redir(t_redir **head, t_redir *new);
 void ft_lstiter_redir(t_redir *first);
-
 
 // UTILS
 char	*ft_substr(const char *s, unsigned int start, size_t len);
@@ -141,6 +142,13 @@ size_t	ft_strlen(const char *s);
 void ft_putstr_fd(int fd, char *str);
 char	*ft_strjoin(const char *s1, const char *s2);
 int	ft_strcmp(const char *s1, const char *s2);
+char	**ft_split(char const *s, char c);
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+
+// EXECUTIONER
+bool executioner(t_treenode *command, char *path, char **envp);
+
+
 
 // BUILTINS
 char *get_pwd(void); // MALLOCS, NEEDS FREE !!!!endif
