@@ -29,29 +29,32 @@ void get_input()
     while (true)
 	{
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
-        if (!input) 
+        if (!input)
 		{
             rl_clear_history();
             break;
         }
-		lexed = tokenizer(input);
-        middled = make_middle(lexed);
-        // ft_lstiter_middle(middled);
-        // we_check = check_valid_input(lexed);
-        // if(we_check)
-        // {
-        //     ft_putstr_fd(2, "Parse error near: ");
-        //     ft_putstr_fd(2, we_check->content);
-        //     ft_putstr_fd(2, "\n");
-        // }
-        // else
-        // {
-        // rdp(middled);
-        root = ruined_tree(middled);
-        // ft_lstiter_middle(middled);
-        //     ft_lstiter_lex(lexed);
-        // }
-        add_history(input);
+        else if(ft_strcmp(input, ""))
+        {
+            lexed = tokenizer(input);
+            middled = make_middle(lexed);
+            // ft_lstiter_middle(middled);
+            // we_check = check_valid_input(lexed);
+            // if(we_check)
+            // {
+            //     ft_putstr_fd(2, "Parse error near: ");
+            //     ft_putstr_fd(2, we_check->content);
+            //     ft_putstr_fd(2, "\n");
+            // }
+            // else
+            // {
+            // rdp(middled);
+            root = ruined_tree(middled);
+            // ft_lstiter_middle(middled);
+            //     ft_lstiter_lex(lexed);
+            // }
+            add_history(input);
+        }
         free(input);
     }
 }

@@ -12,9 +12,7 @@ t_middle	*ft_lstnew_middle(char *content, char **args, int token)
 	new_node->token = token;
 	new_node->content = content;
 	new_node->args = args;
-	new_node->write_to = NULL;
-	new_node->read_from = NULL;
-	new_node->write_to = NULL;
+	new_node->redir_string = NULL;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -69,12 +67,12 @@ void print_middle(t_middle *node)
 			i++;
 		}
 	}
-	if(node->read_from)
-		printf("Read from: %s // ", node->read_from);
-	else if (node->write_to)
-		printf("Write to: %s // ", node->write_to);
-	else if (node->delimiter)
-		printf("Delimiter: %s // ", node->delimiter);
+	if(node->token == REDIR_IN)
+		printf("Read from: %s // ", node->redir_string);
+	else if (node->token == REDIR_OUT || node->token == DREDIR_OUT)
+		printf("Write to: %s // ", node->redir_string);
+	else if (node->token == HERE_DOC)
+		printf("Delimiter: %s // ", node->redir_string);
 	printf("\n");
 }
 

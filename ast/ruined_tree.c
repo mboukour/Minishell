@@ -12,6 +12,8 @@ void print_ascii_tree(t_treenode *root, int level)
     print_ascii_tree(root->right, level + 1);
     for (int i = 0; i < level; i++)
         printf("    ");
+	if(root->before_redir)
+		ft_lstiter_redir(root->before_redir);
 	printf("%s", root->content);
 	int j = 0;
 	if(root->args)
@@ -22,15 +24,18 @@ void print_ascii_tree(t_treenode *root, int level)
 			j++;
 		}
 	}
+	printf(" ");
+	if(root->after_redir)
+		ft_lstiter_redir(root->after_redir);
     print_ascii_tree(root->left, level + 1);
 }
-t_treenode *parse_cmdline(t_middle **middled);  // TO INCLUDE IN HEADER
 
 bool is_redir(t_middle *middle)
 {
-	return(middle->token == REDIR_IN || middle->token == REDIR_OUT || middle->token == DREDIR_OUT || middle->token == HERE_DOC);
+	return(middle->token == REDIR_IN || middle->token == REDIR_OUT || middle->token == DREDIR_OUT);
 }
 
+// t_treenode *parse_cmdline(t_middle **middled);  // TO INCLUDE IN HEADER
 // t_treenode *parse_redir(t_middle **middled)
 // {
 // 	t_treenode *result;
@@ -51,18 +56,65 @@ bool is_redir(t_middle *middle)
 // }
 
 // <cmdlist>  | "(" <cmdline> ")" <redir>
+
+
+// void handle_para_redir(t_treenode *para_tree)
+
+
+
+// t_treenode *parse_redir(t_middle **middled)
+// {
+
+// }
+
+// < // > // >>
+t_redir *handle_after_redirs(t_middle **middled)
+{
+	t_redir *result;
+	t_redir *current;
+
+	result = NULL;
+	while(*middled && ((*middled)->token == REDIR_OUT || (*middled)->token == DREDIR_OUT))
+	{
+		current = ft_lstnew_redir(*middled);
+		ft_lstaddback_redir(&result, current);
+		(*middled) = (*middled)->next;
+	}
+	return (result);
+}
+
+t_redir *handle_before_redirs(t_middle **middled)
+{
+	t_redir *result;
+	t_redir *current;
+
+	result = NULL;
+	while(*middled && ((*middled)->token == REDIR_IN || (*middled)->token == HERE_DOC))
+	{
+		current = ft_lstnew_redir(*middled);
+		ft_lstaddback_redir(&result, current);
+		(*middled) = (*middled)->next;
+	}
+	return (result);
+}
+t_treenode *parse_cmdline(t_middle **middled);
 t_treenode *parse_command(t_middle **middled)
 {
-	t_middle *cmd;
+	t_redir *before_redir;
+	t_redir *after_redir;
 	t_treenode *l_node;
 
 	if((*middled)->token == OPEN_PARANTHESE)
 	{
 		(*middled) = (*middled)->next;
-		return (parse_cmdline(middled));
+		l_node = parse_cmdline(middled);
+		return (l_node);
 	}
+	before_redir = handle_before_redirs(middled);
 	l_node = new_treenode(*middled);
+	l_node->before_redir = before_redir;
 	(*middled) = (*middled)->next;
+	l_node->after_redir = handle_after_redirs(middled);
 	return (l_node);
 }
 

@@ -116,7 +116,7 @@ t_middle *make_middle(t_lex *lex)
 			current = ft_lstnew_middle(ft_strdup(lex->content), NULL, lex->token);
 			lex = lex->next;
 			jump_spaces(&lex);
-			current->read_from = ft_strdup(lex->content);
+			current->redir_string = ft_strdup(lex->content);
 			ft_lstadd_back_middle(&head, current);
 			in_command = false;
 		}
@@ -125,7 +125,7 @@ t_middle *make_middle(t_lex *lex)
 			current = ft_lstnew_middle(ft_strdup(lex->content), NULL, lex->token);
 			lex = lex->next;
 			jump_spaces(&lex);
-			current->write_to = ft_strdup(lex->content);
+			current->redir_string = ft_strdup(lex->content);
 			ft_lstadd_back_middle(&head, current);
 			in_command = false;
 		}
@@ -134,7 +134,7 @@ t_middle *make_middle(t_lex *lex)
 			current = ft_lstnew_middle(ft_strdup(lex->content), NULL, lex->token);
 			lex = lex->next;
 			jump_spaces(&lex);
-			current->delimiter = ft_strdup(lex->content);
+			current->redir_string = ft_strdup(lex->content);
 			ft_lstadd_back_middle(&head, current);
 			in_command = false;
 		}
