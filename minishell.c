@@ -65,6 +65,7 @@ void get_input(char **envp)
             add_history(input);
         }
         free(input);
+        smart_free();
     }
 }
 

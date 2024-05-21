@@ -4,7 +4,7 @@ t_lex	*ft_lstnew_lex(char *content, int token, int len)
 {
 	t_lex	*new_node;
 
-	new_node = malloc(sizeof(t_lex));
+	new_node = smart_malloc(sizeof(t_lex));
 	if (!new_node)
 		return (NULL);
 	new_node->content = content;

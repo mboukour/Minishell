@@ -24,7 +24,7 @@ char **make_args(t_lex **first_arg)
 	t_lex *prev;
 
 	arg_count = get_arg_count(*first_arg);
-	args = malloc((arg_count + 1) * sizeof(char *));
+	args = smart_malloc((arg_count + 1) * sizeof(char *));
 	i = 0;
 	while(i < arg_count)
 	{

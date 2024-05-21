@@ -9,7 +9,7 @@ char **copy_args(char **args, char *cmd)
 	c = 0;
 	while(args[c])
 		c++;
-	result = malloc((c + 2) * sizeof(char *));
+	result = smart_malloc((c + 2) * sizeof(char *));
 	c = 0;
 	result[0] = cmd;
 	while(args[c])
@@ -25,7 +25,7 @@ t_treenode		*new_treenode(t_middle *middled)
 {
 	t_treenode		*new_node;
 
-	new_node = malloc(sizeof(t_treenode));
+	new_node = smart_malloc(sizeof(t_treenode));
 	if (!new_node)
 		return (NULL);
 	new_node->token = middled->token;
@@ -35,7 +35,7 @@ t_treenode		*new_treenode(t_middle *middled)
 		new_node->args = copy_args(middled->args, new_node->content);
 	else
 	{
-		new_node->args = malloc(2 * sizeof(char *));
+		new_node->args = smart_malloc(2 * sizeof(char *));
 		new_node->args[0] = middled->content;
 		new_node->args[1] = NULL;
 	}
@@ -51,7 +51,7 @@ t_redir *ft_lstnew_redir(t_middle *middled)
 {
 	t_redir *new_node;
 
-	new_node = malloc(sizeof(t_redir));
+	new_node = smart_malloc(sizeof(t_redir));
 	if(!new_node)
 		return (NULL);
 	new_node->token = (middled)->token;
@@ -94,10 +94,3 @@ void ft_lstiter_redir(t_redir *first)
 	}
 }
 
-void change_root_to(t_treenode **from_node, t_treenode *to_node)
-{
-	t_treenode *new_left;
-
-	to_node->left = *from_node;
-	*from_node = to_node;
-}

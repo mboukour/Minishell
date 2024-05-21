@@ -14,8 +14,8 @@
 #include <time.h>
 #include <signal.h>
 #include <dirent.h>
+#include "garbage_collector/cgc.h"
 
-// useful valgrind commands: --leak-check=yes && --track-fds=yes --tools=drd. useful copiilation flags, -Wpedantic, -g -fsanitize=address,undefined x
 # define NONE -1
 # define SECURE_PATH "/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:."
 
@@ -114,7 +114,7 @@ typedef struct s_treenode
 
 // LEXER
 t_lex *tokenizer(char *input);
-char *expand(t_lex *lex); // MALLOCS and can fail
+char *expand(t_lex *lex); // smart_mallocS and can fail
 t_lex	*ft_lstnew_lex(char *content, int token, int len);
 t_lex	*ft_lstlast_lex(t_lex *lst);
 t_lex	*ft_lstfirst_lex(t_lex *lst);
@@ -134,7 +134,6 @@ bool is_redir(t_middle *middle);
 
 // ABSTRACT SYNTAX TREE
 t_treenode		*new_treenode(t_middle *middled);
-void change_root_to(t_treenode **from_node, t_treenode *to_node);
 int counter(t_lex *current, char c);
 t_treenode *ruined_tree(t_middle *middled);
 t_treenode *parse_cmdline(t_middle **middled);
@@ -156,10 +155,8 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 // EXECUTIONER
 int executioner(t_treenode *command, char *path, char **envp, int fd);
 
-
-
 // BUILTINS
-char *get_pwd(void); // MALLOCS, NEEDS FREE !!!!endif
+char *get_pwd(void); // smart_mallocS, NEEDS FREE !!!!endif
 
 
 #endif

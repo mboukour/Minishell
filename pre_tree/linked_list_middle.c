@@ -6,7 +6,7 @@ t_middle	*ft_lstnew_middle(char *content, char **args, int token)
 {
 	t_middle	*new_node;
 
-	new_node = malloc(sizeof(t_middle));
+	new_node = smart_malloc(sizeof(t_middle));
 	if (!new_node)
 		return (NULL);
 	new_node->token = token;

@@ -41,7 +41,7 @@ static char	*allocate_word(char const *s, size_t start, size_t end)
 {
 	char	*word;
 
-	word = (char *)malloc(sizeof(char) * (end - start + 1));
+	word = (char *)smart_malloc(sizeof(char) * (end - start + 1));
 	if (!word)
 		return (NULL);
 	ft_strlcpy(word, s + start, end - start + 1);
@@ -55,7 +55,7 @@ static char	**split_into_words(char const *s, char c, size_t word_count)
 	size_t	start;
 	char	**all_words;
 
-	all_words = (char **)malloc(sizeof(char *) * (word_count + 1));
+	all_words = (char **)smart_malloc(sizeof(char *) * (word_count + 1));
 	if (!all_words)
 		return (NULL);
 	i = 0;
@@ -83,7 +83,7 @@ char	**ft_split(char const *s, char c)
 
 	if (!s || !*s)
 	{
-		empty = (char **)malloc(sizeof(char *));
+		empty = (char **)smart_malloc(sizeof(char *));
 		if (!empty)
 			return (NULL);
 		empty[0] = NULL;
