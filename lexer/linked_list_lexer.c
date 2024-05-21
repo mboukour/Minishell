@@ -88,6 +88,8 @@ void	ft_lstadd_back_lex(t_lex **lst, t_lex *new)
 	new->prev = last_lex;
 }
 
+// EVERYTHING BELOW HERE IS FOR DEBUGGING PURPOSES AND SHOULD BE REMOVED LATER
+
 const char* tokenToString(enum e_token t)
 {
     switch (t) 

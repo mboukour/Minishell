@@ -18,6 +18,7 @@
 
 # define NONE -1
 # define SECURE_PATH "/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:."
+# define PARSE_ERROR "Parse error near: "
 
 enum e_token
 {
@@ -97,6 +98,15 @@ typedef struct s_middle
 } t_middle;
 
 
+typedef struct s_middle_vars
+{
+	t_middle *head;
+	t_middle *current;
+	bool in_command;
+	char *command;
+	char **args;
+} t_middle_vars;
+
 
 typedef struct s_treenode
 {
@@ -130,7 +140,6 @@ void	ft_lstadd_back_middle(t_middle **lst, t_middle *new);
 t_middle *make_middle(t_lex *lex);
 void ft_lstiter_middle(t_middle *first);
 t_middle	*ft_lstlast_middle(t_middle *lst);
-bool is_redir(t_middle *middle);
 
 // ABSTRACT SYNTAX TREE
 t_treenode		*new_treenode(t_middle *middled);
@@ -141,6 +150,7 @@ t_treenode *parse_pipeline(t_middle **middled);
 t_redir *ft_lstnew_redir(t_middle *middled);
 void ft_lstaddback_redir(t_redir **head, t_redir *new);
 void ft_lstiter_redir(t_redir *first);
+void print_ascii_tree(t_treenode *root, int level); // FOR DEBUGGING -- SHOULD BE REMOVED LATER
 
 // UTILS
 char	*ft_substr(const char *s, unsigned int start, size_t len);
@@ -156,7 +166,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 int executioner(t_treenode *command, char *path, char **envp, int fd);
 
 // BUILTINS
-char *get_pwd(void); // smart_mallocS, NEEDS FREE !!!!endif
+char *get_pwd(void); // GC does not free this!
 
 
 #endif

@@ -132,6 +132,5 @@ t_treenode *ruined_tree(t_middle *middled)
 	t_treenode *root;
 
 	root = parse_cmdline(&middled);
-	print_ascii_tree(root, 0);
 	return (root);
 }

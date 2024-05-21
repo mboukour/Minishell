@@ -51,7 +51,7 @@ void	ft_lstadd_back_middle(t_middle **lst, t_middle *new)
 	new->prev = last_middle;
 }
 
-
+// DEBUGGING FUNCTIONS
 void print_middle(t_middle *node)
 {
 	int i;

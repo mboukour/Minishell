@@ -9,7 +9,10 @@
 #define ERROR 0
 #define SUCCESS 1
 
-typedef struct s_node {
+#define FAILURE_MSG "Error: Failed to allocate memory!\n"
+
+typedef struct s_node 
+{
     void *ptr_to_free;
     struct s_node* next;
 } t_node;

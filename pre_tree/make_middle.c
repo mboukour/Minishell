@@ -69,83 +69,74 @@ void jump_spaces(t_lex **lex)
 		(*lex) = (*lex)->next;
 }
 
+void process_redirection_token(t_lex **lex, t_middle **head, int token)
+{
+	t_middle *current;
+
+    current = ft_lstnew_middle(ft_strdup((*lex)->content), NULL, token);
+    *lex = (*lex)->next;
+    jump_spaces(lex);
+    current->redir_string = ft_strdup((*lex)->content);
+    ft_lstadd_back_middle(head, current);
+}
+
+void process_other_token(t_lex **lex, t_middle **head)
+{
+	t_middle *current;
+
+    current = ft_lstnew_middle(ft_strdup((*lex)->content), NULL, (*lex)->token);
+    ft_lstadd_back_middle(head, current);
+}
+void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *in_command, char **command, char ***args)
+{
+    if (!(*in_command))
+    {
+        *command = ft_strdup((*lex)->content);
+        *in_command = true;
+        if (!do_i_have_args(*lex))
+        {
+            *current = ft_lstnew_middle(*command, NULL, COMMAND);
+            ft_lstadd_back_middle(head, *current);
+        }
+    }
+    else
+    {
+        *args = make_args(lex);
+        *current = ft_lstnew_middle(*command, *args, COMMAND);
+        ft_lstadd_back_middle(head, *current);
+        *in_command = false;
+    }
+}
+
+void initialize_vars(t_middle_vars *vars)
+{
+	vars->head = NULL;
+	vars->args = NULL;
+	vars->command = NULL;
+	vars->current = NULL;
+	vars->in_command = false;
+}
+
 t_middle *make_middle(t_lex *lex)
 {
-	t_middle *head;
-	t_middle *current;
-	bool in_command;
-	char *command;
-	char **args;
+	t_middle_vars vars;
 
-	command = NULL;
-	head = NULL;
-	args = NULL;
-	current = NULL;
-	in_command = false;
-	while(lex)
-	{
-		if(lex->token == WORD)
-		{
-			{
-				if(!in_command)
-				{
-					command = ft_strdup(lex->content);
-					in_command = true;
-					if(!do_i_have_args(lex))
-					{
-						current = ft_lstnew_middle(command, NULL, COMMAND);
-						ft_lstadd_back_middle(&head, current);
-					}
-				}
-				else
-				{
-					args = make_args(&lex);
-					current = ft_lstnew_middle(command, args, COMMAND);
-					ft_lstadd_back_middle(&head, current);
-					in_command = false;
-					if(!lex)
-					{
-						printf("Last before my null: %s\n", command);
-						break;
-					}
-				}
-			}
-		}
-		else if(lex->token == REDIR_IN) // <
-		{
-			current = ft_lstnew_middle(ft_strdup(lex->content), NULL, lex->token);
-			lex = lex->next;
-			jump_spaces(&lex);
-			current->redir_string = ft_strdup(lex->content);
-			ft_lstadd_back_middle(&head, current);
-			in_command = false;
-		}
-		else if (lex->token == REDIR_OUT || lex->token == DREDIR_OUT)
-		{
-			current = ft_lstnew_middle(ft_strdup(lex->content), NULL, lex->token);
-			lex = lex->next;
-			jump_spaces(&lex);
-			current->redir_string = ft_strdup(lex->content);
-			ft_lstadd_back_middle(&head, current);
-			in_command = false;
-		}
-		else if (lex->token == HERE_DOC)
-		{
-			current = ft_lstnew_middle(ft_strdup(lex->content), NULL, lex->token);
-			lex = lex->next;
-			jump_spaces(&lex);
-			current->redir_string = ft_strdup(lex->content);
-			ft_lstadd_back_middle(&head, current);
-			in_command = false;
-		}
-		else if(lex->token != WHITE_SPACE)
-		{
-			// printf("HI: %s\n", lex->content);
-			current = ft_lstnew_middle(ft_strdup(lex->content), NULL, lex->token);
-			ft_lstadd_back_middle(&head, current);
-			in_command = false;
-		}
-		lex = lex->next;
-	}
-	return (head);
+	initialize_vars(&vars);
+    while (lex)
+    {
+        if (lex->token == WORD)
+            process_word_token(&lex, &vars.head, &vars.current, &vars.in_command, &vars.command, &vars.args);
+        else if (lex->token == REDIR_IN || lex->token == REDIR_OUT || lex->token == DREDIR_OUT || lex->token == HERE_DOC)
+        {
+            process_redirection_token(&lex, &vars.head, lex->token);
+            vars.in_command = false;
+        }
+        else if (lex->token != WHITE_SPACE)
+        {
+            process_other_token(&lex, &vars.head);
+            vars.in_command = false;
+        }
+        lex = lex->next;
+    }
+    return vars.head;
 }

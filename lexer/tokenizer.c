@@ -1,6 +1,5 @@
 #include "../minishell.h"
 
-// echo "hello  $USER " > file | grep h | cat << eof | cat >> file | echo 'done'
 
 bool is_special(char c) 
 {
