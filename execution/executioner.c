@@ -20,18 +20,19 @@ char	**get_paths(char **envp, char *path)
 	slash_paths(binary_paths);
 	return (binary_paths);
 }
-int executioner(t_treenode *command, char *path, char **envp)
+int executioner(t_treenode *command, char *path, char **envp, int fd)
 {
 	int i;
 	int pid;
 	char **bin_paths;
 	char *cmd_path;
-	int status;
 
 	i = 0;
 	pid = fork();
 	if(!pid)
 	{
+		close(fd);
+		// fprintf(stderr, "Starting: %s\n", command->content);
 		execve(command->content, command->args, envp);
 		bin_paths = get_paths(envp, path);
 		while(bin_paths[i])
@@ -43,7 +44,5 @@ int executioner(t_treenode *command, char *path, char **envp)
 		perror("Error: ");
 		exit(EXIT_FAILURE);
 	}
-	else
-		waitpid(pid, &status, 0);
-	return (status);
+	return (pid);
 }

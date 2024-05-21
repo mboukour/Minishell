@@ -62,6 +62,13 @@ enum e_modes
 	RIGHT
 };
 
+enum e_wait_modes
+{
+	NO_WAIT,
+	WAIT
+};
+
+
 typedef struct s_lex
 {
 	char *content;
@@ -113,7 +120,8 @@ t_lex	*ft_lstlast_lex(t_lex *lst);
 t_lex	*ft_lstfirst_lex(t_lex *lst);
 void	ft_lstadd_back_lex(t_lex **lst, t_lex *new);
 void ft_lstiter_lex(t_lex *lex);
-t_lex *check_valid_input(t_lex *tokens);
+t_lex *lex_input_checker(t_lex *tokens);
+t_middle *middle_input_checker(t_middle *middled);
 const char* tokenToString(enum e_token t);
 
 // MIDDLE MAN
@@ -146,7 +154,7 @@ char	**ft_split(char const *s, char c);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 
 // EXECUTIONER
-int executioner(t_treenode *command, char *path, char **envp);
+int executioner(t_treenode *command, char *path, char **envp, int fd);
 
 
 

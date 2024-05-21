@@ -18,7 +18,8 @@ void get_input(char **envp)
 {
     char *input;
     t_lex *lexed;
-    t_lex *we_check;
+    t_lex *we_check_lex;
+    t_middle *we_check_middled;
     t_middle *middled;
     int erorr_flag;
     t_treenode *root;
@@ -37,19 +38,26 @@ void get_input(char **envp)
         else if(ft_strcmp(input, ""))
         {
             lexed = tokenizer(input);
-            middled = make_middle(lexed);
-            // ft_lstiter_middle(middled);
-            // we_check = check_valid_input(lexed);
-            // if(we_check)
-            // {
-            //     ft_putstr_fd(2, "Parse error near: ");
-            //     ft_putstr_fd(2, we_check->content);
-            //     ft_putstr_fd(2, "\n");
-            // }
-            // else
-            // {
-            // rdp(middled);
-            root = ruined_tree(middled);
+            we_check_lex = lex_input_checker(lexed);
+            if(we_check_lex)
+            {
+                ft_putstr_fd(2, "Parse error near: ");
+                ft_putstr_fd(2, we_check_lex->content);
+                ft_putstr_fd(2, "\n");
+            }
+            else
+            {
+                middled = make_middle(lexed);
+                we_check_middled = middle_input_checker(middled);
+                if(we_check_middled)
+                {
+                    ft_putstr_fd(2, "Parse error near: ");
+                    ft_putstr_fd(2, we_check_middled->content);
+                    ft_putstr_fd(2, "\n");
+                }
+                else
+                    root = ruined_tree(middled); // Can tree fail too?
+            }
             // executioner(root, getenv("PATH"), envp);
             // ft_lstiter_middle(middled);
             //     ft_lstiter_lex(lexed);
