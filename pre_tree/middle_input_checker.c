@@ -14,12 +14,9 @@ t_middle *middle_input_checker(t_middle *middled)
 			if(!next)
 				return (middled);
 			else if(next->token == CLOSE_PARANTHESE)
-			{
-				fprintf(stderr, "Hi\n");
 				return (next);
-			}
 		}
-		middled = next;
+		middled = middled->next;
 	}
 	return (NULL);
 }
