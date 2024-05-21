@@ -49,7 +49,7 @@ void *smart_malloc(size_t size)
 
     head = globalizer_head(GET, NULL);
     ptr = malloc(size);
-    if(ptr && store_mallocs(ptr) && i < 100)
+    if(ptr && store_mallocs(ptr))
         return (ptr);
     smart_free();
     ft_putstr_fd(2, "Error: Failed to allocate memory!\n");
