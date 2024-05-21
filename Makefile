@@ -1,5 +1,5 @@
 # NAME = minishell
-# SRC = minishell.c lexer/*.c utils/*.c ast/*.c pre_tree/*.c
+# SRC = minishell.c lexer/*.c utils/*.c ast/*.c pre_tree/*.c garbage_collector/*.c
 # CC = cc
 
 # all: fclean $(NAME)

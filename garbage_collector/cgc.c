@@ -1,4 +1,7 @@
 #include "cgc.h"
+#include "../minishell.h"
+
+
 
 void *globalizer_head(int mode, void *ptr)
 {
@@ -21,7 +24,12 @@ int store_mallocs(void *ptr_to_add)
     head = globalizer_head(GET, NULL);
     new_node = ft_lstnew(ptr_to_add);
     if (!new_node)
+    {
+        smart_free();
+        ft_putstr_fd(2, "Error: Failed to allocate memory!\n");
+        exit(EXIT_FAILURE);
         return (ERROR);
+    }
     if (!head)
     {
         globalizer_head(SET, new_node);
@@ -41,13 +49,16 @@ void *smart_malloc(size_t size)
 
     head = globalizer_head(GET, NULL);
     ptr = malloc(size);
-    if(ptr && store_mallocs(ptr))
+    if(ptr && store_mallocs(ptr) && i < 100)
         return (ptr);
     smart_free();
+    ft_putstr_fd(2, "Error: Failed to allocate memory!\n");
+    exit(EXIT_FAILURE);
     return (NULL);
 }
 
-void smart_free() {
+void smart_free() 
+{
     t_node *head;
 
     head = globalizer_head(GET, NULL);

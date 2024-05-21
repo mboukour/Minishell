@@ -14,7 +14,7 @@
 #include <time.h>
 #include <signal.h>
 #include <dirent.h>
-#include "garbage_collector/cgc.h"
+#include "./garbage_collector/cgc.h"
 
 # define NONE -1
 # define SECURE_PATH "/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:."
