@@ -10,7 +10,7 @@ void handle_double_special(char *input, int *i, t_lex **head, char *content, int
 {
 	t_lex *current_node;
 
-    content = ft_substr(input, *i, 2);
+    content = ft_substr(input, *i, 2, GC);
     current_node = ft_lstnew_lex(content, type, 2);
     ft_lstadd_back_lex(head, current_node);
     *i += 2;
@@ -28,7 +28,7 @@ void handle_super_special(char *input, int *i, t_lex **head)
     (*i)++;
     while (input[*i] && !is_special(input[*i]) && input[*i] != ' ')
         (*i)++;
-    content = ft_substr(input, hold, *i - hold);
+    content = ft_substr(input, hold, *i - hold, GC);
     current_node = ft_lstnew_lex(content, c, *i - hold);
     ft_lstadd_back_lex(head, current_node);
 }
@@ -38,7 +38,7 @@ void handle_general_special(char *input, int *i, t_lex **head, int type)
 	t_lex *current_node;
     char *content;
 
-	content = ft_substr(input, *i, 1);
+	content = ft_substr(input, *i, 1, GC);
     current_node = ft_lstnew_lex(content, type, 1);
     ft_lstadd_back_lex(head, current_node);
     (*i)++;
@@ -53,7 +53,7 @@ void handle_word(char *input, int *i, t_lex **head)
 	hold = *i;
     while (input[*i] && !is_special(input[*i]) && input[*i] != ' ')
         (*i)++;
-    content = ft_substr(input, hold, *i - hold);
+    content = ft_substr(input, hold, *i - hold, GC);
     current_node = ft_lstnew_lex(content, WORD, *i - hold);
     ft_lstadd_back_lex(head, current_node);
 }
@@ -67,7 +67,7 @@ void handle_space(char *input, int *i, t_lex **head)
 	hold = *i;
     while (input[*i] == ' ')
         (*i)++;
-    content = ft_substr(input, hold, *i - hold);
+    content = ft_substr(input, hold, *i - hold, GC);
     current_node = ft_lstnew_lex(content, WHITE_SPACE, *i - hold);
     ft_lstadd_back_lex(head, current_node);
 }

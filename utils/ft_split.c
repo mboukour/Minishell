@@ -37,27 +37,37 @@ static void	*free_all(char **all_words, int j)
 	return (NULL);
 }
 
-static char	*allocate_word(char const *s, size_t start, size_t end)
+static char	*allocate_word(char const *s, size_t start, size_t end, int mode)
 {
 	char	*word;
 
-	word = (char *)smart_malloc(sizeof(char) * (end - start + 1));
-	if (!word)
-		return (NULL);
+	if(mode == MANUAL)
+	{
+		word = (char *)malloc(sizeof(char) * (end - start + 1));
+		if (!word)
+			return (NULL);
+	}
+	else
+		word = (char *)smart_malloc(sizeof(char) * (end - start + 1));
 	ft_strlcpy(word, s + start, end - start + 1);
 	return (word);
 }
 
-static char	**split_into_words(char const *s, char c, size_t word_count)
+static char	**split_into_words(char const *s, char c, size_t word_count, int mode)
 {
 	size_t	i;
 	size_t	j;
 	size_t	start;
 	char	**all_words;
 
-	all_words = (char **)smart_malloc(sizeof(char *) * (word_count + 1));
-	if (!all_words)
-		return (NULL);
+	if (mode == MANUAL)
+		all_words = malloc(sizeof(char *) * (word_count + 1));
+	else
+	{
+		all_words = (char **)smart_malloc(sizeof(char *) * (word_count + 1));
+		if (!all_words)
+			return (NULL);
+	}
 	i = 0;
 	j = 0;
 	while (j < word_count)
@@ -67,8 +77,8 @@ static char	**split_into_words(char const *s, char c, size_t word_count)
 		start = i;
 		while (s[i] && s[i] != c)
 			i++;
-		all_words[j] = allocate_word(s, start, i);
-		if (!all_words[j])
+		all_words[j] = allocate_word(s, start, i, mode);
+		if (!all_words[j] && mode == MANUAL)
 			return (free_all(all_words, j));
 		j++;
 	}
@@ -76,19 +86,17 @@ static char	**split_into_words(char const *s, char c, size_t word_count)
 	return (all_words);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c, int mode)
 {
 	size_t	word_count;
 	char	**empty;
 
 	if (!s || !*s)
 	{
-		empty = (char **)smart_malloc(sizeof(char *));
-		if (!empty)
-			return (NULL);
+		empty = malloc(sizeof(char *));
 		empty[0] = NULL;
 		return (empty);
 	}
 	word_count = ft_word_count(s, c);
-	return (split_into_words(s, c, word_count));
+	return (split_into_words(s, c, word_count, mode));
 }

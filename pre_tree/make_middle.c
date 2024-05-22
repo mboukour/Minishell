@@ -30,7 +30,7 @@ char **make_args(t_lex **first_arg)
 	{
 		if((*first_arg)->token == WORD)
 		{
-			args[i] = ft_strdup((*first_arg)->content);
+			args[i] = ft_strdup((*first_arg)->content, GC);
 			i++;
 		}
 		prev = *first_arg;
@@ -73,10 +73,10 @@ void process_redirection_token(t_lex **lex, t_middle **head, int token)
 {
 	t_middle *current;
 
-    current = ft_lstnew_middle(ft_strdup((*lex)->content), NULL, token);
+    current = ft_lstnew_middle(ft_strdup((*lex)->content, GC), NULL, token);
     *lex = (*lex)->next;
     jump_spaces(lex);
-    current->redir_string = ft_strdup((*lex)->content);
+    current->redir_string = ft_strdup((*lex)->content, GC);
     ft_lstadd_back_middle(head, current);
 }
 
@@ -84,14 +84,14 @@ void process_other_token(t_lex **lex, t_middle **head)
 {
 	t_middle *current;
 
-    current = ft_lstnew_middle(ft_strdup((*lex)->content), NULL, (*lex)->token);
+    current = ft_lstnew_middle(ft_strdup((*lex)->content, GC), NULL, (*lex)->token);
     ft_lstadd_back_middle(head, current);
 }
 void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *in_command, char **command, char ***args)
 {
     if (!(*in_command))
     {
-        *command = ft_strdup((*lex)->content);
+        *command = ft_strdup((*lex)->content, GC);
         *in_command = true;
         if (!do_i_have_args(*lex))
         {

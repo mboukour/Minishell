@@ -14,7 +14,7 @@ char **copy_args(char **args, char *cmd)
 	result[0] = cmd;
 	while(args[c])
 	{
-		result[c + 1] = ft_strdup(args[c]);
+		result[c + 1] = ft_strdup(args[c], GC);
 		c++;
 	}
 	result[c + 1] = NULL;
@@ -36,7 +36,7 @@ t_treenode		*new_treenode(t_middle *middled)
 	if(middled)
 	{
 		new_node->token = middled->token;
-		new_node->content = ft_strdup(middled->content);
+		new_node->content = ft_strdup(middled->content, GC);
 		new_node->args = NULL;
 		if(middled->args)
 			new_node->args = copy_args(middled->args, new_node->content);
@@ -65,7 +65,7 @@ t_redir *ft_lstnew_redir(t_middle *middled)
 	if(!new_node)
 		return (NULL);
 	new_node->token = (middled)->token;
-	new_node->redir_string = ft_strdup((middled)->redir_string);
+	new_node->redir_string = ft_strdup((middled)->redir_string, GC);
 	new_node->next = NULL;
 	return (new_node);
 }

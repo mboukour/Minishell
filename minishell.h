@@ -69,6 +69,26 @@ enum e_wait_modes
 	WAIT
 };
 
+enum e_malloc_types
+{
+	MANUAL,
+	GC
+};
+
+enum e_error_codes
+{
+	PARSING_ERROR = 1,
+	MALLOC_ERROR
+};
+
+typedef struct s_env
+{
+	int index;
+	char *name;
+	char *value;
+	struct s_env *next;
+	struct s_env *prev;
+} t_env;
 
 typedef struct s_lex
 {
@@ -153,20 +173,29 @@ void ft_lstiter_redir(t_redir *first);
 void print_ascii_tree(t_treenode *root, int level); // FOR DEBUGGING -- SHOULD BE REMOVED LATER
 
 // UTILS
-char	*ft_substr(const char *s, unsigned int start, size_t len);
-char	*ft_strdup(const char *s1);
+char	*ft_substr(const char *s, unsigned int start, size_t len, int mode);
+char	*ft_strdup(const char *s1, int mode);
 size_t	ft_strlen(const char *s);
 void ft_putstr_fd(int fd, char *str);
-char	*ft_strjoin(const char *s1, const char *s2);
+char	*ft_strjoin(const char *s1, const char *s2, int mode);
 int	ft_strcmp(const char *s1, const char *s2);
-char	**ft_split(char const *s, char c);
+char	**ft_split(char const *s, char c, int mode);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+int	ft_strncmp(const char *s1, const char *s2, size_t n);
 
 // EXECUTIONER
 int executioner(t_treenode *command, char *path, char **envp, int fd);
 
 // BUILTINS
+
 char *get_pwd(void); // GC does not free this!
 
+// ENV STUFF
+t_env *array_to_env(char **env);
+void ft_lstiter_env(t_env *env); // DEBUG
+void ft_lstclear_env(t_env *env);
+t_env	*ft_lstnew_env(char *env);
+void	ft_lstadd_back_env(t_env **lst, t_env *new);
+int export(t_env **env, char *exp_arg);
 
 #endif

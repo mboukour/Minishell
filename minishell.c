@@ -41,7 +41,6 @@ t_treenode *parsing(char *input)
          display_error(we_check_lex, NULL);
     else
     {
-        // ft_lstiter_lex(lexed);
         middled = make_middle(lexed);
         we_check_middled = middle_input_checker(middled);
         if(we_check_middled)
@@ -52,7 +51,7 @@ t_treenode *parsing(char *input)
     return (NULL);
 }
 
-void get_input(char **envp) 
+void get_input(t_env **env) 
 {
     char *input;
     t_treenode *root;
@@ -67,6 +66,10 @@ void get_input(char **envp)
             rl_clear_history();
             break;
         }
+        else if(!ft_strcmp(input, "hi"))
+            export(env, "hi=15");
+        else if(!ft_strcmp(input, "print"))
+            ft_lstiter_env(*env);
         else if(ft_strcmp(input, ""))
         {
             root = parsing(input);
@@ -79,12 +82,16 @@ void get_input(char **envp)
     }
 }
 
-int main(int ac, char **av, char **env)
+int main(int ac, char **av, char **envp)
 {
+    t_env *env;
+
     (void)ac;
     (void)av;
     if(!isatty(0))
         return 0;
-    get_input(env);
+    env = array_to_env(envp);
+    get_input(&env);
+    ft_lstclear_env(env);
     return 0;
 }

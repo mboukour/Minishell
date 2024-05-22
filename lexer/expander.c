@@ -7,8 +7,7 @@ char *free_and_join(char *s1, char *s2)
 	char *tmp;
 
 	tmp = s1;
-	ret = ft_strjoin(s1, s2);
-	free(tmp);
+	ret = ft_strjoin(s1, s2, GC);
 	return (ret);
 }
 
@@ -46,7 +45,7 @@ char *expand(t_lex *lex)
 
 	ret = NULL;
     if (lex->token == ENV)
-        ret = ft_strdup(getenv(&lex->content[1]));
+        ret = ft_strdup(getenv(&lex->content[1]), GC);
     else if (lex->token == STAR)
 		ret = handle_star(lex);
 	return (ret);
