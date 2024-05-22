@@ -56,7 +56,7 @@ int export(t_env **env, char *exp_arg)
 		final = ft_strdup(exp_arg, MANUAL);
 		if(!final)
 			return (MALLOC_ERROR);
-		// free((*env)->value);
+		free((*env)->value);
 		(*env)->value = final;
 	}
 	else

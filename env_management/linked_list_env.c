@@ -4,7 +4,6 @@
 t_env	*ft_lstnew_env(char *env)
 {
 	t_env	*new_node;
-	char 	**args;
 
 	new_node = malloc(sizeof(t_env));
 	if(!new_node)
@@ -13,7 +12,6 @@ t_env	*ft_lstnew_env(char *env)
 	new_node->index = NONE;
 	new_node->next = NULL;
 	new_node->prev = NULL;
-	free(args);
 	return (new_node);
 }
 
@@ -129,6 +127,7 @@ void ft_lstiter_env(t_env *env)
 void ft_lstclear_env(t_env *env)
 {
 	t_env *hold;
+
 	while(env)
 	{
 		hold = env->next;
