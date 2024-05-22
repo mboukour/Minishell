@@ -67,12 +67,6 @@ void get_input(t_env **env)
             rl_clear_history();
             break;
         }
-        else if(!ft_strcmp(input, "export"))
-            export(env, "USER=me");
-        else if(!ft_strcmp(input, "unset"))
-            unset(env, "USER");
-        else if(!ft_strcmp(input, "print"))
-            ft_lstiter_env(*env);
         else if(ft_strcmp(input, ""))
         {
             root = parsing(input);
