@@ -29,7 +29,7 @@ t_env *get_env(t_env *env, char *str)
 		i++;
 	while(env)
 	{
-		if(!ft_strncmp(str, env->value, i))
+		if(!ft_strncmp(str, env->value, i) && env->value[i] == '=')
 			return (env);
 		env = env->next;
 	}
@@ -56,8 +56,8 @@ int export(t_env **env, char *exp_arg)
 		final = ft_strdup(exp_arg, MANUAL);
 		if(!final)
 			return (MALLOC_ERROR);
-		free((*env)->value);
-		(*env)->value = final;
+		free(find->value);
+		find->value = final;
 	}
 	else
 	{

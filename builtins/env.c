@@ -2,13 +2,7 @@
 
 
 
-void env(char **envp)
+void env(t_env *env)
 {
-	while(*envp)
-		printf("%s\n", *envp++);
-}
-
-int main(int ac, char **av, char **envp)
-{
-	env(envp);
+	ft_lstiter_env(env);
 }

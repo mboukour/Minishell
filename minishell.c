@@ -58,6 +58,7 @@ void get_input(t_env **env)
 
     signal(SIGINT, sigint_handler);
     signal(SIGQUIT, sigquit_handler);
+
     while (true)
 	{
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
@@ -66,8 +67,10 @@ void get_input(t_env **env)
             rl_clear_history();
             break;
         }
-        else if(!ft_strcmp(input, "hi"))
-            export(env, "hi=15");
+        else if(!ft_strcmp(input, "export"))
+            export(env, "USER=me");
+        else if(!ft_strcmp(input, "unset"))
+            unset(env, "USER");
         else if(!ft_strcmp(input, "print"))
             ft_lstiter_env(*env);
         else if(ft_strcmp(input, ""))

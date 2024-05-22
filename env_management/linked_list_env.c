@@ -44,7 +44,7 @@ void	ft_lstadd_back_env(t_env **lst, t_env *new)
 	}
 	last_env = ft_lstlast_env(*lst);
 	new->index = last_env->index + 1;
-	last_env->next = new;	
+	last_env->next = new;
 	new->prev = last_env;
 }
 
@@ -117,8 +117,12 @@ char **env_to_array(t_env *env)
 
 void ft_lstiter_env(t_env *env)
 {
+	int i;
+
+	i = 0;
 	while(env)
 	{
+		i++;
 		printf("%s\n", env->value);
 		env = env->next;
 	}

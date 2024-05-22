@@ -189,6 +189,8 @@ int executioner(t_treenode *command, char *path, char **envp, int fd);
 // BUILTINS
 
 char *get_pwd(void); // GC does not free this!
+int export(t_env **env, char *exp_arg);
+int unset(t_env **env, char *to_unset);
 
 // ENV STUFF
 t_env *array_to_env(char **env);
@@ -196,6 +198,6 @@ void ft_lstiter_env(t_env *env); // DEBUG
 void ft_lstclear_env(t_env *env);
 t_env	*ft_lstnew_env(char *env);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
-int export(t_env **env, char *exp_arg);
+t_env *get_env(t_env *env, char *str);
 
 #endif
