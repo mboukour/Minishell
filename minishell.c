@@ -41,6 +41,7 @@ t_treenode *parsing(char *input)
          display_error(we_check_lex, NULL);
     else
     {
+        // ft_lstiter_lex(lexed);
         middled = make_middle(lexed);
         we_check_middled = middle_input_checker(middled);
         if(we_check_middled)

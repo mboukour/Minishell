@@ -21,24 +21,34 @@ char **copy_args(char **args, char *cmd)
 	return (result);
 }
 
+void nullify_all(t_treenode *node)
+{
+	node->token = NONE;
+	node->content = NULL;
+	node->args = NULL;
+}
+
 t_treenode		*new_treenode(t_middle *middled)
 {
 	t_treenode		*new_node;
 
 	new_node = smart_malloc(sizeof(t_treenode));
-	if (!new_node)
-		return (NULL);
-	new_node->token = middled->token;
-	new_node->content = ft_strdup(middled->content);
-	new_node->args = NULL;
-	if(middled->args)
-		new_node->args = copy_args(middled->args, new_node->content);
-	else
+	if(middled)
 	{
-		new_node->args = smart_malloc(2 * sizeof(char *));
-		new_node->args[0] = middled->content;
-		new_node->args[1] = NULL;
+		new_node->token = middled->token;
+		new_node->content = ft_strdup(middled->content);
+		new_node->args = NULL;
+		if(middled->args)
+			new_node->args = copy_args(middled->args, new_node->content);
+		else
+		{
+			new_node->args = smart_malloc(2 * sizeof(char *));
+			new_node->args[0] = middled->content;
+			new_node->args[1] = NULL;
+		}
 	}
+	else
+		nullify_all(new_node);
 	new_node->after_redir = NULL;
 	new_node->before_redir = NULL;
 	new_node->left = NULL;

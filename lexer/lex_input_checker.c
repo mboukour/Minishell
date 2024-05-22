@@ -23,6 +23,14 @@ t_lex *lex_input_checker(t_lex *tokens)
                 next->token != DOUBLE_QUOTE && next->token != OPEN_PARANTHESE))
                 return tokens;
         }
+        else if (tokens->token == REDIR_IN || tokens->token == REDIR_OUT || tokens->token == DREDIR_OUT || tokens->token == HERE_DOC)
+        {
+            next = tokens->next;
+            while (next && next->token == WHITE_SPACE)
+                next = next->next;
+            if (!next || next->token != WORD)
+                return tokens;
+        }
         tokens = tokens->next;
     }
     return NULL;
