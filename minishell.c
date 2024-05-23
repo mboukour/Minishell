@@ -14,10 +14,18 @@ void sigquit_handler(int sig)
     rl_redisplay();
 }
 
-void display_error(t_lex *lex, t_middle *middle)
+void display_error(int error_checker, t_lex *lex, t_middle *middle)
 {
     char *res;
 
+    if(error_checker)
+    {
+        if(error_checker == QUOTE)
+            ft_putstr_fd(2, QUOTE_ERROR);
+        else
+            ft_putstr_fd(2, PARA_ERROR);
+        return;
+    }
     res = "UNKOWN";
     if(lex)
         res = lex->content;
@@ -34,17 +42,20 @@ t_treenode *parsing(char *input)
     t_lex *we_check_lex;
     t_middle *we_check_middled;
     t_middle *middled;
+    int error_checker;
 
     lexed = tokenizer(input);
-    we_check_lex = lex_input_checker(lexed);
-    if(we_check_lex)
-         display_error(we_check_lex, NULL);
+    error_checker = false;
+    we_check_lex = lex_input_checker(lexed, &error_checker);
+    if(we_check_lex || error_checker)
+         display_error(error_checker, we_check_lex, NULL);
     else
     {
+        expand(lexed);
         middled = make_middle(lexed);
         we_check_middled = middle_input_checker(middled);
         if(we_check_middled)
-            display_error(NULL, we_check_middled);
+            display_error(false, NULL, we_check_middled);
         else
             return (ruined_tree(middled));
     }
@@ -58,7 +69,6 @@ void get_input(t_env **env)
 
     signal(SIGINT, sigint_handler);
     signal(SIGQUIT, sigquit_handler);
-
     while (true)
 	{
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
@@ -88,6 +98,11 @@ int main(int ac, char **av, char **envp)
     if(!isatty(0))
         return 0;
     env = array_to_env(envp);
+    if(!env)
+    {
+        ft_putstr_fd(2, FAILURE_MSG);
+        return (1);
+    }
     get_input(&env);
     ft_lstclear_env(env);
     return 0;

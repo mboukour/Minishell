@@ -5,12 +5,11 @@ t_lex	*ft_lstnew_lex(char *content, int token, int len)
 	t_lex	*new_node;
 
 	new_node = smart_malloc(sizeof(t_lex));
-	if (!new_node)
-		return (NULL);
 	new_node->content = content;
 	new_node->len = len;
 	new_node->token = token;
 	new_node->state = GENERAL;
+	new_node->to_replace = false;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -128,11 +127,13 @@ const char* stateToString(enum e_state s)
 
 
 void print_lex(const t_lex *lex) {
-
+	char *c = "False";
+	if(lex->to_replace)
+		c = "True";
     // printf("| %-10s | %-15s | %-10d |\n", lex->content, tokenToString(lex->token), lex->len);
     // printf("| %-10s | %-15s | %-10s |\n", "", "", "");
     // printf("|------------|-----------------|------------|\n");
-	printf("Content: {%s} // Token: %s\n", lex->content, tokenToString(lex->token));
+	printf("Content: {%s} // Token: %s // To replace: %s\n", lex->content, tokenToString(lex->token), c);
 }
 
 void ft_lstiter_lex(t_lex *lex)

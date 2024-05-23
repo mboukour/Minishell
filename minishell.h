@@ -19,6 +19,8 @@
 # define NONE -1
 # define SECURE_PATH "/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:."
 # define PARSE_ERROR "Parse error near: "
+# define QUOTE_ERROR "Parse error: open quotes\n"
+# define PARA_ERROR "Parse error: open parantheses\n"
 
 enum e_token
 {
@@ -94,6 +96,7 @@ typedef struct s_lex
 {
 	char *content;
 	int len;
+	bool to_replace;
 	enum e_token token;
 	enum e_state state;
 	struct s_lex *prev;
@@ -107,12 +110,20 @@ typedef struct s_redir
 	struct s_redir *next;
 } t_redir;
 
+typedef struct s_arg
+{
+	char *content;
+	bool to_replace;
+	struct s_arg *next;
+} t_arg;
+
 typedef struct s_middle
 {
 	int token;
 	char *content;
-	char **args;
+	t_arg *args;
 	char *redir_string;
+	bool to_replace;
 	struct s_middle *next;
 	struct s_middle *prev;
 } t_middle;
@@ -124,17 +135,18 @@ typedef struct s_middle_vars
 	t_middle *current;
 	bool in_command;
 	char *command;
-	char **args;
+	bool to_replace;
 } t_middle_vars;
 
 
 typedef struct s_treenode
 {
-	int token;
+	int token; // COMMAND // OR // AND // PIPE
 	char *content;
-	char **args;
+	t_arg *args;
 	bool is_before_redirected;
 	bool is_after_redirected;
+	bool to_replace;
 	t_redir *before_redir;
 	t_redir *after_redir;
 	struct s_treenode *left;
@@ -144,22 +156,25 @@ typedef struct s_treenode
 
 // LEXER
 t_lex *tokenizer(char *input);
-char *expand(t_lex *lex); // smart_mallocS and can fail
+void expand(t_lex *middled);
 t_lex	*ft_lstnew_lex(char *content, int token, int len);
 t_lex	*ft_lstlast_lex(t_lex *lst);
 t_lex	*ft_lstfirst_lex(t_lex *lst);
 void	ft_lstadd_back_lex(t_lex **lst, t_lex *new);
 void ft_lstiter_lex(t_lex *lex);
-t_lex *lex_input_checker(t_lex *tokens);
+t_lex *lex_input_checker(t_lex *tokens, int *error_checker);
 t_middle *middle_input_checker(t_middle *middled);
 const char* tokenToString(enum e_token t);
 
 // MIDDLE MAN
-t_middle	*ft_lstnew_middle(char *content, char **args, int token);
+t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token);
 void	ft_lstadd_back_middle(t_middle **lst, t_middle *new);
 t_middle *make_middle(t_lex *lex);
 void ft_lstiter_middle(t_middle *first);
 t_middle	*ft_lstlast_middle(t_middle *lst);
+t_arg *ft_lstnew_arg(t_lex *word);
+t_arg *ft_lstlast_arg(t_arg *head);
+void ft_lstaddback_arg(t_arg **head, t_arg *new);
 
 // ABSTRACT SYNTAX TREE
 t_treenode		*new_treenode(t_middle *middled);

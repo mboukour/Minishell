@@ -2,7 +2,7 @@
 
 
 
-t_middle	*ft_lstnew_middle(char *content, char **args, int token)
+t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token)
 {
 	t_middle	*new_node;
 
@@ -13,6 +13,7 @@ t_middle	*ft_lstnew_middle(char *content, char **args, int token)
 	new_node->content = content;
 	new_node->args = args;
 	new_node->redir_string = NULL;
+	new_node->to_replace = false;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -55,16 +56,18 @@ void	ft_lstadd_back_middle(t_middle **lst, t_middle *new)
 void print_middle(t_middle *node)
 {
 	int i;
+	t_arg *loop;
 
 	i = 0;
 	
 	printf("Content: %s // Token: %s  // ", node->content, tokenToString(node->token));
 	if(node->args)
 	{
-		while (node->args[i])
+		loop = node->args;
+		while(loop)
 		{
-			printf("Arg %i: %s // ", i, node->args[i]);
-			i++;
+			printf("%s: %i // ", loop->content, loop->to_replace);
+			loop = loop->next;
 		}
 	}
 	if(node->token == REDIR_IN)

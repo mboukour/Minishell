@@ -1,31 +1,27 @@
 #include "../minishell.h"
 
-
-char **copy_args(char **args, char *cmd)
-{
-	char **result;
-	int c;
-
-	c = 0;
-	while(args[c])
-		c++;
-	result = smart_malloc((c + 2) * sizeof(char *));
-	c = 0;
-	result[0] = cmd;
-	while(args[c])
-	{
-		result[c + 1] = ft_strdup(args[c], GC);
-		c++;
-	}
-	result[c + 1] = NULL;
-	return (result);
-}
-
 void nullify_all(t_treenode *node)
 {
 	node->token = NONE;
 	node->content = NULL;
 	node->args = NULL;
+}
+
+t_arg *copy_arg(t_arg *arg)
+{
+	t_arg *res;
+	t_arg *new;
+
+	res = NULL;
+	while(arg)
+	{
+		new = ft_lstnew_arg(NULL);
+		new->content = ft_strdup(arg->content, GC);
+		new->to_replace = arg->to_replace;
+		ft_lstaddback_arg(&res, new);
+		arg = arg->next;
+	}
+	return (res);
 }
 
 t_treenode		*new_treenode(t_middle *middled)
@@ -38,14 +34,8 @@ t_treenode		*new_treenode(t_middle *middled)
 		new_node->token = middled->token;
 		new_node->content = ft_strdup(middled->content, GC);
 		new_node->args = NULL;
-		if(middled->args)
-			new_node->args = copy_args(middled->args, new_node->content);
-		else
-		{
-			new_node->args = smart_malloc(2 * sizeof(char *));
-			new_node->args[0] = middled->content;
-			new_node->args[1] = NULL;
-		}
+		new_node->to_replace = middled->to_replace;
+		new_node->args = copy_arg(middled->args);
 	}
 	else
 		nullify_all(new_node);

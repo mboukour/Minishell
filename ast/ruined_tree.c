@@ -4,6 +4,7 @@
 void print_ascii_tree(t_treenode *root, int level)
 {
 	t_middle *lol;
+	t_arg *args;
     if (root == NULL)
 	{
 		printf("\n");
@@ -14,14 +15,15 @@ void print_ascii_tree(t_treenode *root, int level)
         printf("    ");
 	if(root->before_redir)
 		ft_lstiter_redir(root->before_redir);
-	printf("(%s)", root->content);
+	printf("%s:%i", root->content, root->to_replace);
 	int j = 1;
 	if(root->args)
 	{
-		while (root->args[j])
+		args = root->args;
+		while (args)
 		{
-			printf(" (%s)", root->args[j]);
-			j++;
+			printf(" %s:%i ", args->content, args->to_replace);
+			args = args->next;
 		}
 	}
 	printf(" ");

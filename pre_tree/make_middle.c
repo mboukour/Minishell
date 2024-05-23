@@ -16,41 +16,70 @@ int get_arg_count(t_lex *first_arg)
 	return (arg_counter);
 }
 
-char **make_args(t_lex **first_arg)
+t_arg *ft_lstnew_arg(t_lex *word)
 {
-	int arg_count;
-	char **args;
-	int i;
-	t_lex *prev;
+	t_arg *new_node;
 
-	arg_count = get_arg_count(*first_arg);
-	args = smart_malloc((arg_count + 1) * sizeof(char *));
-	i = 0;
-	while(i < arg_count)
+	new_node = smart_malloc(sizeof(t_arg));
+	new_node->content = NULL;
+	new_node->to_replace = false;
+	if(word)
 	{
-		if((*first_arg)->token == WORD)
-		{
-			args[i] = ft_strdup((*first_arg)->content, GC);
-			i++;
-		}
-		prev = *first_arg;
-		*first_arg = (*first_arg)->next;
-		if(!(*first_arg) || ((*first_arg)->token != WHITE_SPACE && (*first_arg)->token != WORD))
-		{
-			*first_arg = prev;
-			break;
-		}
+		new_node->content = ft_strdup(word->content, GC);
+		new_node->to_replace = word->to_replace;
 	}
-	args[i] = NULL;
-	return (args);
+	new_node->next = NULL;
+	return (new_node);
+}
+
+t_arg *ft_lstlast_arg(t_arg *head)
+{
+	while(head->next)
+		head = head->next;
+	return (head);
+}
+
+void ft_lstaddback_arg(t_arg **head, t_arg *new)
+{
+	if(!*head)
+	{
+		*head = new;
+		return;
+	}
+	ft_lstlast_arg(*head)->next = new;
+}
+
+t_arg *make_args(t_lex **first_arg)
+{
+    t_arg *args = NULL;
+    t_lex *prev = NULL;
+
+    while (*first_arg)
+    {
+        if ((*first_arg)->token == WORD)
+        {
+            t_arg *new_arg = ft_lstnew_arg(*first_arg);
+            ft_lstaddback_arg(&args, new_arg);
+        }
+        prev = *first_arg;
+        *first_arg = (*first_arg)->next;
+        if (!(*first_arg) || ((*first_arg)->token != WHITE_SPACE && (*first_arg)->token != WORD))
+        {
+            *first_arg = prev;
+            break;
+        }
+    }
+    
+    return args;
 }
 
 bool do_i_have_args(t_lex *command)
 {
 	int word_count;
+	char *cmd;
 
 	word_count = 0;
-	char *cmd = command->content;
+	cmd = command->content;
 	while(command && (command->token == WORD || command->token == WHITE_SPACE))
 	{
 		if(command->token == WORD)
@@ -87,22 +116,27 @@ void process_other_token(t_lex **lex, t_middle **head)
     current = ft_lstnew_middle(ft_strdup((*lex)->content, GC), NULL, (*lex)->token);
     ft_lstadd_back_middle(head, current);
 }
-void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *in_command, char **command, char ***args)
+void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *in_command, char **command, bool *to_replace)
 {
+	t_arg *args;
+
     if (!(*in_command))
     {
         *command = ft_strdup((*lex)->content, GC);
         *in_command = true;
+		*to_replace = (*lex)->to_replace; 
         if (!do_i_have_args(*lex))
         {
             *current = ft_lstnew_middle(*command, NULL, COMMAND);
+			(*current)->to_replace = *to_replace;
             ft_lstadd_back_middle(head, *current);
         }
     }
     else
     {
-        *args = make_args(lex);
-        *current = ft_lstnew_middle(*command, *args, COMMAND);
+        args = make_args(lex);
+        *current = ft_lstnew_middle(*command, args, COMMAND);
+		(*current)->to_replace = *to_replace;
         ft_lstadd_back_middle(head, *current);
         *in_command = false;
     }
@@ -111,21 +145,24 @@ void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *
 void initialize_vars(t_middle_vars *vars)
 {
 	vars->head = NULL;
-	vars->args = NULL;
 	vars->command = NULL;
 	vars->current = NULL;
 	vars->in_command = false;
+	vars->to_replace = false;
 }
+
+
 
 t_middle *make_middle(t_lex *lex)
 {
 	t_middle_vars vars;
+	t_middle *last;
 
 	initialize_vars(&vars);
     while (lex)
     {
         if (lex->token == WORD)
-            process_word_token(&lex, &vars.head, &vars.current, &vars.in_command, &vars.command, &vars.args);
+            process_word_token(&lex, &vars.head, &vars.current, &vars.in_command, &vars.command, &vars.to_replace);
         else if (lex->token == REDIR_IN || lex->token == REDIR_OUT || lex->token == DREDIR_OUT || lex->token == HERE_DOC)
         {
             process_redirection_token(&lex, &vars.head, lex->token);
@@ -138,5 +175,5 @@ t_middle *make_middle(t_lex *lex)
         }
         lex = lex->next;
     }
-    return vars.head;
+    return (vars.head);
 }

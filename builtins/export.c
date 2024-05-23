@@ -36,6 +36,14 @@ t_env *get_env(t_env *env, char *str)
 	return (NULL);
 }
 
+void export_malloc_failure(t_env *env)
+{
+	ft_lstclear_env(env);
+	smart_free();
+	ft_putstr_fd(2, FAILURE_MSG);
+	exit(EXIT_FAILURE);
+}
+
 int export(t_env **env, char *exp_arg)
 {
 	t_env *find;
@@ -55,13 +63,15 @@ int export(t_env **env, char *exp_arg)
 	{
 		final = ft_strdup(exp_arg, MANUAL);
 		if(!final)
-			return (MALLOC_ERROR);
+			export_malloc_failure(*env);
 		free(find->value);
 		find->value = final;
 	}
 	else
 	{
 		find = ft_lstnew_env(exp_arg);
+		if(!find)
+			export_malloc_failure(*env);
 		ft_lstadd_back_env(env, find);
 	}
 	return (0);

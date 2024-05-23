@@ -9,6 +9,11 @@ t_env	*ft_lstnew_env(char *env)
 	if(!new_node)
 		return (NULL);
 	new_node->value = ft_strdup(env, MANUAL);
+	if(!new_node->value)
+	{
+		free(new_node);
+		return (NULL);
+	}
 	new_node->index = NONE;
 	new_node->next = NULL;
 	new_node->prev = NULL;
@@ -73,6 +78,8 @@ t_env *array_to_env(char **env)
 	while(env[i])
 	{
 		current = ft_lstnew_env(env[i]);
+		if(!current)
+			return (NULL);
 		ft_lstadd_back_env(&head, current);
 		i++;
 	}

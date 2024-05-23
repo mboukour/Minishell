@@ -38,6 +38,8 @@ void handle_general_special(char *input, int *i, t_lex **head, int type)
 	t_lex *current_node;
     char *content;
 
+    if(*input == '&')
+        type = WORD;
 	content = ft_substr(input, *i, 1, GC);
     current_node = ft_lstnew_lex(content, type, 1);
     ft_lstadd_back_lex(head, current_node);
@@ -72,6 +74,7 @@ void handle_space(char *input, int *i, t_lex **head)
     ft_lstadd_back_lex(head, current_node);
 }
 
+
 void handle_special(char *input, int *i, t_lex **head)
 {
     if (input[*i] == ' ')
@@ -83,8 +86,10 @@ void handle_special(char *input, int *i, t_lex **head)
     else if (input[*i] == '|' && input[*i + 1] == '|')
         handle_double_special(input, i, head, NULL, OR);
     else if (input[*i] == '&' && input[*i + 1] == '&')
-        handle_double_special(input, i, head, NULL, AND);
-    else if (input[*i] == '$' || input[*i] == '*')
+            handle_double_special(input, i, head, NULL, AND);
+    else if (input[*i] == '$')
+        handle_super_special(input, i, head);
+    else if (input[*i] == '*')
         handle_super_special(input, i, head);
     else
         handle_general_special(input, i, head, input[*i]);
