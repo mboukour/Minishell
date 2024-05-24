@@ -10,6 +10,8 @@ t_lex	*ft_lstnew_lex(char *content, int token, int len)
 	new_node->token = token;
 	new_node->state = GENERAL;
 	new_node->to_replace = false;
+	if(token == ENV)
+		new_node->to_replace = true;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);

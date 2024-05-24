@@ -14,6 +14,8 @@ t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token)
 	new_node->args = args;
 	new_node->redir_string = NULL;
 	new_node->to_replace = false;
+	if(new_node->token == ENV)
+		new_node->to_replace = true;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -60,7 +62,7 @@ void print_middle(t_middle *node)
 
 	i = 0;
 	
-	printf("Content: %s // Token: %s  // ", node->content, tokenToString(node->token));
+	printf("Content: %s:%i // Token: %s  // ", node->content, node->to_replace, tokenToString(node->token));
 	if(node->args)
 	{
 		loop = node->args;

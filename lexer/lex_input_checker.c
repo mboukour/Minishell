@@ -18,13 +18,13 @@ t_lex *lex_input_checker(t_lex *tokens, int *error_checker)
             prev = tokens->prev;
             while (prev && prev->token == WHITE_SPACE)
                 prev = prev->prev;
-            if (!prev || (prev->token != WORD && prev->token != STAR && prev->token != QUOTE &&
+            if (!prev || (prev->token != WORD && prev->token != ENV && prev->token != STAR && prev->token != QUOTE &&
                 prev->token != DOUBLE_QUOTE && prev->token != CLOSE_PARANTHESE))
                 return tokens;
             next = tokens->next;
             while (next && next->token == WHITE_SPACE)
                 next = next->next;
-            if (!next || (next->token != WORD && next->token != STAR && next->token != QUOTE &&
+            if (!next || (next->token != WORD && next->token != ENV && next->token != STAR && next->token != QUOTE &&
                 next->token != DOUBLE_QUOTE && next->token != OPEN_PARANTHESE))
                 return tokens;
         }
@@ -33,7 +33,7 @@ t_lex *lex_input_checker(t_lex *tokens, int *error_checker)
             next = tokens->next;
             while (next && next->token == WHITE_SPACE)
                 next = next->next;
-            if (!next || (next->token != WORD && next->token != STAR))
+            if (!next || (next->token != WORD && next->token != ENV && next->token != STAR))
                 return tokens;
         }
         else if (tokens->token == DOUBLE_QUOTE && !in_quotes)

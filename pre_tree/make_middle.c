@@ -124,7 +124,7 @@ void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *
     {
         *command = ft_strdup((*lex)->content, GC);
         *in_command = true;
-		*to_replace = (*lex)->to_replace; 
+		*to_replace = (*lex)->to_replace;
         if (!do_i_have_args(*lex))
         {
             *current = ft_lstnew_middle(*command, NULL, COMMAND);
