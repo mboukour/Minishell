@@ -67,7 +67,9 @@ t_treenode *parse_command(t_middle **middled)
 	t_redir *before_redir;
 	t_redir *after_redir;
 	t_treenode *l_node;
+	bool command_flag;
 
+	command_flag = false;
 	if((*middled)->token == OPEN_PARANTHESE)
 	{
 		(*middled) = (*middled)->next;
@@ -75,10 +77,20 @@ t_treenode *parse_command(t_middle **middled)
 		return (l_node);
 	}
 	before_redir = handle_before_redirs(middled);
-	l_node = new_treenode(*middled);
+	if((*middled) && ((*middled)->token != REDIR_OUT && (*middled)->token != DREDIR_OUT))
+	{
+		command_flag = true;
+		l_node = new_treenode(*middled);
+	}
+	else
+		l_node = new_treenode(NULL);
 	l_node->before_redir = before_redir;
-	(*middled) = (*middled)->next;
-	l_node->after_redir = handle_after_redirs(middled);
+	if((*middled))
+	{
+		if(command_flag)
+			(*middled) = (*middled)->next;
+		l_node->after_redir = handle_after_redirs(middled);
+	}
 	return (l_node);
 }
 

@@ -85,11 +85,23 @@ void ft_lstaddback_redir(t_redir **head, t_redir *new)
 	last->next = new;
 }
 
+char *redir_to_str(int token)
+{
+	if(token == DREDIR_OUT)
+		return (">>");
+	else if(token == REDIR_OUT)
+		return (">");
+	else if (token == REDIR_IN)
+		return ("<");
+	else
+		return ("<<");
+}
+
 void ft_lstiter_redir(t_redir *first)
 {
 	while(first)
 	{
-		printf("(%s %s) ", tokenToString(first->token), first->redir_string);
+		printf("(%s %s) ", redir_to_str(first->token), first->redir_string);
 		first = first->next;
 	}
 }
