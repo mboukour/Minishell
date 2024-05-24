@@ -139,6 +139,13 @@ typedef struct s_middle_vars
 } t_middle_vars;
 
 
+typedef struct s_bool_syntax
+{
+	bool in_para;
+	bool in_quote;
+	bool in_dquote;
+} t_bool_syntax;
+
 typedef struct s_treenode
 {
 	int token; // COMMAND // OR // AND // PIPE
@@ -156,14 +163,13 @@ typedef struct s_treenode
 
 // LEXER
 t_lex *tokenizer(char *input);
-void expand(t_lex *middled);
+void expand(t_lex *lexed, int mode);
 t_lex	*ft_lstnew_lex(char *content, int token, int len);
 t_lex	*ft_lstlast_lex(t_lex *lst);
 t_lex	*ft_lstfirst_lex(t_lex *lst);
 void	ft_lstadd_back_lex(t_lex **lst, t_lex *new);
 void ft_lstiter_lex(t_lex *lex);
 t_lex *lex_input_checker(t_lex *tokens, int *error_checker);
-t_middle *middle_input_checker(t_middle *middled);
 const char* tokenToString(enum e_token t);
 
 // MIDDLE MAN

@@ -14,10 +14,8 @@ void sigquit_handler(int sig)
     rl_redisplay();
 }
 
-void display_error(int error_checker, t_lex *lex, t_middle *middle)
+void display_error(int error_checker, t_lex *lex)
 {
-    char *res;
-
     if(error_checker)
     {
         if(error_checker == QUOTE)
@@ -26,13 +24,8 @@ void display_error(int error_checker, t_lex *lex, t_middle *middle)
             ft_putstr_fd(2, PARA_ERROR);
         return;
     }
-    res = "UNKOWN";
-    if(lex)
-        res = lex->content;
-    else if(middle)
-        res = middle->content;
     ft_putstr_fd(2, PARSE_ERROR);
-    ft_putstr_fd(2, res);
+    ft_putstr_fd(2, lex->content);
     ft_putstr_fd(2, "\n");
 }
 
@@ -45,19 +38,17 @@ t_treenode *parsing(char *input)
     int error_checker;
 
     lexed = tokenizer(input);
+    expand(lexed, QUOTE);
+
     error_checker = false;
     we_check_lex = lex_input_checker(lexed, &error_checker);
     if(we_check_lex || error_checker)
-         display_error(error_checker, we_check_lex, NULL);
+         display_error(error_checker, we_check_lex);
     else
     {
-        expand(lexed);
+        expand(lexed, STAR);
         middled = make_middle(lexed);
-        we_check_middled = middle_input_checker(middled);
-        if(we_check_middled)
-            display_error(false, NULL, we_check_middled);
-        else
-            return (ruined_tree(middled));
+        return (ruined_tree(middled));
     }
     return (NULL);
 }

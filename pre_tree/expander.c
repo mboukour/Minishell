@@ -56,13 +56,13 @@ void handle_quotes(t_lex *lex)
 	original->next = looping->next;
 }
 
-void expand(t_lex *lexed)
+void expand(t_lex *lexed, int mode)
 {
 	while(lexed)
 	{
-		if (lexed->token == STAR)
+		if (lexed->token == STAR && mode == STAR)
 			handle_star(lexed);
-		else if(lexed->token == QUOTE || lexed->token == DOUBLE_QUOTE)
+		else if((lexed->token == QUOTE || lexed->token == DOUBLE_QUOTE) && mode == QUOTE)
 			handle_quotes(lexed);
 		lexed = lexed->next;
 	}
