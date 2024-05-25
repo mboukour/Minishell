@@ -106,6 +106,7 @@ void process_redirection_token(t_lex **lex, t_middle **head, int token)
     *lex = (*lex)->next;
     jump_spaces(lex);
     current->redir_string = ft_strdup((*lex)->content, GC);
+	current->to_replace = (*lex)->to_replace;
     ft_lstadd_back_middle(head, current);
 }
 

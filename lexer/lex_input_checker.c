@@ -49,11 +49,9 @@ void toggle_parentheses_state(t_lex *token, bool *in_para)
         *in_para = !(*in_para);
 }
 
-void update_error_checker(bool in_quotes, bool in_dquotes, bool in_para, int *error_checker)
+void update_error_checker(bool in_para, int *error_checker)
 {
-    if (in_quotes || in_dquotes)
-        *error_checker = QUOTE;
-    else if (in_para)
+    if (in_para)
         *error_checker = OPEN_PARANTHESE;
     else
         *error_checker = false;
@@ -141,7 +139,7 @@ t_lex *lex_input_checker(t_lex *tokens, int *error_checker)
             toggle_quote_states(tokens, &syntax.in_quote, &syntax.in_dquote);
         tokens = tokens->next;
     }
-    update_error_checker(syntax.in_quote, syntax.in_dquote, syntax.in_para, error_checker);
+    update_error_checker(syntax.in_para, error_checker);
     return (NULL);
 }
 

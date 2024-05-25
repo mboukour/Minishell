@@ -106,6 +106,7 @@ typedef struct s_lex
 typedef struct s_redir
 {
 	int token;
+	bool to_replace;
 	char *redir_string;
 	struct s_redir *next;
 } t_redir;
@@ -171,6 +172,7 @@ void	ft_lstadd_back_lex(t_lex **lst, t_lex *new);
 void ft_lstiter_lex(t_lex *lex);
 t_lex *lex_input_checker(t_lex *tokens, int *error_checker);
 const char* tokenToString(enum e_token t);
+bool quote_checker(t_lex *token);
 
 // MIDDLE MAN
 t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token);
