@@ -16,7 +16,7 @@ void sigquit_handler(int sig)
 
 void display_error(int error_checker, t_lex *lex)
 {
-    if(error_checker)
+    if(error_checker != NONE)
     {
         if(error_checker == QUOTE)
             ft_putstr_fd(2, QUOTE_ERROR);
