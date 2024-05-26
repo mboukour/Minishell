@@ -14,7 +14,7 @@ t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token)
 	new_node->args = args;
 	new_node->redir_string = NULL;
 	new_node->to_replace = false;
-	if(new_node->token == ENV)
+	if(new_node->token == ENV || new_node->token == STAR)
 		new_node->to_replace = true;
 	new_node->next = NULL;
 	new_node->prev = NULL;

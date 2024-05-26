@@ -38,6 +38,8 @@ t_treenode *parsing(char *input)
     int error_checker;
 
     lexed = tokenizer(input);
+    ft_lstiter_lex(lexed);
+    printf("---------------\n");
     error_checker = open_checker(lexed);
     if(error_checker != NONE)
         return (display_error(error_checker, NULL), NULL);
@@ -48,8 +50,8 @@ t_treenode *parsing(char *input)
          display_error(error_checker, we_check_lex);
     else
     {
-        expand(lexed, STAR);
         middled = make_middle(lexed);
+        ft_lstiter_middle(middled);
         return (ruined_tree(middled));
     }
     return (NULL);

@@ -7,9 +7,9 @@ int get_arg_count(t_lex *first_arg)
 	arg_counter = 0;
 	while(first_arg)
 	{
-		if(first_arg->token == WORD || first_arg->token == ENV)
+		if(first_arg->token == WORD || first_arg->token == ENV || first_arg->token == STAR)
 			arg_counter++;
-		else if (first_arg->token != WORD && first_arg->token != ENV && first_arg->token != WHITE_SPACE)
+		else if (first_arg->token != WORD && first_arg->token != ENV  && first_arg->token == STAR && first_arg->token != WHITE_SPACE)
 			break;
 		first_arg = first_arg->next;
 	}
@@ -59,14 +59,14 @@ t_arg *make_args(t_lex **first_arg)
 	prev = NULL;
     while (*first_arg)
     {
-        if ((*first_arg)->token == WORD || (*first_arg)->token == ENV)
+        if ((*first_arg)->token == WORD || (*first_arg)->token == ENV || (*first_arg)->token == STAR)
         {
             new_arg = ft_lstnew_arg(*first_arg);
             ft_lstaddback_arg(&args, new_arg);
         }
         prev = *first_arg;
         *first_arg = (*first_arg)->next;
-        if (!(*first_arg) || ((*first_arg)->token != WHITE_SPACE && (*first_arg)->token != WORD && (*first_arg)->token != ENV))
+        if (!(*first_arg) || ((*first_arg)->token != WHITE_SPACE && (*first_arg)->token != WORD && (*first_arg)->token != ENV && (*first_arg)->token != STAR) && (*first_arg)->token != STAR)
         {
             *first_arg = prev;
             break;
@@ -83,9 +83,9 @@ bool do_i_have_args(t_lex *command)
 
 	word_count = 0;
 	cmd = command->content;
-	while(command && (command->token == WORD || command->token == ENV || command->token == WHITE_SPACE))
+	while(command && (command->token == WORD || command->token == ENV  || command->token == STAR || command->token == WHITE_SPACE))
 	{
-		if(command->token == WORD || command->token == ENV)
+		if(command->token != WHITE_SPACE)
 			word_count++;
 		command = command->next;
 	}
@@ -115,6 +115,7 @@ void process_redirection_token(t_lex **lex, t_middle **head, int token)
 
 void process_other_token(t_lex **lex, t_middle **head)
 {
+	int token;
 	t_middle *current;
 
     current = ft_lstnew_middle(ft_strdup((*lex)->content, GC), NULL, (*lex)->token);
@@ -165,7 +166,7 @@ t_middle *make_middle(t_lex *lex)
 	initialize_vars(&vars);
     while (lex)
     {
-        if (lex->token == WORD || lex->token == ENV)
+        if (lex->token == WORD || lex->token == ENV || lex->token == STAR)
             process_word_token(&lex, &vars.head, &vars.current, &vars.in_command, &vars.command, &vars.to_replace);
         else if (lex->token == REDIR_IN || lex->token == REDIR_OUT || lex->token == DREDIR_OUT || lex->token == HERE_DOC)
         {

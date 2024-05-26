@@ -26,7 +26,7 @@ void handle_star(char *input, int *i, t_lex **head)
     c = input[*i];
 	hold = *i;
     (*i)++;
-    while (input[*i] && input[*i] == '*')
+    while (input[*i] && (input[*i] == '*' || input[*i] == '$' || !is_special(input[*i])) && input[*i] != ' ')
         (*i)++;
     content = ft_substr(input, hold, *i - hold, GC);
     current_node = ft_lstnew_lex(content, c, *i - hold);
@@ -43,7 +43,7 @@ void handle_env(char *input, int *i, t_lex **head)
     c = input[*i];
 	hold = *i;
     (*i)++;
-    while (input[*i] && (input[*i] == '$' || !is_special(input[*i])) && input[*i] != ' ')
+    while (input[*i] && (input[*i] == '$' || input[*i] == '*' || !is_special(input[*i])) && input[*i] != ' ')
         (*i)++;
     content = ft_substr(input, hold, *i - hold, GC);
     current_node = ft_lstnew_lex(content, c, *i - hold);
