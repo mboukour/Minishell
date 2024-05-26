@@ -87,9 +87,7 @@ void handle_special(char *input, int *i, t_lex **head)
         handle_double_special(input, i, head, NULL, OR);
     else if (input[*i] == '&' && input[*i + 1] == '&')
             handle_double_special(input, i, head, NULL, AND);
-    else if (input[*i] == '$')
-        handle_super_special(input, i, head);
-    else if (input[*i] == '*')
+    else if (input[*i] == '$' || input[*i] == '*')
         handle_super_special(input, i, head);
     else
         handle_general_special(input, i, head, input[*i]);

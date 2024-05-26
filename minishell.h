@@ -207,7 +207,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
 
 // EXECUTIONER
-int executioner(t_treenode *command, char *path, char **envp, int fd);
+
 
 // BUILTINS
 
@@ -222,5 +222,6 @@ void ft_lstclear_env(t_env *env);
 t_env	*ft_lstnew_env(char *env);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
 t_env *get_env(t_env *env, char *str);
+int ft_lstsize_env(t_env *env);
 
 #endif

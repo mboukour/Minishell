@@ -35,6 +35,8 @@ t_env	*ft_lstlast_env(t_env *lst)
 	}
 	return (lst);
 }
+
+
 void	ft_lstadd_back_env(t_env **lst, t_env *new)
 {
 	t_env	*last_env;
@@ -105,12 +107,10 @@ char **env_to_array(t_env *env)
 	int i;
 
 	i = 0;
-	arr = malloc(ft_lstsize_env(env));
-	if(!arr)
-		return (NULL);
+	arr = smart_malloc((ft_lstsize_env(env) + 1) * sizeof(char *));
 	while(env)
 	{
-		arr[i] = ft_strdup(env->value, MANUAL);
+		arr[i] = ft_strdup(env->value, GC);
 		if(!arr[i])
 		{
 			free_until_k(arr, i);
@@ -119,6 +119,7 @@ char **env_to_array(t_env *env)
 		i++;
 		env = env->next;
 	}
+	arr[i] = NULL;
 	return (arr);
 }
 
