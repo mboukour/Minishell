@@ -96,7 +96,7 @@ typedef struct s_lex
 {
 	char *content;
 	int len;
-	int to_replace;
+	bool to_replace;
 	enum e_token token;
 	enum e_state state;
 	struct s_lex *prev;
@@ -106,7 +106,7 @@ typedef struct s_lex
 typedef struct s_redir
 {
 	int token;
-	int to_replace;
+	bool to_replace;
 	char *redir_string;
 	struct s_redir *next;
 } t_redir;
@@ -114,7 +114,7 @@ typedef struct s_redir
 typedef struct s_arg
 {
 	char *content;
-	int to_replace;
+	bool to_replace;
 	struct s_arg *next;
 } t_arg;
 
@@ -124,7 +124,7 @@ typedef struct s_middle
 	char *content;
 	t_arg *args;
 	char *redir_string;
-	int to_replace;
+	bool to_replace;
 	struct s_middle *next;
 	struct s_middle *prev;
 } t_middle;
@@ -136,7 +136,7 @@ typedef struct s_middle_vars
 	t_middle *current;
 	bool in_command;
 	char *command;
-	int to_replace;
+	bool to_replace;
 } t_middle_vars;
 
 
@@ -154,7 +154,7 @@ typedef struct s_treenode
 	t_arg *args;
 	bool is_before_redirected;
 	bool is_after_redirected;
-	int to_replace;
+	bool to_replace;
 	t_redir *before_redir;
 	t_redir *after_redir;
 	struct s_treenode *left;
