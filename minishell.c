@@ -42,10 +42,9 @@ t_treenode *parsing(char *input)
     if(error_checker != NONE)
         return (display_error(error_checker, NULL), NULL);
     expand(lexed, QUOTE);
-    error_checker = false;
     we_check_lex = lex_input_checker(lexed);
     if(we_check_lex)
-         display_error(error_checker, we_check_lex);
+         display_error(NONE, we_check_lex);
     else
     {
         middled = make_middle(lexed);
