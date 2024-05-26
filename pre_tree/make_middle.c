@@ -7,9 +7,9 @@ int get_arg_count(t_lex *first_arg)
 	arg_counter = 0;
 	while(first_arg)
 	{
-		if(first_arg->token == WORD)
+		if(first_arg->token == WORD || first_arg->token == ENV)
 			arg_counter++;
-		else if (first_arg->token != WORD && first_arg->token != WHITE_SPACE)
+		else if (first_arg->token != WORD && first_arg->token != ENV && first_arg->token != WHITE_SPACE)
 			break;
 		first_arg = first_arg->next;
 	}
@@ -51,19 +51,22 @@ void ft_lstaddback_arg(t_arg **head, t_arg *new)
 
 t_arg *make_args(t_lex **first_arg)
 {
-    t_arg *args = NULL;
-    t_lex *prev = NULL;
+    t_arg *args;
+    t_lex *prev;
+	t_arg *new_arg;
 
+	args = NULL;
+	prev = NULL;
     while (*first_arg)
     {
-        if ((*first_arg)->token == WORD)
+        if ((*first_arg)->token == WORD || (*first_arg)->token == ENV)
         {
-            t_arg *new_arg = ft_lstnew_arg(*first_arg);
+            new_arg = ft_lstnew_arg(*first_arg);
             ft_lstaddback_arg(&args, new_arg);
         }
         prev = *first_arg;
         *first_arg = (*first_arg)->next;
-        if (!(*first_arg) || ((*first_arg)->token != WHITE_SPACE && (*first_arg)->token != WORD))
+        if (!(*first_arg) || ((*first_arg)->token != WHITE_SPACE && (*first_arg)->token != WORD && (*first_arg)->token != ENV))
         {
             *first_arg = prev;
             break;
@@ -80,9 +83,9 @@ bool do_i_have_args(t_lex *command)
 
 	word_count = 0;
 	cmd = command->content;
-	while(command && (command->token == WORD || command->token == WHITE_SPACE))
+	while(command && (command->token == WORD || command->token == ENV || command->token == WHITE_SPACE))
 	{
-		if(command->token == WORD)
+		if(command->token == WORD || command->token == ENV)
 			word_count++;
 		command = command->next;
 	}
@@ -162,7 +165,7 @@ t_middle *make_middle(t_lex *lex)
 	initialize_vars(&vars);
     while (lex)
     {
-        if (lex->token == WORD)
+        if (lex->token == WORD || lex->token == ENV)
             process_word_token(&lex, &vars.head, &vars.current, &vars.in_command, &vars.command, &vars.to_replace);
         else if (lex->token == REDIR_IN || lex->token == REDIR_OUT || lex->token == DREDIR_OUT || lex->token == HERE_DOC)
         {

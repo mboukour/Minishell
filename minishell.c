@@ -99,7 +99,6 @@ int main(int ac, char **av, char **envp)
         return (1);
     }
     get_input(&env);
-    // expand_env("$ENV$R$PATH", env);
     ft_lstclear_env(env);
     return 0;
 }
