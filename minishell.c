@@ -38,15 +38,13 @@ t_treenode *parsing(char *input)
     int error_checker;
 
     lexed = tokenizer(input);
-    if(quote_checker(lexed))
-    {
-        display_error(QUOTE, NULL);
-        return (NULL);
-    }
+    error_checker = open_checker(lexed);
+    if(error_checker != NONE)
+        return (display_error(error_checker, NULL), NULL);
     expand(lexed, QUOTE);
     error_checker = false;
-    we_check_lex = lex_input_checker(lexed, &error_checker);
-    if(we_check_lex || error_checker)
+    we_check_lex = lex_input_checker(lexed);
+    if(we_check_lex)
          display_error(error_checker, we_check_lex);
     else
     {

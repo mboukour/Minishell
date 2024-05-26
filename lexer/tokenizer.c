@@ -16,7 +16,7 @@ void handle_double_special(char *input, int *i, t_lex **head, char *content, int
     *i += 2;
 }
 
-void handle_super_special(char *input, int *i, t_lex **head)
+void handle_star(char *input, int *i, t_lex **head)
 {
 	t_lex *current_node;
     int hold;
@@ -26,7 +26,24 @@ void handle_super_special(char *input, int *i, t_lex **head)
     c = input[*i];
 	hold = *i;
     (*i)++;
-    while (input[*i] && !is_special(input[*i]) && input[*i] != ' ')
+    while (input[*i] && input[*i] == '*')
+        (*i)++;
+    content = ft_substr(input, hold, *i - hold, GC);
+    current_node = ft_lstnew_lex(content, c, *i - hold);
+    ft_lstadd_back_lex(head, current_node);
+}
+
+void handle_env(char *input, int *i, t_lex **head)
+{
+	t_lex *current_node;
+    int hold;
+    char c;
+    char *content;
+
+    c = input[*i];
+	hold = *i;
+    (*i)++;
+    while (input[*i] && (input[*i] == '$' || !is_special(input[*i])) && input[*i] != ' ')
         (*i)++;
     content = ft_substr(input, hold, *i - hold, GC);
     current_node = ft_lstnew_lex(content, c, *i - hold);
@@ -87,8 +104,10 @@ void handle_special(char *input, int *i, t_lex **head)
         handle_double_special(input, i, head, NULL, OR);
     else if (input[*i] == '&' && input[*i + 1] == '&')
             handle_double_special(input, i, head, NULL, AND);
-    else if (input[*i] == '$' || input[*i] == '*')
-        handle_super_special(input, i, head);
+    else if (input[*i] == '$')
+        handle_env(input, i, head);
+    else if (input[*i] == '*')
+        handle_star(input, i, head);
     else
         handle_general_special(input, i, head, input[*i]);
 }

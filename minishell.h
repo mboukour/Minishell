@@ -170,9 +170,9 @@ t_lex	*ft_lstlast_lex(t_lex *lst);
 t_lex	*ft_lstfirst_lex(t_lex *lst);
 void	ft_lstadd_back_lex(t_lex **lst, t_lex *new);
 void ft_lstiter_lex(t_lex *lex);
-t_lex *lex_input_checker(t_lex *tokens, int *error_checker);
+t_lex *lex_input_checker(t_lex *tokens);
 const char* tokenToString(enum e_token t);
-bool quote_checker(t_lex *token);
+int open_checker(t_lex *token);
 
 // MIDDLE MAN
 t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token);

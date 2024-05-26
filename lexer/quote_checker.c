@@ -2,21 +2,28 @@
 
 
 
-bool quote_checker(t_lex *token)
+int open_checker(t_lex *token)
 {
 	bool in_quotes;
 	bool in_dquotes;
+	bool in_para;
 
 	in_quotes = false;
 	in_dquotes = false;
-
+	in_para = false;
 	while(token)
 	{
 		if (token->token == DOUBLE_QUOTE && !(in_quotes))
 			in_dquotes = !(in_dquotes);
 		else if (token->token == QUOTE && !(in_dquotes))
 			in_quotes = !(in_quotes);
+		else if((token->token == OPEN_PARANTHESE || token->token == CLOSE_PARANTHESE) && !in_quotes && !in_dquotes)
+			in_para = !(in_para);
 		token = token->next;
 	}
-	return (in_dquotes || in_quotes);
+	if (in_dquotes || in_quotes)
+		return (QUOTE);
+	else if(in_para)
+		return (OPEN_PARANTHESE);
+	return (NONE);
 }

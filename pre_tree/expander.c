@@ -1,7 +1,7 @@
 #include "../minishell.h"
 
 
-void handle_star(t_lex *lexed) // HANDLE STAR MATCHING
+void expand_star(t_lex *lexed) // HANDLE STAR MATCHING
 {
 	DIR *current;
     struct dirent *read;
@@ -30,7 +30,7 @@ void handle_star(t_lex *lexed) // HANDLE STAR MATCHING
 }
 
 
-void handle_quotes(t_lex *lex)
+void expand_quotes(t_lex *lex)
 {
 	char *str;
 	t_lex *looping;
@@ -61,9 +61,9 @@ void expand(t_lex *lexed, int mode)
 	while(lexed)
 	{
 		if (lexed->token == STAR && mode == STAR)
-			handle_star(lexed);
+			expand_star(lexed);
 		else if((lexed->token == QUOTE || lexed->token == DOUBLE_QUOTE) && mode == QUOTE)
-			handle_quotes(lexed);
+			expand_quotes(lexed);
 		lexed = lexed->next;
 	}
 }

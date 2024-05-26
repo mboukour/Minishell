@@ -35,28 +35,6 @@ t_lex *check_redirections(t_lex *tokens)
     return NULL;
 }
 
-void toggle_quote_states(t_lex *token, bool *in_quotes, bool *in_dquotes)
-{
-    if (token->token == DOUBLE_QUOTE && !(*in_quotes))
-        *in_dquotes = !(*in_dquotes);
-    else if (token->token == QUOTE && !(*in_dquotes))
-        *in_quotes = !(*in_quotes);
-}
-
-void toggle_parentheses_state(t_lex *token, bool *in_para)
-{
-    if (token->token == OPEN_PARANTHESE || token->token == CLOSE_PARANTHESE)
-        *in_para = !(*in_para);
-}
-
-void update_error_checker(bool in_para, int *error_checker)
-{
-    if (in_para)
-        *error_checker = OPEN_PARANTHESE;
-    else
-        *error_checker = false;
-}
-
 void false_syntax(t_bool_syntax *syntax)
 {
     syntax->in_dquote = false;
@@ -105,7 +83,7 @@ t_lex *check_parentheses(t_lex *tokens)
     return NULL;
 }
 
-t_lex *lex_input_checker(t_lex *tokens, int *error_checker)
+t_lex *lex_input_checker(t_lex *tokens)
 {
     t_bool_syntax syntax;
     t_lex *error_token;
@@ -132,14 +110,10 @@ t_lex *lex_input_checker(t_lex *tokens, int *error_checker)
                 error_token = check_parentheses(tokens);
                 if (error_token)
                     return error_token;
-                toggle_parentheses_state(tokens, &syntax.in_para);
             }
         }
-        else
-            toggle_quote_states(tokens, &syntax.in_quote, &syntax.in_dquote);
         tokens = tokens->next;
     }
-    update_error_checker(syntax.in_para, error_checker);
     return (NULL);
 }
 
