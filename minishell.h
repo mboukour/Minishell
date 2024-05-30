@@ -174,7 +174,7 @@ void ft_lstiter_lex(t_lex *lex);
 t_lex *lex_input_checker(t_lex *tokens);
 const char* tokenToString(enum e_token t);
 int open_checker(t_lex *token);
-
+char **args_to_arr(t_arg *arg);
 // MIDDLE MAN
 t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token);
 void	ft_lstadd_back_middle(t_middle **lst, t_middle *new);

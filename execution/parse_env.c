@@ -12,7 +12,7 @@
 
 #include "execution.h"
 
-char	**ft_parsing(t_treenode *root, t_env *env, t_data *data)
+void ft_parsing(t_treenode *root, t_env *env, t_data *data)
 {
 	char	**path;
 	char	**cmd;
@@ -24,10 +24,7 @@ char	**ft_parsing(t_treenode *root, t_env *env, t_data *data)
 	// cmd = get_cmd();												//	TO_DO
 	path = ft_split(path_node->value, ':', GC);
 	if (root->content[0] == '/' || root->content[0] == '.')
-	{
-		return (data->path = root->content, &root->content);				// kant return (root->content);
-	}
+		data->path = ft_strdup(root->content, GC);				// kant return (root->content);
 	else
-		return (find_path(root, path, data));
-	return (perror(NULL), cmd);
+		find_path(root, path, data);
 }

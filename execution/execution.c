@@ -19,7 +19,8 @@ void	first_child(t_treenode *root, t_env **env, t_data *data)
 		close(data->end[0]);
 		dup2(data->end[1], 1);
 		close(data->end[1]);
-		data->cmd = ft_parsing(root, *env, data);
+		ft_parsing(root, *env, data);
+		data->cmd = args_to_arr(root->args);
 		execve(data->path, data->cmd, NULL);
 		perror("Execve error");
 		exit(EXIT_FAILURE);
@@ -34,7 +35,8 @@ void	last_child(t_treenode *root, t_env **env, t_data *data)
 		close(data->end[1]);
 		dup2(data->end[0], 0);												// Check here
 		close(data->end[0]);
-		data->cmd = ft_parsing(root, *env, data);
+		ft_parsing(root, *env, data);
+		data->cmd = args_to_arr(root->args);
 		execve(data->path, data->cmd, NULL);
 		perror("Execve error");
 		exit(EXIT_FAILURE);

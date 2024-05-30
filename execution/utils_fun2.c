@@ -12,7 +12,7 @@
 
 #include "execution.h"
 
-char	**find_path(t_treenode *root, char **allpath, t_data *data)
+void find_path(t_treenode *root, char **allpath, t_data *data)
 {
 	char	*joined;
 	int		i;
@@ -26,11 +26,11 @@ char	**find_path(t_treenode *root, char **allpath, t_data *data)
 		if (joined && access(joined, F_OK) == 0)
 		{
 			data->path = ft_strdup(joined, 1);
-			return (&root->content);
+			return;
 		}
 		i++;
 	}
-	return (NULL);
+	data->path = NULL;
 }
 
 int	is_whitespace(char *s)

@@ -29,7 +29,6 @@ typedef struct s_data
 }				t_data;
 
 void	pipeline(t_treenode *root, t_env **env);
-char	**ft_parsing(t_treenode *root, t_env *env, t_data *data);
-char	**find_path(t_treenode *root, char **allpath, t_data *data);
-
+void ft_parsing(t_treenode *root, t_env *env, t_data *data);
+void find_path(t_treenode *root, char **allpath, t_data *data);
 #endif

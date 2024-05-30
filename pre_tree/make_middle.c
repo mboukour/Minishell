@@ -49,13 +49,23 @@ void ft_lstaddback_arg(t_arg **head, t_arg *new)
 	ft_lstlast_arg(*head)->next = new;
 }
 
-t_arg *make_args(t_lex **first_arg)
+t_arg *make_cmd_arg(char *command, int to_replace)
+{
+	t_arg *result;
+
+	result = smart_malloc(sizeof(t_arg));
+	result->content = ft_strdup(command, GC);
+	result->to_replace = to_replace;
+	result->next = NULL;
+}
+
+t_arg *make_args(t_lex **first_arg, char *command, int to_replace)
 {
     t_arg *args;
     t_lex *prev;
 	t_arg *new_arg;
 
-	args = NULL;
+	args = make_cmd_arg(command, to_replace);
 	prev = NULL;
     while (*first_arg)
     {
@@ -134,12 +144,13 @@ void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *
         {
             *current = ft_lstnew_middle(*command, NULL, COMMAND);
 			(*current)->to_replace = *to_replace;
+			(*current)->args = make_cmd_arg(*command, *to_replace);
             ft_lstadd_back_middle(head, *current);
         }
     }
     else
     {
-        args = make_args(lex);
+        args = make_args(lex, *command, *to_replace);
         *current = ft_lstnew_middle(*command, args, COMMAND);
 		(*current)->to_replace = *to_replace;
         ft_lstadd_back_middle(head, *current);
