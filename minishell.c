@@ -74,7 +74,7 @@ void get_input(t_env **env)
             if(root)
 			{
                 print_ascii_tree(root, 0); // EXEUCTION SHOULD GO HERE!!!
-				ft_pipe(root, env);
+				pipeline(root, env);
 			}
         }
         add_history(input);

@@ -6,13 +6,13 @@
 /*   By: amabrouk <amabrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 16:26:17 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/05/26 18:53:30 by amabrouk         ###   ########.fr       */
+/*   Updated: 2024/05/27 17:44:44 by amabrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipeline.h"
+#include "execution.h"
 
-char	**find_path(t_treenode *root, char **allpath, char **cmd, t_data *data)
+char	**find_path(t_treenode *root, char **allpath, t_data *data)
 {
 	char	*joined;
 	int		i;
@@ -22,15 +22,15 @@ char	**find_path(t_treenode *root, char **allpath, char **cmd, t_data *data)
 	while (allpath[i])
 	{
 		allpath[i] = ft_strjoin(allpath[i], "/", 1);
-		joined = ft_strjoin(allpath[i], cmd[0], 1);
+		joined = ft_strjoin(allpath[i], root->content, 1);
 		if (joined && access(joined, F_OK) == 0)
 		{
 			data->path = ft_strdup(joined, 1);
-			return (cmd);
+			return (&root->content);
 		}
 		i++;
 	}
-	return (cmd);
+	return (NULL);
 }
 
 int	is_whitespace(char *s)

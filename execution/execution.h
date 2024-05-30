@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipeline.h                                         :+:      :+:    :+:   */
+/*   execution.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amabrouk <amabrouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 13:17:34 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/05/26 18:54:01 by amabrouk         ###   ########.fr       */
+/*   Updated: 2024/05/27 17:24:55 by amabrouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPELINE_H
-#define PIPELINE_H
+#ifndef EXECUTION_H
+#define EXECUTION_H
 
 # include "../minishell.h"
 # include <fcntl.h>
@@ -28,8 +28,8 @@ typedef struct s_data
 	char	*path;
 }				t_data;
 
-void	ft_pipe(t_treenode *root, t_env **env);
-char	**ft_parsing(t_treenode *root, char	*content, t_env *env, t_data *data);
-char	**find_path(t_treenode *root, char **path, char **cmd, t_data *data);
+void	pipeline(t_treenode *root, t_env **env);
+char	**ft_parsing(t_treenode *root, t_env *env, t_data *data);
+char	**find_path(t_treenode *root, char **allpath, t_data *data);
 
 #endif
