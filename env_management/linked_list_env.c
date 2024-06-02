@@ -123,7 +123,7 @@ char **env_to_array(t_env *env)
 	return (arr);
 }
 
-void ft_lstiter_env(t_env *env)
+void ft_lstiter_env(t_env *env, bool add_declare)
 {
 	int i;
 
@@ -131,6 +131,8 @@ void ft_lstiter_env(t_env *env)
 	while(env)
 	{
 		i++;
+		if(add_declare)
+			printf("declare -x ");
 		printf("%s\n", env->value);
 		env = env->next;
 	}

@@ -18,7 +18,7 @@ void remove_node(t_env **env, t_env *node_to_remove)
 }
 
 
-int unset(t_env **env, char *to_unset)
+int unset_core(t_env **env, char *to_unset)
 {
 	t_env *unset_env;
 
@@ -29,4 +29,20 @@ int unset(t_env **env, char *to_unset)
 		return (0);
 	remove_node(env, unset_env);
 	return (0);
+}
+
+
+int unset(t_env **env, t_treenode *unset_root)
+{
+    t_arg *arg;
+
+    arg = unset_root->args;
+    if(!arg->next)
+        return (0);
+    while(arg)
+    {
+        unset_core(env, arg->content);
+        arg = arg->next;
+    }
+    return (0);
 }

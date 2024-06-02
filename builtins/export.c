@@ -44,7 +44,7 @@ void export_malloc_failure(t_env *env)
 	exit(EXIT_FAILURE);
 }
 
-int export(t_env **env, char *exp_arg)
+int export_core(t_env **env, char *exp_arg)
 {
 	t_env *find;
 	char *final;
@@ -73,6 +73,26 @@ int export(t_env **env, char *exp_arg)
 		if(!find)
 			export_malloc_failure(*env);
 		ft_lstadd_back_env(env, find);
+	}
+	return (0);
+}
+
+
+int export(t_env **env, t_treenode *export_root)
+{
+	t_arg *args;
+
+	args = export_root->args;
+	if(!args->next)
+	{
+		ft_lstiter_env(*env, true);
+		return (0);
+	}
+	args = args->next;
+	while(args)
+	{
+		export_core(env, args->content);
+		args = args->next;
 	}
 	return (0);
 }

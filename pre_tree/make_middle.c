@@ -39,6 +39,19 @@ t_arg *ft_lstlast_arg(t_arg *head)
 	return (head);
 }
 
+int ft_lstsize_arg(t_arg *arg)
+{
+	int i;
+
+	i = 0;
+	while(arg)
+	{
+		i++;
+		arg = arg->next;
+	}
+	return (i);
+}
+
 void ft_lstaddback_arg(t_arg **head, t_arg *new)
 {
 	if(!*head)

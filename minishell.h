@@ -175,6 +175,7 @@ t_lex *lex_input_checker(t_lex *tokens);
 const char* tokenToString(enum e_token t);
 int open_checker(t_lex *token);
 char **args_to_arr(t_arg *arg);
+
 // MIDDLE MAN
 t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token);
 void	ft_lstadd_back_middle(t_middle **lst, t_middle *new);
@@ -184,6 +185,7 @@ t_middle	*ft_lstlast_middle(t_middle *lst);
 t_arg *ft_lstnew_arg(t_lex *word);
 t_arg *ft_lstlast_arg(t_arg *head);
 void ft_lstaddback_arg(t_arg **head, t_arg *new);
+int ft_lstsize_arg(t_arg *arg);
 
 // ABSTRACT SYNTAX TREE
 t_treenode		*new_treenode(t_middle *middled);
@@ -213,12 +215,12 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n);
 // BUILTINS
 
 char *get_pwd(void); // GC does not free this!
-int export(t_env **env, char *exp_arg);
-int unset(t_env **env, char *to_unset);
-
+int export(t_env **env, t_treenode *export_root);
+int unset(t_env **env, t_treenode *unset_root);
+int echo(t_treenode *echo_root);
 // ENV STUFF
 t_env *array_to_env(char **env);
-void ft_lstiter_env(t_env *env); // DEBUG
+void ft_lstiter_env(t_env *env, bool add_declare); // DEBUG
 void ft_lstclear_env(t_env *env);
 t_env	*ft_lstnew_env(char *env);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);

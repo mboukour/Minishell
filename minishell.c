@@ -73,8 +73,10 @@ void get_input(t_env **env)
             root = parsing(input);
             if(root)
 			{
-                print_ascii_tree(root, 0); // EXEUCTION SHOULD GO HERE!!!
-				pipeline(root, env);
+                // print_ascii_tree(root, 0); // EXEUCTION SHOULD GO HERE!!!
+                if(!ft_strcmp("echo", root->content));
+                    echo(root);
+				// pipeline(root, env);
 			}
         }
         add_history(input);
