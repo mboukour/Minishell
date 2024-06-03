@@ -77,7 +77,7 @@ t_lex *check_parentheses(t_lex *tokens)
     }
     else if (tokens->token == CLOSE_PARANTHESE)
     {
-        if (next && (next->token != AND && next->token != OR && next->token != PIPE_LINE))
+        if (next && (next->token != AND && next->token != OR && next->token != PIPE_LINE && next->token != CLOSE_PARANTHESE))
             return tokens;
     }
     return NULL;
