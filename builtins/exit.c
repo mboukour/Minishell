@@ -47,4 +47,5 @@ int exit_cmd(t_treenode *root, t_env *env)
 		return (1);
 	}
 	exit_core(ft_atoi(args->content), env);
+	return (0);
 }
