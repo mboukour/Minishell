@@ -108,16 +108,15 @@ int main(int ac, char **av, char **envp)
     (void)av;
     if(!isatty(0))
         return 0;
+    rl_catch_signals = 0; 
     env = array_to_env(envp);
     if(!env)
     {
         ft_putstr_fd(2, FAILURE_MSG);
         return (1);
     }
+    export_core(&env, "?=0");
     get_input(&env);
-    // printf("%s\n", env_expander("hello world", ENV, env));
-    // printf("{%s}\n", star_matching("*****.*****"));
-
     ft_lstclear_env(env);
     return 0;
 }

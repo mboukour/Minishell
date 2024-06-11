@@ -85,6 +85,20 @@ void execute_builtin(t_treenode *root, t_env **envp, t_data *data)
 		data->status = exit_cmd(root, *envp);
 }
 
+
+int change_status(t_env **env, int new_status)
+{
+	char *current_status;
+	char *final;
+
+	current_status = ft_itoa(new_status, MANUAL);
+	if(!current_status)
+		return (1);
+	final = ft_strjoin("?=", current_status, MANUAL);
+	export_core(env, final);
+	return (0);
+}
+
 void execute_command(t_treenode *root, t_env **env, t_data *data)
 {
 	pid_t pid;
@@ -98,7 +112,7 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	if (pid == -1)
 	{
 		perror("FORK FAILED");
-		exit(EXIT_FAILURE);
+		return ;
 	}
 	else if (pid == 0)
 	{
@@ -109,14 +123,22 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 		{
 			write(2, root->content, ft_strlen(root->content));
 			write(2, ": command not found\n", 20);
-			exit(EXIT_FAILURE);
+			exit(127);
 		}
 	}
 	else
 	{
 		waitpid(pid, &data->status, 0);
+		if (WIFSIGNALED(data->status))
+		{
+			data->status += 128;
+			change_status(env, data->status);
+			// fprintf(stderr, "status == %d\n", data->status);
+			return ;
+		}
 		WIFEXITED(data->status);
 		data->status = WEXITSTATUS(data->status);
+		change_status(env, data->status);
 	}
 }
 

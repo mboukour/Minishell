@@ -94,7 +94,7 @@ enum e_bulitins
 	PWD,
 	EXPORT,
 	UNSET,
-	ENV_CMD
+	ENV_CMD,
 };
 
 enum e_replace_modes
@@ -248,6 +248,7 @@ int export(t_env **env, t_treenode *export_root);
 int unset(t_env **env, t_treenode *unset_root);
 int echo(t_treenode *echo_root);
 int exit_cmd(t_treenode *root, t_env *env);
+int export_core(t_env **env, char *exp_arg);
 // ENV STUFF
 t_env *array_to_env(char **env);
 void ft_lstiter_env(t_env *env, bool add_declare); // DEBUG
