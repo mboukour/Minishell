@@ -23,7 +23,12 @@ int unset_core(t_env **env, char *to_unset)
 	t_env *unset_env;
 
 	if(!to_unset)
-		return (0);
+		return (1);
+    if(!ft_strcmp("?", to_unset))
+    {
+        ft_putstr_fd(2, "unset: `?': not a valid identifier\n");
+        return (0);
+    }
 	unset_env = get_env(*env, to_unset);
 	if(!unset_env)
 		return (0);

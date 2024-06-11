@@ -51,11 +51,6 @@ int export_core(t_env **env, char *exp_arg)
 	int i;
 
 	i = 0;
-	if(!exp_arg)
-	{
-		printf("NOTHING EXPORT GOES HERE\n");
-		return (0);
-	}
 	if(!is_valid_export(exp_arg))
 	{
 		fprintf(stderr, "Not valid\n");
@@ -83,6 +78,7 @@ int export_core(t_env **env, char *exp_arg)
 
 int export(t_env **env, t_treenode *export_root)
 {
+	int status;
 	t_arg *args;
 
 	args = export_root->args;
@@ -94,7 +90,14 @@ int export(t_env **env, t_treenode *export_root)
 	args = args->next;
 	while(args)
 	{
-		export_core(env, args->content);
+		if(args->content[0] == '?' && args->content[1] == '=')
+		{
+			ft_putstr_fd(2, "export: `");
+			ft_putstr_fd(2,args->content);
+			ft_putstr_fd(2, "' : not a valid identifier\n");
+		}
+		else
+			export_core(env, args->content);
 		args = args->next;
 	}
 	return (0);

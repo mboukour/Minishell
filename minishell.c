@@ -83,22 +83,21 @@ void get_input(t_env **env)
         if (!input)
         {
             rl_clear_history();
-            break;
+        	ft_putstr_fd(1, "exit\n");
+            exit_core(0, *env);
         }
         else if(ft_strcmp(input, ""))
         {
             root = parsing(input);
             if(root)
-			{
                 traverse_tree(root, &data, env);
-                // print_ascii_tree(root, 0); // EXEUCTION SHOULD GO HERE!!!
-			}
         }
         add_history(input);
         free(input);
         smart_free();
     }
 }
+
 
 int main(int ac, char **av, char **envp)
 {
@@ -108,7 +107,7 @@ int main(int ac, char **av, char **envp)
     (void)av;
     if(!isatty(0))
         return 0;
-    rl_catch_signals = 0; 
+    rl_catch_signals = 0;
     env = array_to_env(envp);
     if(!env)
     {
@@ -117,6 +116,5 @@ int main(int ac, char **av, char **envp)
     }
     export_core(&env, "?=0");
     get_input(&env);
-    ft_lstclear_env(env);
-    return 0;
+    return (0);
 }

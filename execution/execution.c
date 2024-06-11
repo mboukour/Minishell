@@ -12,10 +12,13 @@
 
 #include "execution.h"
 
+
+
 void	pipeline(t_treenode *root, t_data *data, t_env **env)
 {
 	pid_t	pid1;
 	pid_t	pid2;
+	char	*exp;
 
 	if (pipe(data->end) == -1)
 	{
@@ -37,6 +40,7 @@ void	pipeline(t_treenode *root, t_data *data, t_env **env)
 			exit(EXIT_FAILURE);
 		}
 		close(data->end[1]);
+
 		traverse_tree(root->left, data, env);
 		exit(EXIT_FAILURE);
 	}
@@ -95,13 +99,19 @@ int change_status(t_env **env, int new_status)
 	if(!current_status)
 		return (1);
 	final = ft_strjoin("?=", current_status, MANUAL);
+	if(!final)
+		return (free(current_status), 1);
+	free(current_status);
 	export_core(env, final);
 	return (0);
 }
 
+
 void execute_command(t_treenode *root, t_env **env, t_data *data)
 {
 	pid_t pid;
+	char *exp;
+	char *absolute_path;
 
 	if(root->builtin != NONE)
 	{
@@ -117,12 +127,17 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	else if (pid == 0)
 	{
 		get_path(root, *env, data);
+		exp = ft_strjoin("_=", data->path , MANUAL);
+		export_core(env, exp);
+		free(exp);
 		data->env = env_to_array(*env);
 		data->cmd = args_to_arr(root->args);
 		if (execve(data->path, data->cmd, data->env) == -1)
 		{
 			write(2, root->content, ft_strlen(root->content));
 			write(2, ": command not found\n", 20);
+			ft_lstclear_env(*env);
+			smart_free();
 			exit(127);
 		}
 	}
@@ -133,7 +148,6 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 		{
 			data->status += 128;
 			change_status(env, data->status);
-			// fprintf(stderr, "status == %d\n", data->status);
 			return ;
 		}
 		WIFEXITED(data->status);
