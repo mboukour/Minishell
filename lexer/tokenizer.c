@@ -20,7 +20,7 @@ void handle_star(char *input, int *i, t_lex **head)
 {
 	t_lex *current_node;
     int hold;
-    char c;
+    int c;
     char *content;
 
     c = input[*i];
@@ -37,9 +37,11 @@ void handle_env(char *input, int *i, t_lex **head)
 {
 	t_lex *current_node;
     int hold;
-    char c;
+    int c;
     char *content;
+    bool star_bool;
 
+    star_bool = false;
     c = input[*i];
 	hold = *i;
     (*i)++;

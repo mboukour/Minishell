@@ -5,6 +5,7 @@ void nullify_all(t_treenode *node)
 	node->token = NONE;
 	node->content = NULL;
 	node->args = NULL;
+	node->builtin = NONE;
 }
 
 t_arg *copy_arg(t_arg *arg)
@@ -36,6 +37,7 @@ t_treenode		*new_treenode(t_middle *middled)
 		new_node->args = NULL;
 		new_node->to_replace = middled->to_replace;
 		new_node->args = copy_arg(middled->args);
+		new_node->builtin = middled->builtin;
 	}
 	else
 		nullify_all(new_node);

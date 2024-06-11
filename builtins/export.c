@@ -57,7 +57,10 @@ int export_core(t_env **env, char *exp_arg)
 		return (0);
 	}
 	if(!is_valid_export(exp_arg))
+	{
+		fprintf(stderr, "Not valid\n");
 		return (NONE);
+	}
 	find = get_env(*env, exp_arg);
 	if(find)
 	{

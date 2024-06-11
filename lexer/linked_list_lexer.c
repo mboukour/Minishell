@@ -9,9 +9,7 @@ t_lex	*ft_lstnew_lex(char *content, int token, int len)
 	new_node->len = len;
 	new_node->token = token;
 	new_node->state = GENERAL;
-	new_node->to_replace = false;
-	if(token == ENV || token == STAR)
-		new_node->to_replace = true;
+	new_node->to_replace = REPLACE_ALL;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -109,8 +107,9 @@ const char* tokenToString(enum e_token t)
 		case STAR: return "STAR";
 		case AND: return "AND";
 		case OR: return "OR";
-		case OPEN_PARANTHESE: return "OPEN PARA";
-		case CLOSE_PARANTHESE: return "CLOSE PARA";
+		case OPEN_PARANTHESE: return "OPEN_PARA";
+		case ENV_STAR: return "ENV_STAR";
+		case CLOSE_PARANTHESE: return "CLOSE_PARA";
         default: return "UNKNOWN_TOKEN";
     }
 }
@@ -129,13 +128,13 @@ const char* stateToString(enum e_state s)
 
 
 void print_lex(const t_lex *lex) {
-	char *c = "False";
-	if(lex->to_replace)
-		c = "True";
+	// char *c = "False";
+	// if(lex->to_replace)
+	// 	c = "True";
     // printf("| %-10s | %-15s | %-10d |\n", lex->content, tokenToString(lex->token), lex->len);
     // printf("| %-10s | %-15s | %-10s |\n", "", "", "");
     // printf("|------------|-----------------|------------|\n");
-	printf("Content: {%s} // Token: %s // To replace: %s\n", lex->content, tokenToString(lex->token), c);
+	printf("Content: {%s} // Token: %s // To replace: %i\n", lex->content, tokenToString(lex->token), lex->to_replace);
 }
 
 void ft_lstiter_lex(t_lex *lex)

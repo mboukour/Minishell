@@ -53,15 +53,32 @@ t_treenode *parsing(char *input)
     return (NULL);
 }
 
+void init_t_data(t_data *data)
+{
+    if (data == NULL)
+        return;
+    data->infile = -1;
+    data->outfile = -1;
+    data->end[0] = -1;
+    data->end[1] = -1;
+    data->status = 0;
+    data->cmd = NULL;
+    data->path = NULL;
+    data->env = NULL;
+}
+
+
 void get_input(t_env **env) 
 {
     char *input;
     t_treenode *root;
+    t_data data;
 
     signal(SIGINT, sigint_handler);
     signal(SIGQUIT, sigquit_handler);
     while (true)
 	{
+        init_t_data(&data);
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
         if (!input)
         {
@@ -73,9 +90,8 @@ void get_input(t_env **env)
             root = parsing(input);
             if(root)
 			{
-                print_ascii_tree(root, 0); // EXEUCTION SHOULD GO HERE!!!
-
-				pipeline(root, env);
+                traverse_tree(root, &data, env);
+                // print_ascii_tree(root, 0); // EXEUCTION SHOULD GO HERE!!!
 			}
         }
         add_history(input);
@@ -99,6 +115,9 @@ int main(int ac, char **av, char **envp)
         return (1);
     }
     get_input(&env);
+    // printf("%s\n", env_expander("hello world", ENV, env));
+    // printf("{%s}\n", star_matching("*****.*****"));
+
     ft_lstclear_env(env);
     return 0;
 }

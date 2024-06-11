@@ -1,6 +1,24 @@
 #include "../minishell.h"
 
 
+int assing_builtin(char *commad) 
+{
+    if (!ft_strcmp(commad, "echo"))
+        return (ECHO);
+    else if (!ft_strcmp(commad, "exit"))
+        return (EXIT);
+    else if (!ft_strcmp(commad, "cd"))
+        return (CD);
+    else if (!ft_strcmp(commad, "pwd"))
+        return (PWD);
+    else if (!ft_strcmp(commad, "export"))
+        return (EXPORT);
+    else if (!ft_strcmp(commad, "unset"))
+        return (UNSET);
+    else if (!ft_strcmp(commad, "env"))
+        return (ENV_CMD);
+    return (NONE);
+}
 
 t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token)
 {
@@ -13,9 +31,9 @@ t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token)
 	new_node->content = content;
 	new_node->args = args;
 	new_node->redir_string = NULL;
-	new_node->to_replace = false;
-	if(new_node->token == ENV || new_node->token == STAR)
-		new_node->to_replace = true;
+	new_node->to_replace = REPLACE_ALL;
+	new_node->builtin = assing_builtin(content);
+	new_node->token = token;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);

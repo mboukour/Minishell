@@ -14,7 +14,6 @@ t_env	*ft_lstnew_env(char *env)
 		free(new_node);
 		return (NULL);
 	}
-	new_node->index = NONE;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -45,12 +44,10 @@ void	ft_lstadd_back_env(t_env **lst, t_env *new)
 		return ;
 	if (!*lst)
 	{
-		new->index = 0;
 		*lst = new;
 		return ;
 	}
 	last_env = ft_lstlast_env(*lst);
-	new->index = last_env->index + 1;
 	last_env->next = new;
 	new->prev = last_env;
 }
@@ -68,24 +65,51 @@ int ft_lstsize_env(t_env *env)
 	return (i);
 }
 
-t_env *array_to_env(char **env)
+char *new_shlvl(char *new_lvl)
 {
-	t_env *current;
-	t_env *head;
 	int i;
+	char *new_shlvl;
+	char *temp;
+	char *lvl;
 
 	i = 0;
-	head = NULL;
-	current = NULL;
-	while(env[i])
-	{
-		current = ft_lstnew_env(env[i]);
-		if(!current)
-			return (NULL);
-		ft_lstadd_back_env(&head, current);
-		i++;
-	}
-	return (head);
+	lvl = ft_itoa(ft_atoi(new_lvl + 6) + 1, MANUAL);
+	if(!lvl)
+		return (NULL);
+	new_shlvl = ft_strjoin("SHLVL=", lvl, MANUAL);
+	free(lvl);
+	return (new_shlvl);
+}
+
+t_env *array_to_env(char **env)
+{
+    t_env *current;
+    t_env *head;
+    int i;
+    char *new;
+
+    i = 0;
+    head = NULL;
+    while (env[i])
+    {
+        current = ft_lstnew_env(env[i]);
+        if (!current)
+        {
+            ft_lstclear_env(head);
+            return (NULL);
+        }
+        if (!ft_strncmp(current->value, "SHLVL", 5) && current->value[5] == '=')
+        {
+            new = new_shlvl(current->value);
+            free(current->value);
+            if (!new)
+                return (free(current), ft_lstclear_env(head), NULL);
+            current->value = new;
+        }
+        ft_lstadd_back_env(&head, current);
+        i++;
+    }
+    return (head);
 }
 
 void free_until_k(char **args, int k)
@@ -138,15 +162,20 @@ void ft_lstiter_env(t_env *env, bool add_declare)
 	}
 }
 
-void ft_lstclear_env(t_env *env)
+void ft_lstclear_env(t_env *head)
 {
-	t_env *hold;
+    t_env *temp;
 
-	while(env)
-	{
-		hold = env->next;
-		free(env->value);
-		free(env);
-		env = env->next;
-	}
+    while (head)
+    {
+        temp = head;
+        head = head->next;
+        if (temp->value)
+        {
+            free(temp->value);
+            temp->value = NULL;
+        }
+        free(temp);
+        temp = NULL;
+    }
 }

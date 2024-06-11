@@ -32,18 +32,13 @@ void print_ascii_tree(t_treenode *root, int level)
     print_ascii_tree(root->left, level + 1);
 }
 
-int is_redir(t_middle *middled)
-{
-	return(middled->token == REDIR_OUT || middled->token == DREDIR_OUT || middled->token == HERE_DOC || middled->token == REDIR_IN);
-}
-
 t_redir *handle_after_redirs(t_middle **middled)
 {
 	t_redir *result;
 	t_redir *current;
 
 	result = NULL;
-	while(*middled && is_redir(*middled))
+	while(*middled && ((*middled)->token == REDIR_OUT || (*middled)->token == DREDIR_OUT))
 	{
 		current = ft_lstnew_redir(*middled);
 		ft_lstaddback_redir(&result, current);

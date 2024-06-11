@@ -14,6 +14,7 @@
 #include <time.h>
 #include <signal.h>
 #include <dirent.h>
+#include <limits.h>
 #include "./garbage_collector/cgc.h"
 #include "execution/execution.h"
 
@@ -38,6 +39,7 @@ enum e_token
 	OPEN_PARANTHESE = '(',
 	CLOSE_PARANTHESE = ')',
 	STAR = '*',
+	ENV_STAR,
 	AND,
 	OR,
 	HERE_DOC,
@@ -84,10 +86,26 @@ enum e_error_codes
 	MALLOC_ERROR
 };
 
+enum e_bulitins
+{
+	ECHO,
+	EXIT,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV_CMD
+};
+
+enum e_replace_modes
+{
+	NO_REPLACE,
+	NO_ENV,
+	REPLACE_ALL
+};
+
 typedef struct s_env
 {
-	int index;
-	char *name;
 	char *value;
 	struct s_env *next;
 	struct s_env *prev;
@@ -97,7 +115,7 @@ typedef struct s_lex
 {
 	char *content;
 	int len;
-	bool to_replace;
+	int to_replace;
 	enum e_token token;
 	enum e_state state;
 	struct s_lex *prev;
@@ -107,59 +125,59 @@ typedef struct s_lex
 typedef struct s_redir
 {
 	int token;
-	bool to_replace;
+	int to_replace;
 	char *redir_string;
 	struct s_redir *next;
-} t_redir;
+}	t_redir;
 
 typedef struct s_arg
 {
 	char *content;
-	bool to_replace;
+	int to_replace;
 	struct s_arg *next;
-} t_arg;
+}	t_arg;
 
 typedef struct s_middle
 {
-	int token;
-	char *content;
-	t_arg *args;
-	char *redir_string;
-	bool to_replace;
-	struct s_middle *next;
-	struct s_middle *prev;
-} t_middle;
+	int		token;
+	char	*content;
+	t_arg	*args;
+	char	*redir_string;
+	int		to_replace;
+	int		builtin;
+	struct	s_middle *next;
+	struct	s_middle *prev;
+}	t_middle;
 
 
-typedef struct s_middle_vars
+typedef struct	s_middle_vars
 {
-	t_middle *head;
-	t_middle *current;
-	bool in_command;
-	char *command;
-	bool to_replace;
-} t_middle_vars;
+	t_middle	*head;
+	t_middle	*current;
+	bool	in_command;
+	char	*command;
+	int		to_replace;
+}	t_middle_vars;
 
 
-typedef struct s_bool_syntax
+typedef struct	s_bool_syntax
 {
-	bool in_para;
-	bool in_quote;
-	bool in_dquote;
-} t_bool_syntax;
+	bool	in_para;
+	bool	in_quote;
+	bool	in_dquote;
+}	t_bool_syntax;
 
 typedef struct s_treenode
 {
-	int token; // COMMAND // OR // AND // PIPE
-	char *content;
-	t_arg *args;
-	bool is_before_redirected;
-	bool is_after_redirected;
-	bool to_replace;
-	t_redir *before_redir;
-	t_redir *after_redir;
-	struct s_treenode *left;
-	struct s_treenode *right;
+	int		token; // COMMAND // OR // AND // PIPE
+	char	*content;
+	t_arg	*args;
+	int		to_replace;
+	t_redir	*before_redir;
+	t_redir	*after_redir;
+	int		builtin;
+	struct	s_treenode *left;
+	struct	s_treenode *right;
 } t_treenode;
 
 
@@ -175,6 +193,10 @@ t_lex *lex_input_checker(t_lex *tokens);
 const char* tokenToString(enum e_token t);
 int open_checker(t_lex *token);
 char **args_to_arr(t_arg *arg);
+void handle_space(char *input, int *i, t_lex **head);
+void handle_word(char *input, int *i, t_lex **head);
+bool is_special(char c);
+
 
 // MIDDLE MAN
 t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token);
@@ -207,17 +229,25 @@ char	*ft_strjoin(const char *s1, const char *s2, int mode);
 int	ft_strcmp(const char *s1, const char *s2);
 char	**ft_split(char const *s, char c, int mode);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+char	*ft_strchr(const char *s, int c);
+int	ft_atoi(const char *str);
+char	*ft_itoa(int n, int mode);
+size_t	ft_strcpy(char *dst, const char *src);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
-
-// EXECUTIONER
-
-
+int	numlen(int n);
+// EXPANDER
+char *star_matching(char *to_match);
+char *env_expander(char *to_expand, t_env *env);
+char *normalize_pattern(char *pattern);
 // BUILTINS
-
+int cd(t_treenode *cd_root);
+int pwd(t_treenode *pwd_node);
+int env(t_env *env);
 char *get_pwd(void); // GC does not free this!
 int export(t_env **env, t_treenode *export_root);
 int unset(t_env **env, t_treenode *unset_root);
 int echo(t_treenode *echo_root);
+int exit_cmd(t_treenode *root, t_env *env);
 // ENV STUFF
 t_env *array_to_env(char **env);
 void ft_lstiter_env(t_env *env, bool add_declare); // DEBUG
@@ -226,5 +256,5 @@ t_env	*ft_lstnew_env(char *env);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
 t_env *get_env(t_env *env, char *str);
 int ft_lstsize_env(t_env *env);
-
+char **env_to_array(t_env *env);
 #endif

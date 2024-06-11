@@ -50,8 +50,11 @@ void expand_quotes(t_lex *lex)
 	if(!str)
 		str = ft_strdup("", GC);
 	original->content = str;
+	original->to_replace = REPLACE_ALL;
 	if(original->token == DOUBLE_QUOTE)
-		original->to_replace = true;
+		original->to_replace = NO_ENV;
+	else if(original->token == QUOTE)
+		original->to_replace = NO_REPLACE;
 	original->token = WORD;
 	original->next = looping->next;
 }

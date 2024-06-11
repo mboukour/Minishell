@@ -70,6 +70,7 @@ t_arg *make_cmd_arg(char *command, int to_replace)
 	result->content = ft_strdup(command, GC);
 	result->to_replace = to_replace;
 	result->next = NULL;
+	return (result);
 }
 
 t_arg *make_args(t_lex **first_arg, char *command, int to_replace)
@@ -144,7 +145,7 @@ void process_other_token(t_lex **lex, t_middle **head)
     current = ft_lstnew_middle(ft_strdup((*lex)->content, GC), NULL, (*lex)->token);
     ft_lstadd_back_middle(head, current);
 }
-void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *in_command, char **command, bool *to_replace)
+void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *in_command, char **command, int *to_replace)
 {
 	t_arg *args;
 
@@ -177,7 +178,7 @@ void initialize_vars(t_middle_vars *vars)
 	vars->command = NULL;
 	vars->current = NULL;
 	vars->in_command = false;
-	vars->to_replace = false;
+	vars->to_replace = REPLACE_ALL;
 }
 
 

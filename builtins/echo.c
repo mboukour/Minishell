@@ -1,5 +1,16 @@
 #include "../minishell.h"
 
+bool is_all_n(char *content)
+{
+	int i;
+
+	i = 0;
+	while(content[i] && content[i] == 'n')
+		i++;
+	if(content[i])
+		return (false);
+	return (true);
+}
 
 int echo(t_treenode *echo_root)
 {
@@ -11,11 +22,10 @@ int echo(t_treenode *echo_root)
 	if(!args->next)
 	{
 		printf("\n");
-		printf("\n");
 		return (0);
 	}
 	args = args->next;
-	if(!ft_strcmp(args->content, "-n"))
+	while(args && !ft_strncmp(args->content, "-n", 2) && is_all_n(args->content + 2))
 	{
 		new_line = false;
 		args = args->next;
@@ -29,6 +39,5 @@ int echo(t_treenode *echo_root)
 	}
 	if(new_line)
 		printf("\n");
-	printf("\n");
 	return(0);
 }

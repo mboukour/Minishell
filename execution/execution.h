@@ -18,6 +18,7 @@
 
 typedef struct s_treenode t_treenode;
 typedef struct s_env t_env;
+typedef struct s_redir t_redir;
 
 typedef struct s_data
 {
@@ -26,9 +27,13 @@ typedef struct s_data
 	int		end[2];
 	char	**cmd;
 	char	*path;
+	char	**env;
+	int		status;
 }				t_data;
 
-void	pipeline(t_treenode *root, t_env **env);
-void ft_parsing(t_treenode *root, t_env *env, t_data *data);
-void find_path(t_treenode *root, char **allpath, t_data *data);
+void	pipeline(t_treenode *root, t_data *data, t_env **env);
+void	get_path(t_treenode *root, t_env *env, t_data *data);
+int		traverse_tree(t_treenode *root, t_data *data, t_env **env);
+void	execute_command(t_treenode *root, t_env **env, t_data *data);
+void	handle_red(t_redir *redir);
 #endif
