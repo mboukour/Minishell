@@ -134,7 +134,7 @@ char **env_to_array(t_env *env)
 	arr = smart_malloc((ft_lstsize_env(env)) * sizeof(char *));
 	while(env)
 	{
-		if(env->value[0] != '?' || env->value[1] != '=')
+		if((env->value[0] != '?' || env->value[1] != '='))
 		{
 			arr[i] = ft_strdup(env->value, GC);
 			if(!arr[i])
@@ -158,11 +158,16 @@ void ft_lstiter_env(t_env *env, bool add_declare)
 	while(env)
 	{
 		i++;
-		if(ft_strncmp("?", env->value, 1) && *(env->value + 1) != '\0')
+		if(ft_strncmp("?", env->value, 1) && *(env->value + 1) != '=')
 		{
 			if(add_declare)
-				printf("declare -x ");
-			printf("%s\n", env->value);
+			{
+				if(ft_strncmp("_", env->value, 1) && *(env->value + 1) != '=')
+					printf("declare -x ");
+				printf("%s\n", env->value);
+			}
+			else
+				printf("%s\n", env->value);
 		}
 		env = env->next;
 	}

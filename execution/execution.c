@@ -68,6 +68,7 @@ void	pipeline(t_treenode *root, t_data *data, t_env **env)
 		;
 }
 
+// SET BUILTINS EXIT STATUS!!!!
 void execute_builtin(t_treenode *root, t_env **envp, t_data *data)
 {
 	int builtin;
@@ -84,7 +85,7 @@ void execute_builtin(t_treenode *root, t_env **envp, t_data *data)
 	else if(builtin == UNSET)
 		data->status = unset(envp, root);
 	else if(builtin == CD)
-		data->status = cd(root);
+		data->status = cd(root, envp);
 	else if(builtin == EXIT)
 		data->status = exit_cmd(root, *envp);
 }
@@ -106,6 +107,19 @@ int change_status(t_env **env, int new_status)
 	return (0);
 }
 
+char *get_underscore(t_treenode *root)
+{
+	t_arg *args;
+	char *result;
+
+	args = root->args;
+	while(args)
+	{
+		result = args->content;
+		args = args->next;
+	}
+	return (result);
+}
 
 void execute_command(t_treenode *root, t_env **env, t_data *data)
 {
@@ -113,6 +127,9 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	char *exp;
 	char *absolute_path;
 
+	exp = ft_strjoin("_=", get_underscore(root) , MANUAL);
+	export_core(env, exp);
+	free(exp);
 	if(root->builtin != NONE)
 	{
 		execute_builtin(root, env, data);
@@ -127,9 +144,6 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	else if (pid == 0)
 	{
 		get_path(root, *env, data);
-		exp = ft_strjoin("_=", data->path , MANUAL);
-		export_core(env, exp);
-		free(exp);
 		data->env = env_to_array(*env);
 		data->cmd = args_to_arr(root->args);
 		if (execve(data->path, data->cmd, data->env) == -1)

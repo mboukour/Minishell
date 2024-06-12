@@ -240,7 +240,7 @@ char *star_matching(char *to_match);
 char *env_expander(char *to_expand, t_env *env);
 char *normalize_pattern(char *pattern);
 // BUILTINS
-int cd(t_treenode *cd_root);
+int cd(t_treenode *cd_root, t_env **env);
 int pwd(t_treenode *pwd_node);
 int env(t_env *env);
 char *get_pwd(void); // GC does not free this!

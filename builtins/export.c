@@ -75,7 +75,9 @@ int export_core(t_env **env, char *exp_arg)
 	return (0);
 }
 
-
+// EXPORT WITH NO ARGS PRINTS INSIDE ""
+// EXPORT WITH NO ARGS PRINTS IN ALPHABETIC ORDER
+// EXPORT NEEDS ITS OWN PARSING
 int export(t_env **env, t_treenode *export_root)
 {
 	int status;

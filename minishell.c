@@ -89,11 +89,10 @@ void get_input(t_env **env)
                 traverse_tree(root, &data, env);
         }
         add_history(input);
-        // free(input);
+        free(input);
         smart_free();
     }
 }
-
 
 int main(int ac, char **av, char **envp)
 {
@@ -110,7 +109,7 @@ int main(int ac, char **av, char **envp)
         ft_putstr_fd(2, FAILURE_MSG);
         return (1);
     }
-    export_core(&env, "?=0");
+
     get_input(&env);
     return (0);
 }
