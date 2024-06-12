@@ -29,6 +29,8 @@ typedef struct s_data
 	char	*path;
 	char	**env;
 	int		status;
+	char	*pwd;
+	char	*old_pwd;
 }				t_data;
 
 void	pipeline(t_treenode *root, t_data *data, t_env **env);

@@ -129,8 +129,8 @@ char *star_matching(char *to_match)
     current_star = get_star();
     if (!current_star)
     {
-        ft_putstr_fd(2, "opendir: can't opendir()");
-        return NULL;
+        // ft_putstr_fd(2, "opendir: can't opendir()");
+        return (to_match);
     }
     normal = normalize_pattern(to_match);
     while (current_star)

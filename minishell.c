@@ -61,6 +61,8 @@ void init_t_data(t_data *data)
     data->cmd = NULL;
     data->path = NULL;
     data->env = NULL;
+    data->pwd = getcwd(NULL, 0);
+    data->old_pwd = NULL;
 }
 
 
@@ -70,11 +72,11 @@ void get_input(t_env **env)
     t_treenode *root;
     t_data data;
 
+    init_t_data(&data);
     signal(SIGQUIT, SIG_IGN);
     while (true)
 	{
         signal(SIGINT, sigint_handler);
-        init_t_data(&data);
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
         if (!input)
         {
@@ -86,7 +88,10 @@ void get_input(t_env **env)
         {
             root = parsing(input);
             if(root)
+            {
+                // print_ascii_tree(root, 1);
                 traverse_tree(root, &data, env);
+            }
         }
         add_history(input);
         free(input);
@@ -109,7 +114,6 @@ int main(int ac, char **av, char **envp)
         ft_putstr_fd(2, FAILURE_MSG);
         return (1);
     }
-
     get_input(&env);
     return (0);
 }

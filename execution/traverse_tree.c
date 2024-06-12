@@ -25,9 +25,9 @@ void expand_args(t_arg *args, t_env *env)
 	{
 		if(args->to_replace != NO_REPLACE)
 		{
-			if(args->to_replace != NO_ENV)
 				args->content = env_expander(args->content, env);
-			args->content = star_matching(args->content);
+			if(args->to_replace == REPLACE_ALL)
+				args->content = star_matching(args->content);
 		}
 		args = args->next;
 	}
@@ -39,9 +39,9 @@ void expand_redirs(t_redir *redir, t_env *env)
 	{
 		if(redir->to_replace != NO_REPLACE)
 		{
-			if(redir->to_replace != NO_ENV)
-				redir->redir_string = env_expander(redir->redir_string, env);
-			redir->redir_string = star_matching(redir->redir_string);
+			redir->redir_string = env_expander(redir->redir_string, env);
+			if(redir->to_replace == REPLACE_ALL)
+				redir->redir_string = star_matching(redir->redir_string);
 		}
 		redir = redir->next;
 	}
@@ -51,9 +51,9 @@ void expand_node(t_treenode *root, t_env *env)
 {
 	if(root->content && root->to_replace != NO_REPLACE)
 	{
-		if(root->to_replace != NO_ENV)
-			root->content = env_expander(root->content, env);
-		root->content = star_matching(root->content);
+		root->content = env_expander(root->content, env);
+		if(root->to_replace == REPLACE_ALL)
+			root->content = star_matching(root->content);
 	}
 	expand_args(root->args, env);
 	expand_redirs(root->before_redir, env);

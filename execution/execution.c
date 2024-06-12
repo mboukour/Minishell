@@ -79,13 +79,13 @@ void execute_builtin(t_treenode *root, t_env **envp, t_data *data)
 	else if(builtin == ECHO)
 		data->status = echo(root);
 	else if(builtin == PWD)
-		data->status = pwd(root);
+		data->status = pwd(root, data);
 	else if(builtin == EXPORT)
 		data->status = export(envp, root);
 	else if(builtin == UNSET)
 		data->status = unset(envp, root);
 	else if(builtin == CD)
-		data->status = cd(root, envp);
+		data->status = cd(root, envp, data);
 	else if(builtin == EXIT)
 		data->status = exit_cmd(root, *envp);
 }

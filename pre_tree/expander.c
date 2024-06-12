@@ -52,7 +52,7 @@ void expand_quotes(t_lex *lex)
 	original->content = str;
 	original->to_replace = REPLACE_ALL;
 	if(original->token == DOUBLE_QUOTE)
-		original->to_replace = NO_ENV;
+		original->to_replace = ONLY_ENV;
 	else if(original->token == QUOTE)
 		original->to_replace = NO_REPLACE;
 	original->token = WORD;

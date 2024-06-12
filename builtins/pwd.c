@@ -12,14 +12,8 @@ char *get_pwd(void)
 	return (pwd);
 }
 
-int pwd(t_treenode *pwd_node)
+int pwd(t_treenode *pwd_node, t_data *data)
 {
-	char *wd;
-
-	wd = get_pwd();
-	if(!wd)
-		return (1);
-	printf("%s\n", wd);
-	free(wd);
+	printf("%s\n", data->pwd);
 	return (0);
 }

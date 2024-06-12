@@ -100,7 +100,7 @@ enum e_bulitins
 enum e_replace_modes
 {
 	NO_REPLACE,
-	NO_ENV,
+	ONLY_ENV,
 	REPLACE_ALL
 };
 
@@ -180,7 +180,7 @@ typedef struct s_treenode
 	struct	s_treenode *right;
 } t_treenode;
 
-
+typedef struct s_data t_data;
 // LEXER
 t_lex *tokenizer(char *input);
 void expand(t_lex *lexed, int mode);
@@ -240,8 +240,8 @@ char *star_matching(char *to_match);
 char *env_expander(char *to_expand, t_env *env);
 char *normalize_pattern(char *pattern);
 // BUILTINS
-int cd(t_treenode *cd_root, t_env **env);
-int pwd(t_treenode *pwd_node);
+int cd(t_treenode *cd_root, t_env **env, t_data *data);
+int pwd(t_treenode *pwd_node, t_data *data);
 int env(t_env *env);
 char *get_pwd(void); // GC does not free this!
 int export(t_env **env, t_treenode *export_root);
