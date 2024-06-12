@@ -37,7 +37,7 @@ t_treenode *parsing(char *input)
     error_checker = open_checker(lexed);
     if(error_checker != NONE)
         return (display_error(error_checker, NULL), NULL);
-    expand(lexed, QUOTE);
+    quotes_handler(lexed);
     we_check_lex = lex_input_checker(lexed);
     if(we_check_lex)
          display_error(NONE, we_check_lex);
@@ -65,7 +65,6 @@ void init_t_data(t_data *data)
     data->old_pwd = NULL;
 }
 
-
 void get_input(t_env **env) 
 {
     char *input;
@@ -88,10 +87,7 @@ void get_input(t_env **env)
         {
             root = parsing(input);
             if(root)
-            {
-                // print_ascii_tree(root, 1);
                 traverse_tree(root, &data, env);
-            }
         }
         add_history(input);
         free(input);

@@ -183,7 +183,7 @@ typedef struct s_treenode
 typedef struct s_data t_data;
 // LEXER
 t_lex *tokenizer(char *input);
-void expand(t_lex *lexed, int mode);
+void quotes_handler(t_lex *lexed);
 t_lex	*ft_lstnew_lex(char *content, int token, int len);
 t_lex	*ft_lstlast_lex(t_lex *lst);
 t_lex	*ft_lstfirst_lex(t_lex *lst);

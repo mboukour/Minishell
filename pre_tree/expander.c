@@ -1,35 +1,6 @@
 #include "../minishell.h"
 
 
-void expand_star(t_lex *lexed) // HANDLE STAR MATCHING
-{
-	DIR *current;
-    struct dirent *read;
-    char *ret;
-	int last_type;
-
-	ret = NULL;
-	current = opendir(".");
-	if(!current)
-		return ; // ERROR MANAGEMENT
-	read = readdir(current);
-	while (read != NULL)
-	{
-		if (read->d_type == DT_REG || read->d_type == DT_DIR && read->d_name[0] != '.')
-		{
-			ret = ft_strjoin(ret, read->d_name, GC);
-			last_type = read->d_type;
-		}
-		read = readdir(current);
-		if(read && (last_type == DT_REG || last_type == DT_DIR))
-			ret = ft_strjoin(ret, " ", GC);
-	}
-	closedir(current);
-	lexed->content = ret;
-	lexed->token = WORD;
-}
-
-
 void expand_quotes(t_lex *lex)
 {
 	char *str;
@@ -59,13 +30,12 @@ void expand_quotes(t_lex *lex)
 	original->next = looping->next;
 }
 
-void expand(t_lex *lexed, int mode)
+/// QUOTES NOT INTERPTED CORRECTLY  'cat''>>' ===> cat>>
+void quotes_handler(t_lex *lexed)
 {
 	while(lexed)
 	{
-		if (lexed->token == STAR && mode == STAR)
-			expand_star(lexed);
-		else if((lexed->token == QUOTE || lexed->token == DOUBLE_QUOTE) && mode == QUOTE)
+		if(lexed->token == QUOTE || lexed->token == DOUBLE_QUOTE)
 			expand_quotes(lexed);
 		lexed = lexed->next;
 	}
