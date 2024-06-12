@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-t_lex	*ft_lstnew_lex(char *content, int token, int len)
+t_lex	*ft_lstnew_lex(char *content, int token, int len, int join_count)
 {
 	t_lex	*new_node;
 
@@ -8,8 +8,8 @@ t_lex	*ft_lstnew_lex(char *content, int token, int len)
 	new_node->content = content;
 	new_node->len = len;
 	new_node->token = token;
-	new_node->state = GENERAL;
 	new_node->to_replace = REPLACE_ALL;
+	new_node->join_count = join_count;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -60,16 +60,8 @@ int counter(t_lex *current, char c)
 	return (count);
 }
 
-bool is_behind_in_para(t_lex *current, char c)
-{
-	while(current)
-	{
-		if (current->len == 1 && current->content[0] == c && current->state == IN_PARENTHESES)
-			return (true);
-		current = current->prev;
-	}
-	return (false);
-}
+
+
 void	ft_lstadd_back_lex(t_lex **lst, t_lex *new)
 {
 	t_lex	*last_lex;
@@ -134,7 +126,7 @@ void print_lex(const t_lex *lex) {
     // printf("| %-10s | %-15s | %-10d |\n", lex->content, tokenToString(lex->token), lex->len);
     // printf("| %-10s | %-15s | %-10s |\n", "", "", "");
     // printf("|------------|-----------------|------------|\n");
-	printf("Content: {%s} // Token: %s // To replace: %i\n", lex->content, tokenToString(lex->token), lex->to_replace);
+	printf("Content: {%s} // Token: %s // To replace: %i // JC: %i\n", lex->content, tokenToString(lex->token), lex->to_replace, lex->join_count);
 }
 
 void ft_lstiter_lex(t_lex *lex)

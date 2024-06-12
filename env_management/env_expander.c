@@ -1,5 +1,6 @@
 #include "../minishell.h"
 
+
 int get_current_path(char *str)
 {
 	int i;
@@ -9,6 +10,52 @@ int get_current_path(char *str)
 		i++;
 	return i;
 }
+
+t_lex	*ft_mini_lstnew_lex(char *content, int token, int len)
+{
+	t_lex	*new_node;
+
+	new_node = smart_malloc(sizeof(t_lex));
+	new_node->content = content;
+	new_node->len = len;
+	new_node->token = token;
+	new_node->to_replace = REPLACE_ALL;
+	new_node->next = NULL;
+	new_node->prev = NULL;
+	return (new_node);
+}
+
+
+
+void mini_handle_word(char *input, int *i, t_lex **head)
+{
+	t_lex *current_node;
+    char *content;
+    int hold;
+
+	hold = *i;
+    while (input[*i] && !is_special(input[*i]) && input[*i] != ' ')
+        (*i)++;
+    content = ft_substr(input, hold, *i - hold, GC);
+    current_node = ft_mini_lstnew_lex(content, WORD, *i - hold);
+    ft_lstadd_back_lex(head, current_node);
+}
+
+
+void mini_handle_space(char *input, int *i, t_lex **head)
+{
+    int hold;
+    char *content;
+    t_lex *current_node;
+
+	hold = *i;
+    while (input[*i] == ' ')
+        (*i)++;
+    content = ft_substr(input, hold, *i - hold, GC);
+    current_node = ft_mini_lstnew_lex(content, WHITE_SPACE, *i - hold);
+    ft_lstadd_back_lex(head, current_node);
+}
+
 
 void mini_handle_star(char *input, int *i, t_lex **head)
 {
@@ -23,7 +70,7 @@ void mini_handle_star(char *input, int *i, t_lex **head)
     while (input[*i] && (input[*i] == '*'|| !is_special(input[*i])) && input[*i] != ' ')
         (*i)++;
     content = ft_substr(input, hold, *i - hold, GC);
-    current_node = ft_lstnew_lex(content, c, *i - hold);
+    current_node = ft_mini_lstnew_lex(content, c, *i - hold);
     ft_lstadd_back_lex(head, current_node);
 }
 
@@ -42,7 +89,7 @@ void mini_handle_env(char *input, int *i, t_lex **head)
     while (input[*i] && (input[*i] == '$' || !is_special(input[*i])) && input[*i] != ' ')
         (*i)++;
     content = ft_substr(input, hold, *i - hold, GC);
-    current_node = ft_lstnew_lex(content, c, *i - hold);
+    current_node = ft_mini_lstnew_lex(content, c, *i - hold);
     ft_lstadd_back_lex(head, current_node);
 }
 
@@ -58,13 +105,13 @@ t_lex *mini_lexer(char *str)
 	while(str[i])
 	{
 		if(str[i] == ' ')
-			handle_space(str, &i, &head);
+			mini_handle_space(str, &i, &head);
 		else if (str[i] == '*')
 			mini_handle_star(str, &i, &head);
 		else if (str[i] == '$')
 			mini_handle_env(str, &i, &head);
 		else
-			handle_word(str, &i, &head);
+			mini_handle_word(str, &i, &head);
 	}
 	return (head);
 }

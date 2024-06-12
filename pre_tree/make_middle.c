@@ -145,6 +145,26 @@ void process_other_token(t_lex **lex, t_middle **head)
     current = ft_lstnew_middle(ft_strdup((*lex)->content, GC), NULL, (*lex)->token);
     ft_lstadd_back_middle(head, current);
 }
+
+// bool is_joinable_lex(t_lex *lex)
+// {
+// 	return(lex->token != AND && lex->token != OR && lex->token != PIPE_LINE);
+// }
+
+// t_arg *make_command(t_arg **lex)
+// {
+// 	t_arg *head;
+// 	t_arg *current;
+
+// 	head = NULL;
+// 	while(is_joinable_lex(*lex))
+// 	{
+// 		current = ft_lstnew_arg((*lex)->content);
+// 		current->to_replace = (*lex)->to_replace;
+// 		ft_lstaddback_arg();
+// 	}
+// }
+
 void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *in_command, char **command, int *to_replace)
 {
 	t_arg *args;

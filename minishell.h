@@ -116,6 +116,7 @@ typedef struct s_lex
 	char *content;
 	int len;
 	int to_replace;
+	int	join_count;
 	enum e_token token;
 	enum e_state state;
 	struct s_lex *prev;
@@ -141,6 +142,7 @@ typedef struct s_middle
 {
 	int		token;
 	char	*content;
+	t_arg	*command;
 	t_arg	*args;
 	char	*redir_string;
 	int		to_replace;
@@ -184,7 +186,7 @@ typedef struct s_data t_data;
 // LEXER
 t_lex *tokenizer(char *input);
 void quotes_handler(t_lex *lexed);
-t_lex	*ft_lstnew_lex(char *content, int token, int len);
+t_lex	*ft_lstnew_lex(char *content, int token, int len, int join_count);
 t_lex	*ft_lstlast_lex(t_lex *lst);
 t_lex	*ft_lstfirst_lex(t_lex *lst);
 void	ft_lstadd_back_lex(t_lex **lst, t_lex *new);
@@ -193,8 +195,6 @@ t_lex *lex_input_checker(t_lex *tokens);
 const char* tokenToString(enum e_token t);
 int open_checker(t_lex *token);
 char **args_to_arr(t_arg *arg);
-void handle_space(char *input, int *i, t_lex **head);
-void handle_word(char *input, int *i, t_lex **head);
 bool is_special(char c);
 
 

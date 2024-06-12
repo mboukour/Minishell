@@ -43,8 +43,12 @@ t_treenode *parsing(char *input)
          display_error(NONE, we_check_lex);
     else
     {
+        // ft_lstiter_lex(lexed);
+        // printf("-------------------\n");
         middled = make_middle(lexed);
+        // ft_lstiter_middle(middled);
         return (ruined_tree(middled));
+        
     }
     return (NULL);
 }
@@ -65,7 +69,7 @@ void init_t_data(t_data *data)
     data->old_pwd = NULL;
 }
 
-void get_input(t_env **env) 
+void get_input(t_env **env)
 {
     char *input;
     t_treenode *root;
@@ -88,6 +92,8 @@ void get_input(t_env **env)
             root = parsing(input);
             if(root)
                 traverse_tree(root, &data, env);
+                // print_ascii_tree(root, 0);
+
         }
         add_history(input);
         free(input);
