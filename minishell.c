@@ -1,16 +1,12 @@
 #include "minishell.h"
 
+
+
 void sigint_handler(int sig)
 {
     printf("\n");
     rl_on_new_line();
     rl_replace_line("", 0);
-    rl_redisplay();
-}
-
-void sigquit_handler(int sig)
-{
-    rl_on_new_line();
     rl_redisplay();
 }
 
@@ -74,10 +70,10 @@ void get_input(t_env **env)
     t_treenode *root;
     t_data data;
 
-    signal(SIGINT, sigint_handler);
-    signal(SIGQUIT, sigquit_handler);
+    signal(SIGQUIT, SIG_IGN);
     while (true)
 	{
+        signal(SIGINT, sigint_handler);
         init_t_data(&data);
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
         if (!input)
@@ -93,7 +89,7 @@ void get_input(t_env **env)
                 traverse_tree(root, &data, env);
         }
         add_history(input);
-        free(input);
+        // free(input);
         smart_free();
     }
 }
