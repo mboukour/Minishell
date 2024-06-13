@@ -5,6 +5,8 @@ void print_ascii_tree(t_treenode *root, int level)
 {
 	t_middle *lol;
 	t_arg *args;
+	t_cmd_arg *cmd_arg;
+	t_arg *command;
     if (root == NULL)
 	{
 		printf("\n");
@@ -15,17 +17,37 @@ void print_ascii_tree(t_treenode *root, int level)
         printf("    ");
 	if(root->before_redir)
 		ft_lstiter_redir(root->before_redir);
-	printf("%s:%i", root->content, root->to_replace);
-	int j = 1;
-	if(root->args)
+	command = root->command;
+	if(!command)
+		printf("None");
+	else
 	{
-		args = root->args;
-		while (args)
+		while (command)
 		{
-			printf(" %s:%i ", args->content, args->to_replace);
-			args = args->next;
+			printf("%s:%i", command->content, command->to_replace);
+			command = command->next;
 		}
 	}
+	// printf("%s:%i", root->content, root->to_replace);
+
+	printf(" ");
+	if(root->cmd_arg)
+	{
+		cmd_arg = root->cmd_arg;
+		while (cmd_arg)
+		{
+			args = cmd_arg->arg;
+			while(args)
+			{
+				printf("%s:%i-", args->content, args->to_replace);
+				args = args->next;
+			}
+			printf(" // ");
+			cmd_arg = cmd_arg->next;
+		}
+	}
+	else
+		printf("No args");
 	printf(" ");
 	if(root->after_redir)
 		ft_lstiter_redir(root->after_redir);

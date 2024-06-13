@@ -68,26 +68,30 @@ void	pipeline(t_treenode *root, t_data *data, t_env **env)
 		;
 }
 
-// SET BUILTINS EXIT STATUS!!!!
-void execute_builtin(t_treenode *root, t_env **envp, t_data *data)
-{
-	int builtin;
 
-	builtin = root->builtin;
-	if(builtin == ENV_CMD)
+// SET BUILTINS EXIT STATUS!!!!
+int execute_builtin(t_treenode *root, t_env **envp, t_data *data)
+{
+	char *command;
+
+	command = root->content;
+	if (!ft_strcmp(command, "env"))
 		data->status = env(*envp);
-	else if(builtin == ECHO)
+	else if (!ft_strcmp(command, "echo"))
 		data->status = echo(root);
-	else if(builtin == PWD)
+	else if (!ft_strcmp(command, "pwd"))
 		data->status = pwd(root, data);
-	else if(builtin == EXPORT)
+	else if (!ft_strcmp(command, "export"))
 		data->status = export(envp, root);
-	else if(builtin == UNSET)
+	else if (!ft_strcmp(command, "unset"))
 		data->status = unset(envp, root);
-	else if(builtin == CD)
+	else if (!ft_strcmp(command, "cd"))
 		data->status = cd(root, envp, data);
-	else if(builtin == EXIT)
+	else if (!ft_strcmp(command, "exit"))
 		data->status = exit_cmd(root, *envp);
+	else
+		return (NONE);
+	return (0);
 }
 
 
@@ -126,15 +130,18 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	pid_t pid;
 	char *exp;
 	char *absolute_path;
+	t_arg *args;
 
 	exp = ft_strjoin("_=", get_underscore(root) , MANUAL);
 	export_core(env, exp);
 	free(exp);
-	if(root->builtin != NONE)
-	{
-		execute_builtin(root, env, data);
+	if (!execute_builtin(root, env, data))
 		return;
-	}
+	// if(root->builtin != NONE)
+	// {
+	// 	execute_builtin(root, env, data);
+	// 	return;
+	// }
 	pid = fork();
 	if (pid == -1)
 	{
@@ -143,9 +150,12 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	}
 	else if (pid == 0)
 	{
+		args = ft_lstnew_arg(NULL);
+		args->content = ft_strdup(root->content, GC);
+		args->next = root->args;
 		get_path(root, *env, data);
 		data->env = env_to_array(*env);
-		data->cmd = args_to_arr(root->args);
+		data->cmd = args_to_arr(args);
 		if (execve(data->path, data->cmd, data->env) == -1)
 		{
 			write(2, root->content, ft_strlen(root->content));

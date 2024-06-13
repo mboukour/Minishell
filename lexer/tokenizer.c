@@ -126,10 +126,11 @@ t_lex *tokenizer(char *input)
     int i;
     t_lex *head;
     char *content;
-	static int join_count;
+	int join_count;
 
 	head = NULL;
 	i = 0;
+    join_count = 0;
     while (input[i])
     {
         if (is_special(input[i]))
@@ -137,6 +138,5 @@ t_lex *tokenizer(char *input)
         else
             handle_word(input, &i, &head, &join_count);
     }
-    join_count = 0;
     return head;
 }

@@ -20,7 +20,7 @@ int assing_builtin(char *commad)
     return (NONE);
 }
 
-t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token)
+t_middle	*ft_lstnew_middle(t_arg *command, t_cmd_arg *cmd_arg, int token)
 {
 	t_middle	*new_node;
 
@@ -28,12 +28,14 @@ t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token)
 	if (!new_node)
 		return (NULL);
 	new_node->token = token;
-	new_node->content = content;
-	new_node->args = args;
+	// new_node->content = content;
+	new_node->command = command;
+	new_node->args = NULL;
+	new_node->cmd_arg = cmd_arg;
 	new_node->redir_string = NULL;
 	new_node->to_replace = REPLACE_ALL;
-	new_node->builtin = assing_builtin(content);
-	new_node->token = token;
+	// new_node->builtin = assing_builtin(content);
+	new_node->builtin = NONE;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -76,17 +78,33 @@ void	ft_lstadd_back_middle(t_middle **lst, t_middle *new)
 void print_middle(t_middle *node)
 {
 	int i;
-	t_arg *loop;
+	t_arg *command;
+	t_cmd_arg *loop;
+	t_arg *mini_args;
 
 	i = 0;
-	
-	printf("Content: %s:%i // Token: %s  // ", node->content, node->to_replace, tokenToString(node->token));
-	if(node->args)
+	command = node->command;
+
+	if(!command)
+		printf("None-");
+	while(command)
 	{
-		loop = node->args;
+		printf("%s:%i-", command->content, command->to_replace);
+		command = command->next;
+	}
+	printf(" // Token: %s //", tokenToString(node->token));
+	if(node->cmd_arg)
+	{
+		loop = node->cmd_arg;
 		while(loop)
 		{
-			printf("%s: %i // ", loop->content, loop->to_replace);
+			mini_args = loop->arg;
+			while(mini_args)
+			{
+				printf("%s:%i-", mini_args->content, mini_args->to_replace);
+				mini_args = mini_args->next;
+			}
+			printf(" // ");
 			loop = loop->next;
 		}
 	}

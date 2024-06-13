@@ -135,8 +135,16 @@ typedef struct s_arg
 {
 	char *content;
 	int to_replace;
+	int join_count;
 	struct s_arg *next;
 }	t_arg;
+
+typedef struct s_cmd_arg
+{
+	t_arg *arg;
+	struct s_cmd_arg *next;
+	struct s_cmd_arg *prev;
+} t_cmd_arg;
 
 typedef struct s_middle
 {
@@ -144,6 +152,7 @@ typedef struct s_middle
 	char	*content;
 	t_arg	*command;
 	t_arg	*args;
+	t_cmd_arg *cmd_arg;
 	char	*redir_string;
 	int		to_replace;
 	int		builtin;
@@ -157,8 +166,7 @@ typedef struct	s_middle_vars
 	t_middle	*head;
 	t_middle	*current;
 	bool	in_command;
-	char	*command;
-	int		to_replace;
+	t_arg	*command;
 }	t_middle_vars;
 
 
@@ -174,6 +182,8 @@ typedef struct s_treenode
 	int		token; // COMMAND // OR // AND // PIPE
 	char	*content;
 	t_arg	*args;
+	t_arg	*command;
+	t_cmd_arg *cmd_arg;
 	int		to_replace;
 	t_redir	*before_redir;
 	t_redir	*after_redir;
@@ -199,7 +209,7 @@ bool is_special(char c);
 
 
 // MIDDLE MAN
-t_middle	*ft_lstnew_middle(char *content, t_arg *args, int token);
+t_middle	*ft_lstnew_middle(t_arg *command, t_cmd_arg *cmd_arg, int token);
 void	ft_lstadd_back_middle(t_middle **lst, t_middle *new);
 t_middle *make_middle(t_lex *lex);
 void ft_lstiter_middle(t_middle *first);
@@ -208,6 +218,8 @@ t_arg *ft_lstnew_arg(t_lex *word);
 t_arg *ft_lstlast_arg(t_arg *head);
 void ft_lstaddback_arg(t_arg **head, t_arg *new);
 int ft_lstsize_arg(t_arg *arg);
+t_cmd_arg *ft_lstnew_cmd_arg(t_arg *arg);
+void ft_lstaddback_cmd_arg(t_cmd_arg **lst, t_cmd_arg *new);
 
 // ABSTRACT SYNTAX TREE
 t_treenode		*new_treenode(t_middle *middled);

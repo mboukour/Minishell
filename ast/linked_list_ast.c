@@ -5,6 +5,8 @@ void nullify_all(t_treenode *node)
 	node->token = NONE;
 	node->content = NULL;
 	node->args = NULL;
+	node->command = NULL;
+	node->cmd_arg = NULL;
 	node->builtin = NONE;
 }
 
@@ -33,14 +35,14 @@ t_treenode		*new_treenode(t_middle *middled)
 	if(middled)
 	{
 		new_node->token = middled->token;
-		new_node->content = ft_strdup(middled->content, GC);
-		new_node->args = NULL;
-		new_node->to_replace = middled->to_replace;
-		new_node->args = copy_arg(middled->args);
+		new_node->command = copy_arg(middled->command);
 		new_node->builtin = middled->builtin;
+		new_node->cmd_arg = middled->cmd_arg;
 	}
 	else
 		nullify_all(new_node);
+	new_node->content = NULL;
+	new_node->args = NULL;
 	new_node->after_redir = NULL;
 	new_node->before_redir = NULL;
 	new_node->left = NULL;

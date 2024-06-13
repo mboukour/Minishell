@@ -84,12 +84,11 @@ int export(t_env **env, t_treenode *export_root)
 	t_arg *args;
 
 	args = export_root->args;
-	if(!args->next)
+	if(!args)
 	{
 		ft_lstiter_env(*env, true);
 		return (0);
 	}
-	args = args->next;
 	while(args)
 	{
 		if(args->content[0] == '?' && args->content[1] == '=')

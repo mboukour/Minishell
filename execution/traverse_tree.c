@@ -19,18 +19,66 @@ void sigint_handler_cmd(int sig)
     rl_replace_line("", 0);
 }
 
-void expand_args(t_arg *args, t_env *env)
+char *args_to_str(t_arg *args)
 {
-	while(args)
+	char *result;
+
+	result = NULL;
+	while (args)
 	{
-		if(args->to_replace != NO_REPLACE)
-		{
-				args->content = env_expander(args->content, env);
-			if(args->to_replace == REPLACE_ALL)
-				args->content = star_matching(args->content);
-		}
+		result = ft_strjoin(result, args->content, GC);
 		args = args->next;
 	}
+	return (result);
+}
+
+t_arg *final_args(t_cmd_arg *cmd_arg)
+{
+	t_arg *args;
+	t_arg *head;
+	t_arg *current;
+	char *ready_arg;
+
+	head = NULL;
+	ready_arg = NULL;
+	while(cmd_arg)
+	{
+		args = cmd_arg->arg;
+		while(args)
+		{
+			ready_arg = ft_strjoin(ready_arg, args->content, GC);
+			args = args->next;
+		}
+		current = ft_lstnew_arg(NULL);
+		current->content = ready_arg;
+		ft_lstaddback_arg(&head, current);
+		cmd_arg = cmd_arg->next;
+	}
+	return (head);
+}
+
+t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
+{
+	t_arg *args;
+	t_cmd_arg *original;
+
+	original = cmd_arg;
+	while(cmd_arg)
+	{
+		args = cmd_arg->arg;
+		while(args)
+		{
+			if(args->to_replace != NO_REPLACE)
+			{
+					args->content = env_expander(args->content, env);
+				if(args->to_replace == REPLACE_ALL)
+					args->content = star_matching(args->content);
+			}
+			args = args->next;
+		}
+		cmd_arg = cmd_arg->next;
+	}
+	return (final_args(original));
 }
 
 void expand_redirs(t_redir *redir, t_env *env)
@@ -49,13 +97,22 @@ void expand_redirs(t_redir *redir, t_env *env)
 
 void expand_node(t_treenode *root, t_env *env)
 {
-	if(root->content && root->to_replace != NO_REPLACE)
+	t_arg *command;
+
+	command = root->command;
+	if(command)
 	{
-		root->content = env_expander(root->content, env);
-		if(root->to_replace == REPLACE_ALL)
-			root->content = star_matching(root->content);
+		while(command)
+		{
+			if(command->to_replace != NO_REPLACE)
+				command->content = env_expander(command->content, env);
+			if(command->to_replace == REPLACE_ALL)
+				command->content = star_matching(command->content);
+			command = command->next;
+		}
+		root->content = args_to_str(root->command);
 	}
-	expand_args(root->args, env);
+	root->args = expand_args(root->cmd_arg, env);
 	expand_redirs(root->before_redir, env);
 	expand_redirs(root->after_redir, env);
 }
