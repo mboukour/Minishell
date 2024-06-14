@@ -121,28 +121,41 @@ t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
 void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 {
 	t_env *star;
+	t_arg *arg;
 
 	while (redir)
 	{
-		if(redir->to_replace != NO_REPLACE)
+		arg = redir->redir_input;
+		while(arg)
 		{
-			redir->redir_string = env_expander(redir->redir_string, *env);
-			if(redir->to_replace == REPLACE_ALL)
+			if(arg->to_replace != NO_REPLACE)
 			{
-				star = star_matching(redir->redir_string);
-				if(star)
+				arg->content = env_expander(arg->content, *env);
+				if(arg->to_replace == REPLACE_ALL)
 				{
-					if(star->next)
+					star = star_matching(arg->content);
+					if(star)
 					{
-						ft_putstr_fd(2, redir->redir_string);
-						ft_putstr_fd(2, ": ambiguous redirect\n");
-						change_status(env, 1);
-						init_tree(root);
+						if(star->next)
+						{
+							ft_putstr_fd(2, redir->redir_string);
+							ft_putstr_fd(2, ": ambiguous redirect\n");
+							change_status(env, 1);
+							init_tree(root);
+							return;
+						}
+						else
+							arg->content = ft_strdup(star->value, GC);
 					}
-					else
-						redir->redir_string = ft_strdup(star->value, GC);
 				}
 			}
+			arg = arg->next;
+		}
+		arg = redir->redir_input;
+		while(arg)
+		{
+			redir->redir_string = ft_strjoin(redir->redir_string, arg->content, GC);
+			arg = arg->next;
 		}
 		redir = redir->next;
 	}
@@ -213,6 +226,7 @@ void expand_node(t_treenode *root, t_env **env)
 	command = root->command;
 	args = NULL;
 	tmp_arg = NULL;
+	no_star = NULL;
 	if(command)
 	{
 		while(command)
@@ -247,9 +261,7 @@ void expand_node(t_treenode *root, t_env **env)
 		tmp_arg->next = expand_args(root->cmd_arg, *env);
 		root->args = tmp_arg;
 	}
-	expand_redirs(root->before_redir, env, root);
-	expand_redirs(root->after_redir, env, root);
-	if(is_a_directory(no_star))
+	if(no_star && is_a_directory(no_star))
 	{
 		ft_putstr_fd(2, no_star);
 		ft_putstr_fd(2,": Is a directory\n");
@@ -258,6 +270,8 @@ void expand_node(t_treenode *root, t_env **env)
 		change_status(env, DIRECORY_STATUS);
 		return;
 	}
+	expand_redirs(root->before_redir, env, root);
+	expand_redirs(root->after_redir, env, root);
 }
 
 
@@ -274,9 +288,9 @@ int	traverse_tree(t_treenode *root, t_data *data, t_env **env)
 	if(root->token != AND  && root->token != OR && root->token != PIPE_LINE)
 		expand_node(root, env);
 	if (root->before_redir)
-		handle_red(root->before_redir, root);
+		handle_red(root->before_redir, root, env);
 	if (root->after_redir)
-		handle_red(root->after_redir, root);
+		handle_red(root->after_redir, root, env);
 	if (root->token == COMMAND)
 		execute_command(root, env, data);
 	else if (root->token == PIPE_LINE)

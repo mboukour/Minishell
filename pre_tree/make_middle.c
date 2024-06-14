@@ -102,9 +102,12 @@ t_arg *make_args(t_lex **first_arg)
 void process_redirection_token(t_lex **lex, t_middle **head, int token)
 {
 	t_middle *current;
+	t_arg *arg;
+	t_arg *arg_head;
 	char *redir_string;
 	int current_jc;
 
+	arg_head = NULL;
 	redir_string = NULL;
     *lex = (*lex)->next;
     jump_spaces(lex);
@@ -112,10 +115,13 @@ void process_redirection_token(t_lex **lex, t_middle **head, int token)
     current = ft_lstnew_middle(NULL, NULL, token);
 	while ((*lex) && ((*lex)->token == COMMAND || (*lex)->token == ENV || (*lex)->token == STAR) && (*lex)->join_count == current_jc)
 	{
-		redir_string = ft_strjoin(redir_string, (*lex)->content, GC);
+		arg = ft_lstnew_arg(*lex);
+		ft_lstaddback_arg(&arg_head, arg);
+		// redir_string = ft_strjoin(redir_string, (*lex)->content, GC);
 		(*lex) = (*lex)->next;
 	}
-    current->redir_string = redir_string;
+    // current->redir_string = redir_string;
+	current->redirections = arg_head;
     ft_lstadd_back_middle(head, current);
 }
 

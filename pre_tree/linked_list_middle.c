@@ -107,12 +107,21 @@ void print_middle(t_middle *node)
 			loop = loop->next;
 		}
 	}
-	if(node->token == REDIR_IN)
-		printf("Read from: %s // ", node->redir_string);
-	else if (node->token == REDIR_OUT || node->token == DREDIR_OUT)
-		printf("Write to: %s // ", node->redir_string);
-	else if (node->token == HERE_DOC)
-		printf("Delimiter: %s // ", node->redir_string);
+	if(node->token == REDIR_IN || node->token == REDIR_OUT || node->token == DREDIR_OUT || node->token == HERE_DOC)
+	{
+		command = node->redirections;
+		if(node->token == REDIR_IN)
+			printf("Read from: // ");
+		else if (node->token == REDIR_OUT || node->token == DREDIR_OUT)
+			printf("Write to: // ");
+		else if (node->token == HERE_DOC)
+			printf("Delimiter: // ");
+		while(command)
+		{
+			printf("%s:%i //", command->content, command->to_replace);
+			command = command->next;
+		}
+	}
 	printf("\n");
 }
 

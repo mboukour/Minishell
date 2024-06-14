@@ -234,7 +234,7 @@ void	handle_heredoc(t_redir *redir)
 	close(fd);
 }
 
-void	handle_red(t_redir *redir, t_treenode *root)
+void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 {
 	int		fd;
 	int		info;
@@ -259,10 +259,11 @@ void	handle_red(t_redir *redir, t_treenode *root)
 				fd = dup(0);
 			else
 				fd = open(redir->redir_string, O_RDONLY, 0777);
-			if (fd == -1)
+			if (fd == -1) // UPDATE STATUS ON FAILURE?
 			{
 				write(2, redir->redir_string, ft_strlen(redir->redir_string));
 				write(2, " :No such file or directoty\n", 28);
+				change_status(env, 1);
 				init_tree(root);
 				return ;
 			}
@@ -272,6 +273,7 @@ void	handle_red(t_redir *redir, t_treenode *root)
 				close(fd);
 				exit(EXIT_FAILURE);
 			}
+			change_status(env, 0);
 			close(fd);
 		}
 		else if (redir->token == REDIR_OUT || redir->token == DREDIR_OUT)
@@ -291,6 +293,7 @@ void	handle_red(t_redir *redir, t_treenode *root)
 				close(fd);
 				exit(EXIT_FAILURE);
 			}
+			change_status(env, 0);
 			close(fd);
 		}
 		redir = redir->next;

@@ -60,7 +60,8 @@ t_redir *ft_lstnew_redir(t_middle *middled)
 	if(!new_node)
 		return (NULL);
 	new_node->token = (middled)->token;
-	new_node->redir_string = ft_strdup((middled)->redir_string, GC);
+	new_node->redir_string = NULL;
+	new_node->redir_input = middled->redirections;
 	new_node->to_replace = middled->to_replace;
 	new_node->next = NULL;
 	return (new_node);
@@ -105,9 +106,17 @@ char *redir_to_str(int token)
 
 void ft_lstiter_redir(t_redir *first)
 {
+	t_arg *arg;
 	while(first)
 	{
-		printf("(%s %s):%i ", redir_to_str(first->token), first->redir_string, first->to_replace);
+		arg = first->redir_input;
+		printf("(%s: ", redir_to_str(first->token));
+		while(arg)
+		{
+			printf("%s:%i //", arg->content, arg->to_replace);
+			arg = arg->next;
+		}
+		printf(")");
 		first = first->next;
 	}
 }

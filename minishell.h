@@ -112,6 +112,16 @@ typedef struct s_env
 	struct s_env *prev;
 } t_env;
 
+typedef struct s_arg
+{
+	char *content;
+	int to_replace;
+	int join_count;
+	struct s_arg *next;
+	struct s_arg *prev;
+}	t_arg;
+
+
 typedef struct s_lex
 {
 	char *content;
@@ -128,18 +138,11 @@ typedef struct s_redir
 {
 	int token;
 	int to_replace;
+	t_arg *redir_input;
 	char *redir_string;
 	struct s_redir *next;
 }	t_redir;
 
-typedef struct s_arg
-{
-	char *content;
-	int to_replace;
-	int join_count;
-	struct s_arg *next;
-	struct s_arg *prev;
-}	t_arg;
 
 typedef struct s_cmd_arg
 {
@@ -154,6 +157,7 @@ typedef struct s_middle
 	char	*content;
 	t_arg	*command;
 	t_arg	*args;
+	t_arg	*redirections;
 	t_cmd_arg *cmd_arg;
 	char	*redir_string;
 	int		to_replace;
