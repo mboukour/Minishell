@@ -190,6 +190,7 @@ typedef struct s_treenode
 	t_redir	*before_redir;
 	t_redir	*after_redir;
 	int		builtin;
+	bool	is_a_directory;
 	struct	s_treenode *left;
 	struct	s_treenode *right;
 } t_treenode;

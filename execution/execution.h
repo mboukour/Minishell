@@ -16,8 +16,8 @@
 # include "../minishell.h"
 # include <fcntl.h>
 
-#define CMD_NOT_FOUND 127
-
+# define CMD_NOT_FOUND 127
+# define DIRECORY_STATUS 126
 typedef struct s_treenode t_treenode;
 typedef struct s_env t_env;
 typedef struct s_redir t_redir;

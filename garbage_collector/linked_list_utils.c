@@ -1,5 +1,5 @@
 #include "cgc.h"
-
+#include <stdio.h>
 t_node	*ft_lstnew(void *ptr_to_store)
 {
 	t_node	*new_node;

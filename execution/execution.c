@@ -124,6 +124,7 @@ char *get_underscore(t_treenode *root)
 	return (result);
 }
 
+
 void execute_command(t_treenode *root, t_env **env, t_data *data)
 {
 	pid_t pid;
@@ -145,7 +146,7 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	}
 	export_core(env, exp);
 	free(exp);
-	if (!execute_builtin(root, env, data))
+	if (!execute_builtin(root, env, data) || root->is_a_directory)
 		return;
 	pid = fork();
 	if (pid == -1)

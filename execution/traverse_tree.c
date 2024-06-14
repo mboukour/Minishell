@@ -148,11 +148,66 @@ void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 	}
 }
 
+
+bool is_a_directory(char *path) 
+{
+    DIR *dir;
+
+	dir = opendir(path);
+    if (dir != NULL) 
+	{
+        closedir(dir);
+        return (true);
+    }
+    return (false);
+}
+
+int count_no_star(char *str)
+{
+	int i;
+	int count;
+
+	i = 0;
+	count = 0;
+	while(str[i])
+	{
+		if(str[i] != '*')
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+char *no_stars(char *path)
+{
+	int i;
+	int j;
+	int count;
+	char *no_star;
+
+	i = 0;
+	j = 0;
+	count = count_no_star(path);
+	no_star = smart_malloc(count + 1);
+	while(path[i])
+	{
+		if(path[i] != '*')
+		{
+			no_star[j] = path[i];
+			j++;
+		}
+		i++;
+	}
+	no_star[j] = '\0';
+	return (no_star);
+}
+
 void expand_node(t_treenode *root, t_env **env)
 {
 	t_arg *command;
 	t_env *star;
 	t_arg *args;
+	char *no_star;
 	t_arg *tmp_arg;
 
 	command = root->command;
@@ -164,6 +219,7 @@ void expand_node(t_treenode *root, t_env **env)
 		{
 			if(command->to_replace != NO_REPLACE)
 				command->content = env_expander(command->content, (*env));
+			no_star = no_stars(command->content);
 			if(command->to_replace == REPLACE_ALL)
 			{
 				star = star_matching(command->content);
@@ -193,6 +249,15 @@ void expand_node(t_treenode *root, t_env **env)
 	}
 	expand_redirs(root->before_redir, env, root);
 	expand_redirs(root->after_redir, env, root);
+	if(is_a_directory(no_star))
+	{
+		ft_putstr_fd(2, no_star);
+		ft_putstr_fd(2,": Is a directory\n");
+		root->is_a_directory = true;
+		root->content = ft_strdup(no_star, GC);
+		change_status(env, DIRECORY_STATUS);
+		return;
+	}
 }
 
 

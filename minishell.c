@@ -66,7 +66,7 @@ void init_t_data(t_data *data)
     data->pwd = getcwd(NULL, 0);
     data->old_pwd = NULL;
 }
-
+void expand_node(t_treenode *root, t_env **env);
 void get_input(t_env **env)
 {
     char *input;

@@ -45,6 +45,7 @@ t_treenode		*new_treenode(t_middle *middled)
 	new_node->args = NULL;
 	new_node->after_redir = NULL;
 	new_node->before_redir = NULL;
+	new_node->is_a_directory = false;
 	new_node->left = NULL;
 	new_node->right = NULL;
 	return (new_node);

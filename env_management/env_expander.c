@@ -34,7 +34,7 @@ void mini_handle_word(char *input, int *i, t_lex **head)
     int hold;
 
 	hold = *i;
-    while (input[*i] && !is_special(input[*i]) && input[*i] != ' ')
+    while (input[*i] && input[*i] != '$' && input[*i] != '*' && input[*i] != ' ')
         (*i)++;
     content = ft_substr(input, hold, *i - hold, GC);
     current_node = ft_mini_lstnew_lex(content, WORD, *i - hold);
@@ -67,7 +67,7 @@ void mini_handle_star(char *input, int *i, t_lex **head)
     c = input[*i];
 	hold = *i;
     (*i)++;
-    while (input[*i] && (input[*i] == '*'|| !is_special(input[*i])) && input[*i] != ' ')
+    while (input[*i] && input[*i] == '*' && input[*i] != '$' && input[*i] != ' ')
         (*i)++;
     content = ft_substr(input, hold, *i - hold, GC);
     current_node = ft_mini_lstnew_lex(content, c, *i - hold);
@@ -86,7 +86,7 @@ void mini_handle_env(char *input, int *i, t_lex **head)
     c = input[*i];
 	hold = *i;
     (*i)++;
-    while (input[*i] && (input[*i] == '$' || !is_special(input[*i])) && input[*i] != ' ')
+    while (input[*i] && input[*i] != '$' && input[*i] != '*' && input[*i] != ' ')
         (*i)++;
     content = ft_substr(input, hold, *i - hold, GC);
     current_node = ft_mini_lstnew_lex(content, c, *i - hold);
