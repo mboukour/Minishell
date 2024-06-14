@@ -10,6 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+// REMOVE !!!!
+
+
 #include "execution.h"
 
 void sigint_handler_cmd(int sig)
@@ -26,6 +29,8 @@ char *args_to_str(t_arg *args)
 	result = NULL;
 	while (args)
 	{
+		if(args->content[0] == ' ')
+			fprintf(stderr, "SPACE\n");
 		result = ft_strjoin(result, args->content, GC);
 		args = args->next;
 	}
@@ -53,6 +58,7 @@ t_arg *final_args(t_cmd_arg *cmd_arg)
 		current->content = ready_arg;
 		ft_lstaddback_arg(&head, current);
 		cmd_arg = cmd_arg->next;
+		ready_arg = NULL;
 	}
 	return (head);
 }
@@ -132,13 +138,11 @@ int	traverse_tree(t_treenode *root, t_data *data, t_env **env)
 		expand_node(root, *env);
 	if (root->before_redir)
 	{
-		handle_red(root->before_redir);
-		printf("before\n");
+		handle_red(root->before_redir, root);
 	}
 	if (root->after_redir)
 	{
-		handle_red(root->after_redir);
-		printf("after\n");
+		handle_red(root->after_redir, root);
 	}
 	if (root->token == COMMAND)
 		execute_command(root, env, data);
@@ -155,7 +159,7 @@ int	traverse_tree(t_treenode *root, t_data *data, t_env **env)
 			traverse_tree(root->right, data, env);
 	}
 	else
-		fprintf(stderr, "ERROR: %i\n", root->token);
+		fprintf(stderr, "ERROR: %i\n", root->token); // REMOVE THIS: DUBGGING
 	dup2(save_in, 0);
 	dup2(save_out, 1);
 	close(save_in);

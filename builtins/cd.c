@@ -85,7 +85,6 @@ int cd(t_treenode *cd_root, t_env **env, t_data *data)
 	t_arg *args;
 
 	args = cd_root->args;
-	args = args->next;
 	if(!args)
 		return (cd_home(env, data));
 	else if (!args->next)

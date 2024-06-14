@@ -37,5 +37,5 @@ void	pipeline(t_treenode *root, t_data *data, t_env **env);
 void	get_path(t_treenode *root, t_env *env, t_data *data);
 int		traverse_tree(t_treenode *root, t_data *data, t_env **env);
 void	execute_command(t_treenode *root, t_env **env, t_data *data);
-void	handle_red(t_redir *redir);
+void	handle_red(t_redir *redir, t_treenode *root);
 #endif

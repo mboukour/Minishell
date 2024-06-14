@@ -13,6 +13,21 @@
 #include "execution.h"
 
 
+int change_status(t_env **env, int new_status)
+{
+	char *current_status;
+	char *final;
+
+	current_status = ft_itoa(new_status, MANUAL);
+	if(!current_status)
+		return (1);
+	final = ft_strjoin("?=", current_status, MANUAL);
+	if(!final)
+		return (free(current_status), 1);
+	free(current_status);
+	export_core(env, final);
+	return (0);
+}
 
 void	pipeline(t_treenode *root, t_data *data, t_env **env)
 {
@@ -40,9 +55,8 @@ void	pipeline(t_treenode *root, t_data *data, t_env **env)
 			exit(EXIT_FAILURE);
 		}
 		close(data->end[1]);
-
 		traverse_tree(root->left, data, env);
-		exit(EXIT_FAILURE);
+		exit(data->status);
 	}
 	pid2 = fork();
 	if (pid2 == -1)
@@ -60,16 +74,16 @@ void	pipeline(t_treenode *root, t_data *data, t_env **env)
 		}
 		close(data->end[0]);
 		traverse_tree(root->right, data, env);
-		exit(EXIT_FAILURE);
+		exit(data->status);
 	}
 	close(data->end[0]);
 	close(data->end[1]);
-	while (wait(NULL) != -1)
-		;
+	waitpid(pid1, NULL, 0);
+	waitpid(pid2, &data->status, 0);
+	data->status = WEXITSTATUS(data->status);
+	change_status(env, data->status);
 }
 
-
-// SET BUILTINS EXIT STATUS!!!!
 int execute_builtin(t_treenode *root, t_env **envp, t_data *data)
 {
 	char *command;
@@ -91,23 +105,7 @@ int execute_builtin(t_treenode *root, t_env **envp, t_data *data)
 		data->status = exit_cmd(root, *envp);
 	else
 		return (NONE);
-	return (0);
-}
-
-
-int change_status(t_env **env, int new_status)
-{
-	char *current_status;
-	char *final;
-
-	current_status = ft_itoa(new_status, MANUAL);
-	if(!current_status)
-		return (1);
-	final = ft_strjoin("?=", current_status, MANUAL);
-	if(!final)
-		return (free(current_status), 1);
-	free(current_status);
-	export_core(env, final);
+	change_status(envp, data->status);
 	return (0);
 }
 
@@ -117,6 +115,7 @@ char *get_underscore(t_treenode *root)
 	char *result;
 
 	args = root->args;
+	result = NULL;
 	while(args)
 	{
 		result = args->content;
@@ -131,17 +130,18 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	char *exp;
 	char *absolute_path;
 	t_arg *args;
+	char *under;
 
-	exp = ft_strjoin("_=", get_underscore(root) , MANUAL);
+	if(!root->content)
+		return;
+	under = get_underscore(root);
+	if(!under)
+		under = root->content;
+	exp = ft_strjoin("_=",  under, MANUAL);
 	export_core(env, exp);
 	free(exp);
 	if (!execute_builtin(root, env, data))
 		return;
-	// if(root->builtin != NONE)
-	// {
-	// 	execute_builtin(root, env, data);
-	// 	return;
-	// }
 	pid = fork();
 	if (pid == -1)
 	{
@@ -160,8 +160,8 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 		{
 			write(2, root->content, ft_strlen(root->content));
 			write(2, ": command not found\n", 20);
-			ft_lstclear_env(*env);
-			smart_free();
+			// ft_lstclear_env(*env);
+			// smart_free();
 			exit(127);
 		}
 	}
@@ -174,35 +174,125 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 			change_status(env, data->status);
 			return ;
 		}
-		WIFEXITED(data->status);
 		data->status = WEXITSTATUS(data->status);
 		change_status(env, data->status);
 	}
 }
 
-void	handle_red(t_redir *redir)
+void	init_tree(t_treenode *root)
 {
-	int	fd;
+	root->after_redir = NULL;
+	root->args = NULL;
+	root->before_redir = NULL;
+	root->builtin = -1;
+	root->content = NULL;
+	root->left = NULL;
+	root->right = NULL;
+	root->to_replace = -1;
+	root->token = -1;
+}
 
-	fd = -2;
+
+void	handle_heredoc(t_redir *redir)
+{
+	char	*line;
+	int		fd;
+
+	fd = open("/tmp/heredoc", O_CREAT | O_RDWR | O_TRUNC, 0777);
+	if (fd == -1)
+	{
+		perror("Error in heredoc fd");
+		exit(EXIT_FAILURE);
+	}
+	while (1)
+	{
+		line = readline("> ");
+		if (!line || !ft_strcmp(line, redir->redir_string))
+			break ;
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
+	}
+	close(fd);
+	fd = open("/tmp/heredoc", O_RDONLY);
+	if (fd == -1)
+	{
+		perror("Error in heredoc fd");
+		exit(EXIT_FAILURE);
+	}
+	if (dup2(fd, 0) == -1)
+	{
+		perror("handle heredoc dup failed");
+		close(fd);
+		exit(EXIT_FAILURE);
+	}
+	close(fd);
+}
+
+void	handle_red(t_redir *redir, t_treenode *root)
+{
+	int		fd;
+	int		info;
+	t_redir	*tmp;
+
+	info = 0;
+	tmp = redir;
+	while (tmp)
+	{
+		if (tmp->token == HERE_DOC)
+		{
+			info = 1;
+			handle_heredoc(tmp);
+		}
+		tmp = tmp->next;
+	}
 	while (redir)
 	{
-		if (redir->token == DREDIR_OUT)
-			fd = open(redir->redir_string, O_RDWR | O_CREAT | O_APPEND, 0777);
-		else if (redir->token == REDIR_OUT)
-			fd = open(redir->redir_string, O_RDWR | O_CREAT | O_TRUNC, 0777);
-		if (fd == -1)
+		if (redir->token == REDIR_IN)
 		{
-			perror("File Descriptor");
-			exit(EXIT_FAILURE);
-		}
-		if (dup2(fd, 1) == -1)
-		{
-			perror("handle red dup failed");
+			if (info == 1)
+				fd = dup(0);
+			else
+				fd = open(redir->redir_string, O_RDONLY, 0777);
+			if (fd == -1)
+			{
+				write(2, redir->redir_string, ft_strlen(redir->redir_string));
+				write(2, " :No such file or directoty\n", 28);
+				init_tree(root);
+				return ;
+			}
+			if (dup2(fd, 0) == -1)
+			{
+				perror("handle redin dup failed");
+				close(fd);
+				exit(EXIT_FAILURE);
+			}
 			close(fd);
-			exit(EXIT_FAILURE);
 		}
-		close(fd);
+		else if (redir->token == REDIR_OUT || redir->token == DREDIR_OUT)
+		{
+			if (redir->token == DREDIR_OUT)
+			{
+				fprintf(stderr, "DREDIR_OUT: {%s}\n", redir->redir_string);
+				fd = open(redir->redir_string, O_RDWR | O_CREAT | O_APPEND, 0777);
+			}
+			else if (redir->token == REDIR_OUT)
+			{
+				fprintf(stderr, "REDIR_OUT: {%s}\n", redir->redir_string);
+				fd = open(redir->redir_string, O_RDWR | O_CREAT | O_TRUNC, 0777);
+			}
+			if (fd == -1)
+			{
+				perror("File Descriptor");
+				exit(EXIT_FAILURE);
+			}
+			if (dup2(fd, 1) == -1)
+			{
+				perror("handle red dup failed");
+				close(fd);
+				exit(EXIT_FAILURE);
+			}
+			close(fd);
+		}
 		redir = redir->next;
 	}
 }

@@ -104,7 +104,6 @@ void print_middle(t_middle *node)
 				printf("%s:%i-", mini_args->content, mini_args->to_replace);
 				mini_args = mini_args->next;
 			}
-			printf(" // ");
 			loop = loop->next;
 		}
 	}

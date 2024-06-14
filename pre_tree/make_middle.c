@@ -113,7 +113,6 @@ void process_redirection_token(t_lex **lex, t_middle **head, int token)
 	}
     current->redir_string = redir_string;
     ft_lstadd_back_middle(head, current);
-	// (*lex) = (*lex)->next;
 }
 
 void process_other_token(t_lex **lex, t_middle **head)
@@ -194,6 +193,8 @@ void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *
 			if(!*lex)
 				break;
 			args = make_args(lex);
+			if(!args)
+				break;
 			cmd_current = ft_lstnew_cmd_arg(args);
 			ft_lstaddback_cmd_arg(&cmd_head, cmd_current);
 		}

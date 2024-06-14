@@ -136,7 +136,7 @@ char **env_to_array(t_env *env)
 	{
 		if((env->value[0] != '?' || env->value[1] != '='))
 		{
-			arr[i] = ft_strdup(env->value, GC);
+			arr[i] = ft_strdup(env->value, MANUAL);
 			if(!arr[i])
 			{
 				free_until_k(arr, i);
