@@ -10,8 +10,10 @@ void sigint_handler(int sig)
     rl_redisplay();
 }
 
-void display_error(int error_checker, t_lex *lex)
+void display_error(int error_checker, t_lex *lex, t_data *data, t_env **env)
 {
+    data->status = SYNTAX_ERROR_STATUS;
+    change_status(env, data->status);
     if(error_checker != NONE)
     {
         if(error_checker == QUOTE)
@@ -25,7 +27,7 @@ void display_error(int error_checker, t_lex *lex)
     ft_putstr_fd(2, "\n");
 }
 
-t_treenode *parsing(char *input)
+t_treenode *parsing(char *input, t_data *data, t_env **env)
 {
     t_lex *lexed;
     t_lex *we_check_lex;
@@ -36,16 +38,14 @@ t_treenode *parsing(char *input)
     lexed = tokenizer(input);
     error_checker = open_checker(lexed);
     if(error_checker != NONE)
-        return (display_error(error_checker, NULL), NULL);
+        return (display_error(error_checker, NULL, data, env), NULL);
     quotes_handler(lexed);
     we_check_lex = lex_input_checker(lexed);
     if(we_check_lex)
-         display_error(NONE, we_check_lex);
+         display_error(NONE, we_check_lex, data, env);
     else
     {
-        // ft_lstiter_lex(lexed);
         middled = make_middle(lexed);
-        // ft_lstiter_middle(middled);
         return (ruined_tree(middled));
     }
     return (NULL);
@@ -87,9 +87,12 @@ void get_input(t_env **env)
         }
         else if(ft_strcmp(input, ""))
         {
-            root = parsing(input);
+            root = parsing(input, &data, env);
             if(root)
+            {
+                // print_ascii_tree(root, 0);
                 traverse_tree(root, &data, env);
+            }
         }
         add_history(input);
         free(input);
@@ -112,6 +115,7 @@ int main(int ac, char **av, char **envp)
         ft_putstr_fd(2, FAILURE_MSG);
         return (1);
     }
+    export_core(&env, "?=0");
     get_input(&env);
     return (0);
 }

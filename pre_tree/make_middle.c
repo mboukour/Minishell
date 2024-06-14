@@ -37,6 +37,7 @@ t_arg *ft_lstnew_arg(t_lex *word)
 		new_node->join_count = NONE;
 	}
 	new_node->next = NULL;
+	new_node->prev = NULL;
 	return (new_node);
 }
 
@@ -62,12 +63,15 @@ int ft_lstsize_arg(t_arg *arg)
 
 void ft_lstaddback_arg(t_arg **head, t_arg *new)
 {
+	t_arg *last_arg;
 	if(!*head)
 	{
 		*head = new;
 		return;
 	}
-	ft_lstlast_arg(*head)->next = new;
+	last_arg = ft_lstlast_arg(*head);
+	last_arg->next = new;
+	new->prev = last_arg;
 }
 
 
@@ -168,6 +172,11 @@ bool is_there_another_arg(t_lex *lex)
 	return (false);
 }
 
+bool is_redir_lex(t_lex *lex)
+{
+	return(lex->token == REDIR_IN || lex->token == REDIR_OUT || lex->token == DREDIR_OUT || lex->token == HERE_DOC);
+}
+
 void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *in_command, t_arg **command)
 {
 	t_arg *args;
@@ -178,7 +187,7 @@ void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *
     if (!(*in_command))
     {
         *command = make_command(lex);
-        if (!(*lex) || (*lex)->token == AND || (*lex)->token == OR || (*lex)->token == PIPE_LINE)
+        if (!(*lex) || (*lex)->token == AND || (*lex)->token == OR || (*lex)->token == PIPE_LINE || is_redir_lex(*lex))
         {
             *current = ft_lstnew_middle(*command, NULL, COMMAND); // COMMAND IS FIRST ARG!
             ft_lstadd_back_middle(head, *current);

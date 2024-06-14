@@ -116,21 +116,23 @@ bool is_star(char *to_match)
     return (false);
 }
 
-char *star_matching(char *to_match)
+t_env *star_matching(char *to_match)
 {
     char *temp;
     char *result;
     t_env *current_star;
     t_env *head;
+    t_env *current;
     char *normal;
 
     head = NULL;
     result = NULL;
+
     current_star = get_star();
     if (!current_star)
     {
         // ft_putstr_fd(2, "opendir: can't opendir()");
-        return (to_match);
+        return (NULL);
     }
     normal = normalize_pattern(to_match);
     while (current_star)
@@ -139,26 +141,28 @@ char *star_matching(char *to_match)
         {
             if (match_pattern(current_star->value, normal))
             {
-                t_env *current = ft_lstnew_env(current_star->value);
+                current = ft_lstnew_env(current_star->value);
                 if (!current)
                     return NULL;
                 ft_lstadd_back_env(&head, current);
             }
         }
         current_star = current_star->next;
+
     }
-    while (head)
-    {
-        temp = head->value;
-        if(head->next)
-            temp = ft_strjoin(head->value, " ", GC);
-        if (!result)
-            result = temp;
-        else
-            result = ft_strjoin(result, temp, GC);
-        head = head->next;
-    }
-    if(!result)
-        return to_match;
-    return (result);
+    return (head);
+    // while (head)
+    // {
+    //     temp = head->value;
+    //     if(head->next)
+    //         temp = ft_strjoin(head->value, " ", GC);
+    //     if (!result)
+    //         result = temp;
+    //     else
+    //         result = ft_strjoin(result, temp, GC);
+    //     head = head->next;
+    // }
+    // if(!result)
+    //     return to_match;
+    // return (result);
 }

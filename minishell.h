@@ -23,6 +23,7 @@
 # define PARSE_ERROR "Parse error near: "
 # define QUOTE_ERROR "Parse error: open quotes\n"
 # define PARA_ERROR "Parse error: open parantheses\n"
+# define SYNTAX_ERROR_STATUS 258
 
 enum e_token
 {
@@ -137,6 +138,7 @@ typedef struct s_arg
 	int to_replace;
 	int join_count;
 	struct s_arg *next;
+	struct s_arg *prev;
 }	t_arg;
 
 typedef struct s_cmd_arg
@@ -220,6 +222,7 @@ void ft_lstaddback_arg(t_arg **head, t_arg *new);
 int ft_lstsize_arg(t_arg *arg);
 t_cmd_arg *ft_lstnew_cmd_arg(t_arg *arg);
 void ft_lstaddback_cmd_arg(t_cmd_arg **lst, t_cmd_arg *new);
+t_cmd_arg	*ft_lstlast_cmd_arg(t_cmd_arg *lst);
 
 // ABSTRACT SYNTAX TREE
 t_treenode		*new_treenode(t_middle *middled);
@@ -247,10 +250,12 @@ char	*ft_itoa(int n, int mode);
 size_t	ft_strcpy(char *dst, const char *src);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
 int	numlen(int n);
+
 // EXPANDER
-char *star_matching(char *to_match);
+t_env *star_matching(char *to_match);
 char *env_expander(char *to_expand, t_env *env);
 char *normalize_pattern(char *pattern);
+
 // BUILTINS
 int cd(t_treenode *cd_root, t_env **env, t_data *data);
 int pwd(t_treenode *pwd_node, t_data *data);
@@ -262,6 +267,7 @@ int echo(t_treenode *echo_root);
 int exit_cmd(t_treenode *root, t_env *env);
 int export_core(t_env **env, char *exp_arg);
 int exit_core(int status, t_env *env);
+
 // ENV STUFF
 t_env *array_to_env(char **env);
 void ft_lstiter_env(t_env *env, bool add_declare); // DEBUG
@@ -271,4 +277,5 @@ void	ft_lstadd_back_env(t_env **lst, t_env *new);
 t_env *get_env(t_env *env, char *str);
 int ft_lstsize_env(t_env *env);
 char **env_to_array(t_env *env);
+int change_status(t_env **env, int new_status);
 #endif

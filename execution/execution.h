@@ -16,6 +16,8 @@
 # include "../minishell.h"
 # include <fcntl.h>
 
+#define CMD_NOT_FOUND 127
+
 typedef struct s_treenode t_treenode;
 typedef struct s_env t_env;
 typedef struct s_redir t_redir;
@@ -38,4 +40,5 @@ void	get_path(t_treenode *root, t_env *env, t_data *data);
 int		traverse_tree(t_treenode *root, t_data *data, t_env **env);
 void	execute_command(t_treenode *root, t_env **env, t_data *data);
 void	handle_red(t_redir *redir, t_treenode *root);
+void	init_tree(t_treenode *root);
 #endif

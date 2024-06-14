@@ -138,6 +138,11 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	if(!under)
 		under = root->content;
 	exp = ft_strjoin("_=",  under, MANUAL);
+	if(!exp)
+	{
+		ft_putstr_fd(2, FAILURE_MSG);
+		exit(EXIT_FAILURE);
+	}
 	export_core(env, exp);
 	free(exp);
 	if (!execute_builtin(root, env, data))
@@ -162,7 +167,7 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 			write(2, ": command not found\n", 20);
 			// ft_lstclear_env(*env);
 			// smart_free();
-			exit(127);
+			exit(CMD_NOT_FOUND);
 		}
 	}
 	else
@@ -271,15 +276,9 @@ void	handle_red(t_redir *redir, t_treenode *root)
 		else if (redir->token == REDIR_OUT || redir->token == DREDIR_OUT)
 		{
 			if (redir->token == DREDIR_OUT)
-			{
-				fprintf(stderr, "DREDIR_OUT: {%s}\n", redir->redir_string);
 				fd = open(redir->redir_string, O_RDWR | O_CREAT | O_APPEND, 0777);
-			}
 			else if (redir->token == REDIR_OUT)
-			{
-				fprintf(stderr, "REDIR_OUT: {%s}\n", redir->redir_string);
 				fd = open(redir->redir_string, O_RDWR | O_CREAT | O_TRUNC, 0777);
-			}
 			if (fd == -1)
 			{
 				perror("File Descriptor");

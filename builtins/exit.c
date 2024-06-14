@@ -28,7 +28,6 @@ int exit_cmd(t_treenode *root, t_env *env)
 	t_arg *args;
 
 	args = root->args;
-	args = args->next;
 	ft_putstr_fd(1, "exit\n");
 	if(!args)
 		exit_core(0, env);
@@ -36,7 +35,7 @@ int exit_cmd(t_treenode *root, t_env *env)
 	{
 		ft_putstr_fd(2,"exit: ");
 		ft_putstr_fd(2,args->content);
-		ft_putstr_fd(2, " numeric argument required\n");
+		ft_putstr_fd(2, ": numeric argument required\n");
 		exit_core(2, env);
 		return (1);
 	}
