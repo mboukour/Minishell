@@ -33,6 +33,7 @@ typedef struct s_data
 	int		status;
 	char	*pwd;
 	char	*old_pwd;
+	char	**foolproof_wd;
 }				t_data;
 
 void	pipeline(t_treenode *root, t_data *data, t_env **env);

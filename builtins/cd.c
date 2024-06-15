@@ -1,19 +1,59 @@
 #include "../minishell.h"
 
-int check_removed(char *path, t_data *data)
+char *remove_last_slash(char *str)
+{
+    int i;
+    int last_slash_index;
+    char *result;
+    i = 0;
+    last_slash_index = -1;
+    while (str[i])
+    {
+        if (str[i] == '/')
+        {
+            last_slash_index = i;
+        }
+        i++;
+    }
+    if (last_slash_index == -1)
+        return str;
+    result = malloc(last_slash_index + 1);
+    if (!result)
+        return NULL;
+    strncpy(result, str, last_slash_index);
+    result[last_slash_index] = '\0';
+    free(str);
+    return result;
+}
+
+int check_removed(char *path, t_data *data, t_env **env)
 {
 	char *dir;
 	char *new;
+	char *result;
 
 	dir = getcwd(NULL, 0);
 	if(!dir)
 	{
-		fprintf(stderr, "Removed\n");
 		new = ft_strjoin(data->pwd, "/", MANUAL);
-		fprintf(stderr, "%s\n", new);
 		new = ft_strjoin(new, path, MANUAL);
 		data->old_pwd = data->pwd;
+		result = ft_strjoin("OLDPWD=", data->old_pwd, MANUAL);
+		export_core(env, result);
+		free(result);
 		data->pwd = new;
+		*(data->foolproof_wd) = remove_last_slash(*(data->foolproof_wd));
+		if(!chdir(*(data->foolproof_wd)))
+		{
+			data->pwd = remove_last_slash(data->pwd);
+			data->old_pwd = data->pwd;
+			result = ft_strjoin("OLDPWD=", data->old_pwd, MANUAL);
+			export_core(env, result);
+			free(result);
+			data->pwd = ft_strdup(*(data->foolproof_wd), MANUAL);
+			free(*(data->foolproof_wd));
+			*(data->foolproof_wd) = NULL;
+		}
 		return (1);
 	}
 	free(dir);
@@ -26,7 +66,7 @@ int cd_core(char *path, t_env **env, t_data *data)
 	char *result;
 	int check;
 
-	check = check_removed(path, data);
+	check = check_removed(path, data, env);
 	if(check)
 		return (1);
 	wd = getcwd(NULL, 0);
@@ -57,12 +97,15 @@ int cd_core(char *path, t_env **env, t_data *data)
 	}
 	free(data->pwd);
 	free(data->old_pwd);
-	data->pwd = wd; // SHOULD BE FREED\
+	data->pwd = wd; // SHOULD BE FREED
 	data->old_pwd = result; // SHOULD BE FREED
+	if(ft_strcmp("..", data->pwd))
+		*(data->foolproof_wd) = ft_strdup(data->pwd, MANUAL);
 	export_core(env, result);
 	free(result);
 	result = ft_strjoin("PWD=", wd, MANUAL);
 	export_core(env, result);
+	free(result);
 	return (0);
 }
 
@@ -83,8 +126,10 @@ int cd_home(t_env **env, t_data *data)
 int cd(t_treenode *cd_root, t_env **env, t_data *data)
 {
 	t_arg *args;
+	static char *foolproof_wd;
 
 	args = cd_root->args;
+	data->foolproof_wd = &foolproof_wd;
 	if(!args)
 		return (cd_home(env, data));
 	else if (!args->next)

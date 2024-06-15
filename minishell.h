@@ -282,5 +282,5 @@ void	ft_lstadd_back_env(t_env **lst, t_env *new);
 t_env *get_env(t_env *env, char *str);
 int ft_lstsize_env(t_env *env);
 char **env_to_array(t_env *env);
-int change_status(t_env **env, int new_status);
+int change_status(t_env **env, int new_status); // CAN FAIL
 #endif

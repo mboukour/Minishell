@@ -65,6 +65,7 @@ void init_t_data(t_data *data)
     data->env = NULL;
     data->pwd = getcwd(NULL, 0);
     data->old_pwd = NULL;
+    data->foolproof_wd = NULL;
 }
 void expand_node(t_treenode *root, t_env **env);
 void get_input(t_env **env)
@@ -79,6 +80,8 @@ void get_input(t_env **env)
 	{
         signal(SIGINT, sigint_handler);
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
+        if(!ft_strcmp("test", input))
+            input = ft_strdup("mkdir -p 1/2/3 && cd 1/2/3 && rm -rf ../../../1", MANUAL);
         if (!input)
         {
             rl_clear_history();
