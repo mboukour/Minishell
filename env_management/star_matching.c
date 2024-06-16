@@ -42,7 +42,6 @@ char *normalize_pattern(char *pattern)
 
     normalized = smart_malloc(pattern_len + 1);
     start = normalized;
-    
     while (pattern[i])
     {
         if (pattern[i] == '*')
@@ -116,6 +115,7 @@ bool is_star(char *to_match)
     return (false);
 }
 
+
 t_env *star_matching(char *to_match)
 {
     char *temp;
@@ -127,7 +127,6 @@ t_env *star_matching(char *to_match)
 
     head = NULL;
     result = NULL;
-
     current_star = get_star();
     if (!current_star)
     {
@@ -148,21 +147,7 @@ t_env *star_matching(char *to_match)
             }
         }
         current_star = current_star->next;
-
     }
+    sort_env_list(head);
     return (head);
-    // while (head)
-    // {
-    //     temp = head->value;
-    //     if(head->next)
-    //         temp = ft_strjoin(head->value, " ", GC);
-    //     if (!result)
-    //         result = temp;
-    //     else
-    //         result = ft_strjoin(result, temp, GC);
-    //     head = head->next;
-    // }
-    // if(!result)
-    //     return to_match;
-    // return (result);
 }

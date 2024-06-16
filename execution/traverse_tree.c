@@ -191,6 +191,11 @@ int count_no_star(char *str)
 	return (count);
 }
 
+bool is_builtin(char *command)
+{
+	return (!ft_strcmp(command, "env") || !ft_strcmp(command, "echo") || !ft_strcmp(command, "pwd") || !ft_strcmp(command, "export") || !ft_strcmp(command, "unset") || !ft_strcmp(command, "cd") || !ft_strcmp(command, "exit"));
+}
+
 char *no_stars(char *path)
 {
 	int i;
@@ -200,6 +205,8 @@ char *no_stars(char *path)
 
 	i = 0;
 	j = 0;
+	if(!path)
+		return (NULL);
 	count = count_no_star(path);
 	no_star = smart_malloc(count + 1);
 	while(path[i])
@@ -261,7 +268,7 @@ void expand_node(t_treenode *root, t_env **env)
 		tmp_arg->next = expand_args(root->cmd_arg, *env);
 		root->args = tmp_arg;
 	}
-	if(no_star && is_a_directory(no_star))
+	if(no_star && !is_builtin(no_star) && is_a_directory(no_star))
 	{
 		ft_putstr_fd(2, no_star);
 		ft_putstr_fd(2,": Is a directory\n");

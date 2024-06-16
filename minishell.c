@@ -68,6 +68,20 @@ void init_t_data(t_data *data)
     data->foolproof_wd = NULL;
 }
 
+bool is_all_space(char *str)
+{
+    int i;
+
+    i = 0;
+    while(str[i])
+    {
+        if(str[i] != ' ')
+            return (false);
+        i++;
+    }
+    return (true);
+}
+
 void get_input(t_env **env)
 {
     char *input;
@@ -86,6 +100,8 @@ void get_input(t_env **env)
         	ft_putstr_fd(1, "exit\n");
             exit_core(0, *env);
         }
+        else if (is_all_space(input))
+            continue;
         else if(ft_strcmp(input, ""))
         {
             root = parsing(input, &data, env);

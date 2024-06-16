@@ -284,4 +284,6 @@ t_env *get_env(t_env *env, char *str);
 int ft_lstsize_env(t_env *env);
 char **env_to_array(t_env *env);
 int change_status(t_env **env, int new_status); // CAN FAIL
+void sort_env_list(t_env *head);
+
 #endif

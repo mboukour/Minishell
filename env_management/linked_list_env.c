@@ -150,28 +150,58 @@ char **env_to_array(t_env *env)
 	return (arr);
 }
 
-void ft_lstiter_env(t_env *env, bool add_declare)
+t_env *copy_env(t_env *env)
 {
-	int i;
+	t_env *head;
+	t_env *current;
 
-	i = 0;
+	head = NULL;
 	while(env)
 	{
-		i++;
-		if(ft_strncmp("?", env->value, 1) && *(env->value + 1) != '=')
-		{
-			if(add_declare)
+		current = ft_lstnew_env(env->value);
+		if(!current)
+			return (ft_lstclear_env(head), NULL);
+		ft_lstadd_back_env(&head, current);
+		env = env->next;
+	}
+	return (head);
+}
+
+void ft_lstiter_env(t_env *env, bool add_declare)
+{
+    int i;
+    t_env *copy;
+
+    i = 0;
+    if (add_declare)
+    {
+        copy = copy_env(env);
+        if (!copy)
+        {
+            perror("Failed to copy environment");
+            exit(EXIT_FAILURE);
+        }
+        sort_env_list(copy);
+        env = copy;
+    }
+
+    while (env)
+    {
+        i++;
+        if (ft_strncmp(env->value, "?=", 2))
+        {
+            if (add_declare)
 			{
-				if(ft_strncmp("_", env->value, 1) && *(env->value + 1) != '=')
-					printf("declare -x ");
-				printf("%s\n", env->value);
+				if(ft_strncmp(env->value, "_=", 2))
+					printf("declare -x %s\n", env->value);
 			}
 			else
 				printf("%s\n", env->value);
-		}
-		env = env->next;
-	}
+        }
+        env = env->next;
+    }
 }
+
 
 void ft_lstclear_env(t_env *head)
 {

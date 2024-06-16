@@ -42,7 +42,7 @@ int unset(t_env **env, t_treenode *unset_root)
     t_arg *arg;
 
     arg = unset_root->args;
-    if(!arg->next)
+    if(!arg)
         return (0);
     while(arg)
     {
