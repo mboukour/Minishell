@@ -1,5 +1,6 @@
 #include "../minishell.h"
 
+
 char *remove_last_slash(char *str)
 {
     int i;
@@ -10,9 +11,7 @@ char *remove_last_slash(char *str)
     while (str[i])
     {
         if (str[i] == '/')
-        {
             last_slash_index = i;
-        }
         i++;
     }
     if (last_slash_index == -1)
@@ -20,10 +19,18 @@ char *remove_last_slash(char *str)
     result = malloc(last_slash_index + 1);
     if (!result)
         return NULL;
-    strncpy(result, str, last_slash_index);
+    ft_strncpy(result, str, last_slash_index + 1);
     result[last_slash_index] = '\0';
     free(str);
     return result;
+}
+
+
+void cd_error()
+{
+	ft_putstr_fd(2, "cd: error retrieving current directory: ");
+	ft_putstr_fd(2, "getcwd: cannot access parent directories: ");
+	perror("");
 }
 
 int check_removed(char *path, t_data *data, t_env **env)
@@ -31,33 +38,48 @@ int check_removed(char *path, t_data *data, t_env **env)
 	char *dir;
 	char *new;
 	char *result;
+	int r;
 
 	dir = getcwd(NULL, 0);
+	r = 0;
 	if(!dir)
 	{
 		new = ft_strjoin(data->pwd, "/", MANUAL);
 		new = ft_strjoin(new, path, MANUAL);
 		data->old_pwd = data->pwd;
+		data->pwd = new;
+		r = 1;
+		if(!ft_strcmp("..", path))
+		{
+			*(data->foolproof_wd) = remove_last_slash(*(data->foolproof_wd));
+			if(!chdir(*(data->foolproof_wd)))
+			{
+				data->pwd = remove_last_slash(data->pwd);
+				data->old_pwd = data->pwd;
+				data->pwd = ft_strdup(*(data->foolproof_wd), MANUAL);
+				free(*(data->foolproof_wd));
+				*(data->foolproof_wd) = NULL;
+			}
+			else
+				cd_error();
+			r = 2;
+		}
+		else if(!ft_strcmp(".", path))
+		{
+			cd_error();
+			r = 2;
+		}
+		else
+			cd_error();
+		result = ft_strjoin("PWD=", data->pwd, MANUAL);
+		export_core(env, result);
+		free(result);
 		result = ft_strjoin("OLDPWD=", data->old_pwd, MANUAL);
 		export_core(env, result);
 		free(result);
-		data->pwd = new;
-		*(data->foolproof_wd) = remove_last_slash(*(data->foolproof_wd));
-		if(!chdir(*(data->foolproof_wd)))
-		{
-			data->pwd = remove_last_slash(data->pwd);
-			data->old_pwd = data->pwd;
-			result = ft_strjoin("OLDPWD=", data->old_pwd, MANUAL);
-			export_core(env, result);
-			free(result);
-			data->pwd = ft_strdup(*(data->foolproof_wd), MANUAL);
-			free(*(data->foolproof_wd));
-			*(data->foolproof_wd) = NULL;
-		}
-		return (1);
 	}
 	free(dir);
-	return (0);
+	return (r);
 }
 
 int cd_core(char *path, t_env **env, t_data *data)
@@ -67,14 +89,11 @@ int cd_core(char *path, t_env **env, t_data *data)
 	int check;
 
 	check = check_removed(path, data, env);
-	if(check)
+	if(check == 1)
 		return (1);
+	else if (check == 2)
+		return (0);
 	wd = getcwd(NULL, 0);
-	if(!wd)
-	{
-		ft_putstr_fd(2, "cd: can't get current working directory\n");
-		return (1);
-	}
 	result = ft_strjoin("OLDPWD=", wd, MANUAL);
 	free(wd);
 	if(!result)

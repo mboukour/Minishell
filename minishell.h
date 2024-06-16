@@ -255,6 +255,7 @@ char	*ft_itoa(int n, int mode);
 size_t	ft_strcpy(char *dst, const char *src);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
 int	numlen(int n);
+size_t ft_strncpy(char *dst, const char *src, size_t dstsize);
 
 // EXPANDER
 t_env *star_matching(char *to_match);
