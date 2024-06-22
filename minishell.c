@@ -111,7 +111,7 @@ void get_input(t_env **env, t_data *data)
             root = parsing(input, data, env);
             if(root)
             {
-                // print_ascii_tree(root, 0);
+                print_ascii_tree(root, 0);
                 traverse_tree(root, data, env);
             }
         }

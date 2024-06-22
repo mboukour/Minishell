@@ -141,7 +141,7 @@ void process_other_token(t_lex **lex, t_middle **head)
 
 bool is_joinable_lex(t_lex *lex)
 {
-	return(lex->token != AND && lex->token != OR && lex->token != PIPE_LINE);
+	return(lex->token != AND && lex->token != OR && lex->token != PIPE_LINE && lex->token != CLOSE_PARANTHESE);
 }
 
 t_arg *make_command(t_lex **lex)
@@ -193,7 +193,7 @@ void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *
     if (!(*in_command))
     {
         *command = make_command(lex);
-        if (!(*lex) || (*lex)->token == AND || (*lex)->token == OR || (*lex)->token == PIPE_LINE || is_redir_lex(*lex))
+        if (!(*lex) || (*lex)->token == AND || (*lex)->token == OR || (*lex)->token == PIPE_LINE || is_redir_lex(*lex) || (*lex)->token == CLOSE_PARANTHESE)
         {
             *current = ft_lstnew_middle(*command, NULL, COMMAND); // COMMAND IS FIRST ARG!
             ft_lstadd_back_middle(head, *current);
@@ -202,7 +202,7 @@ void process_word_token(t_lex **lex, t_middle **head, t_middle **current, bool *
     }
     else
     {
-		while((*lex) && (*lex)->token != AND && (*lex)->token != OR && (*lex)->token != PIPE_LINE)
+		while((*lex) && (*lex)->token != AND && (*lex)->token != OR && (*lex)->token != PIPE_LINE && (*lex)->token != CLOSE_PARANTHESE && (*lex)->token != OPEN_PARANTHESE)
 		{
 			jump_spaces(lex);
 			if(!*lex)

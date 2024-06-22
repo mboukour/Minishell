@@ -107,7 +107,7 @@ t_treenode *parse_command(t_middle **middled)
 	if((*middled) && ((*middled)->token != REDIR_OUT && (*middled)->token != DREDIR_OUT))
 	{
 		command_flag = true;
-		l_node = new_treenode(*middled);
+		l_node = new_treenode(*middled);  // ls
 	}
 	else
 		l_node = new_treenode(NULL);
@@ -129,18 +129,18 @@ t_treenode *parse_pipeline(t_middle **middled)
 	t_treenode *pipe;
 
 	pipe = NULL;
-	l_node = parse_command(middled);
+	l_node = parse_command(middled); // ls | (cat || wc)
 	while((*middled) && (*middled)->token == PIPE_LINE)
 	{
-		pipe = new_treenode(*middled);
+		pipe = new_treenode(*middled); // pipe
 		(*middled) = (*middled)->next;
-		r_node = parse_pipeline(middled);
+		r_node = parse_pipeline(middled); // ls
 		pipe->left = l_node;
 		pipe->right = r_node;
 	}
 	if(pipe)
 		return (pipe);
-	return (l_node);
+	return (l_node); // ls
 }
 
 // <cmdline>  ::= <pipeline> {("&&" | "||") <pipeline>
@@ -151,10 +151,10 @@ t_treenode *parse_cmdline(t_middle **middled)
 	t_treenode *r_node;
 
 	op = NULL;
-	l_node = parse_pipeline(middled);
+	l_node = parse_pipeline(middled); // ls
 	while((*middled) && ((*middled)->token == AND || (*middled)->token == OR))
 	{
-		op = new_treenode(*middled);
+		op = new_treenode(*middled); // AND OR
 		(*middled) = (*middled)->next;
 		r_node = parse_pipeline(middled);
 		op->left = l_node;

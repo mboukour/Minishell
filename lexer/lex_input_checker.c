@@ -72,7 +72,7 @@ t_lex *check_parentheses(t_lex *tokens)
     prev = skip_sp(tokens, 0);
     if (tokens->token == OPEN_PARANTHESE)
     {
-        if (prev && (prev->token != AND && prev->token != OR && prev->token != PIPE_LINE))
+        if (prev && (prev->token != AND && prev->token != OR && prev->token != PIPE_LINE && prev->token != OPEN_PARANTHESE))
             return tokens;
         if (!next)
             return tokens;
