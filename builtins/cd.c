@@ -66,15 +66,11 @@ int check_removed(char *path, t_data *data, t_env **env)
 
         if (!ft_strcmp("..", path))
         {
-            char *temp = *(data->foolproof_wd);
             *(data->foolproof_wd) = remove_last_slash(*(data->foolproof_wd));
-            free(temp);
 
             if (!chdir(*(data->foolproof_wd)))
             {
-                temp = data->pwd;
                 data->pwd = remove_last_slash(data->pwd);
-                safe_free(&temp);
                 safe_free(&data->old_pwd);
                 data->old_pwd = data->pwd;
                 data->pwd = ft_strdup(*(data->foolproof_wd), MANUAL);

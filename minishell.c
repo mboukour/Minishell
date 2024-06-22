@@ -51,7 +51,7 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
     return (NULL);
 }
 
-void init_t_data(t_data *data)
+void init_t_data(t_data *data, t_env **env)
 {
     if (data == NULL)
         return;
@@ -64,6 +64,11 @@ void init_t_data(t_data *data)
     data->path = NULL;
     data->env = NULL;
     data->pwd = getcwd(NULL, 0);
+    if(!data->pwd)
+    {
+        ft_putstr_fd(2, "error retrieving current directory: getcwd: cannot access parent directories: ");
+        perror("");
+    }
     data->old_pwd = NULL;
     data->foolproof_wd = NULL;
 }
@@ -82,13 +87,12 @@ bool is_all_space(char *str)
     return (true);
 }
 
-void get_input(t_env **env)
+void get_input(t_env **env, t_data *data)
 {
     char *input;
     t_treenode *root;
-    t_data data;
+    
 
-    init_t_data(&data);
     signal(SIGQUIT, SIG_IGN);
     while (true)
 	{
@@ -104,11 +108,11 @@ void get_input(t_env **env)
             continue;
         else if(ft_strcmp(input, ""))
         {
-            root = parsing(input, &data, env);
+            root = parsing(input, data, env);
             if(root)
             {
                 // print_ascii_tree(root, 0);
-                traverse_tree(root, &data, env);
+                traverse_tree(root, data, env);
             }
         }
         add_history(input);
@@ -117,22 +121,49 @@ void get_input(t_env **env)
     }
 }
 
+int no_envp_export(t_env **env, t_data *data)
+{
+    char *pwd;
+
+    if(data->pwd)
+    {
+        pwd = ft_strjoin("PWD=", data->pwd, MANUAL);
+        if(!pwd)
+            return (1);
+        export_core(env, pwd);
+    }
+    export_core(env, "SHLVL=1");
+    return (0);
+}
+
+
 int main(int ac, char **av, char **envp)
 {
     t_env *env;
+    t_data data;
 
     (void)ac;
     (void)av;
     if(!isatty(0))
         return 0;
     rl_catch_signals = 0;
-    env = array_to_env(envp);
-    if(!env)
+    init_t_data(&data, &env);
+    if(!envp || !*envp)
     {
-        ft_putstr_fd(2, FAILURE_MSG);
-        return (1);
+        env = NULL;
+        if(no_envp_export(&env, &data))
+            return(1);
+    }
+    else
+    {
+        env = array_to_env(envp);
+        if(!env)
+        {
+            ft_putstr_fd(2, FAILURE_MSG);
+            return (1);
+        }
     }
     export_core(&env, "?=0");
-    get_input(&env);
+    get_input(&env, &data);
     return (0);
 }
