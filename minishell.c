@@ -53,8 +53,6 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
 
 void init_t_data(t_data *data, t_env **env)
 {
-    if (data == NULL)
-        return;
     data->infile = -1;
     data->outfile = -1;
     data->end[0] = -1;
@@ -87,11 +85,11 @@ bool is_all_space(char *str)
     return (true);
 }
 
+
 void get_input(t_env **env, t_data *data)
 {
     char *input;
     t_treenode *root;
-    
 
     signal(SIGQUIT, SIG_IGN);
     while (true)
@@ -111,7 +109,7 @@ void get_input(t_env **env, t_data *data)
             root = parsing(input, data, env);
             if(root)
             {
-                print_ascii_tree(root, 0);
+                // print_ascii_tree(root, 0);
                 traverse_tree(root, data, env);
             }
         }
@@ -133,6 +131,7 @@ int no_envp_export(t_env **env, t_data *data)
         export_core(env, pwd);
     }
     export_core(env, "SHLVL=1");
+    export_core(env, SECURE_PATH);
     return (0);
 }
 

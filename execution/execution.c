@@ -156,12 +156,13 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	}
 	else if (pid == 0)
 	{
+		data->env = env_to_array(*env);
 		args = ft_lstnew_arg(NULL);
 		args->content = ft_strdup(root->content, GC);
 		args->next = root->args;
-		get_path(root, *env, data);
-		data->env = env_to_array(*env);
 		data->cmd = args_to_arr(args);
+		execve(root->content, data->cmd, data->env);
+		get_path(root, *env, data);
 		if (execve(data->path, data->cmd, data->env) == -1)
 		{
 			write(2, root->content, ft_strlen(root->content));

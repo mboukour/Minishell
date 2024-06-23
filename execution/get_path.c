@@ -41,6 +41,11 @@ void	get_path(t_treenode *root, t_env *env, t_data *data) // Copy
 
 	i = 0;
 	path_node = get_env(env, "PATH");
+	if(!path_node)
+	{
+		data->path = ft_strdup(root->content, GC);
+		return;
+	}
 	path = ft_split(path_node->value, ':', GC);
 	if (root->content[0] == '/' || root->content[0] == '.')
 		data->path = ft_strdup(root->content, GC);

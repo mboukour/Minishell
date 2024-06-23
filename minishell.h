@@ -19,7 +19,7 @@
 #include "execution/execution.h"
 
 # define NONE -1
-# define SECURE_PATH "/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:."
+# define SECURE_PATH "PATH=/usr/gnu/bin:/usr/local/bin:/bin:/usr/bin:."
 # define PARSE_ERROR "Parse error near: "
 # define QUOTE_ERROR "Parse error: open quotes\n"
 # define PARA_ERROR "Parse error: open parantheses\n"

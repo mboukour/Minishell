@@ -86,10 +86,12 @@ t_env *array_to_env(char **env)
     t_env *current;
     t_env *head;
     int i;
+	bool set_shlvl;
     char *new;
 
     i = 0;
     head = NULL;
+	set_shlvl = false;
     while (env[i])
     {
         current = ft_lstnew_env(env[i]);
@@ -100,6 +102,7 @@ t_env *array_to_env(char **env)
         }
         if (!ft_strncmp(current->value, "SHLVL", 5) && current->value[5] == '=')
         {
+			set_shlvl = true;
             new = new_shlvl(current->value);
             free(current->value);
             if (!new)
@@ -109,6 +112,8 @@ t_env *array_to_env(char **env)
         ft_lstadd_back_env(&head, current);
         i++;
     }
+	if(!set_shlvl)
+		export_core(&head, "SHLVL=1");
     return (head);
 }
 
