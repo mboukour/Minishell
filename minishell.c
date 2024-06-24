@@ -36,6 +36,8 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
     int error_checker;
 
     lexed = tokenizer(input);
+    ft_lstiter_lex(lexed);
+    printf("------------------------\n");
     error_checker = open_checker(lexed);
     if(error_checker != NONE)
         return (display_error(error_checker, NULL, data, env), NULL);
@@ -46,6 +48,8 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
     else
     {
         middled = make_middle(lexed);
+        ft_lstiter_middle(middled);
+        printf("------------------------\n");
         return (ruined_tree(middled));
     }
     return (NULL);
@@ -109,7 +113,7 @@ void get_input(t_env **env, t_data *data)
             root = parsing(input, data, env);
             if(root)
             {
-                // print_ascii_tree(root, 0);
+                print_ascii_tree(root, 0);
                 traverse_tree(root, data, env);
             }
         }

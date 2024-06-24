@@ -1,5 +1,5 @@
 #include "../minishell.h"
-
+// FIX EXIT
 
 int exit_core(int status, t_env *env)
 {
@@ -42,7 +42,6 @@ int exit_cmd(t_treenode *root, t_env *env)
 	else if(args->next)
 	{
 		ft_putstr_fd(2,"exit: too many arguments\n");
-		exit_core(1, env);
 		return (1);
 	}
 	exit_core(ft_atoi(args->content), env);

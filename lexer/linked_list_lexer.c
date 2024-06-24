@@ -102,7 +102,8 @@ const char* tokenToString(enum e_token t)
 		case OPEN_PARANTHESE: return "OPEN_PARA";
 		case ENV_STAR: return "ENV_STAR";
 		case CLOSE_PARANTHESE: return "CLOSE_PARA";
-        default: return "UNKNOWN_TOKEN";
+		case NONE: return "NONE";
+        default: return ft_strjoin("UNKOWN: ", ft_itoa(t, GC), GC);
     }
 }
 

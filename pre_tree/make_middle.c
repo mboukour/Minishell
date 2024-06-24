@@ -30,11 +30,15 @@ t_arg *ft_lstnew_arg(t_lex *word)
 	new_node->content = NULL;
 	new_node->to_replace = false;
 	new_node->join_count = NONE;
+	new_node->token = NONE;
+	new_node->after_joinable = true;
+	new_node->before_joinable = true;
 	if(word)
 	{
 		new_node->content = ft_strdup(word->content, GC);
 		new_node->to_replace = word->to_replace;
 		new_node->join_count = NONE;
+		new_node->token = word->token;
 	}
 	new_node->next = NULL;
 	new_node->prev = NULL;
@@ -74,6 +78,15 @@ void ft_lstaddback_arg(t_arg **head, t_arg *new)
 	new->prev = last_arg;
 }
 
+
+void ft_lstiter_arg(t_arg *arg)
+{
+	while(arg)
+	{
+		printf("%s\n", arg->content);
+		arg = arg->next;
+	}
+}
 
 t_arg *make_args(t_lex **first_arg)
 {

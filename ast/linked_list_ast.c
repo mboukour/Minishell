@@ -21,6 +21,7 @@ t_arg *copy_arg(t_arg *arg)
 		new = ft_lstnew_arg(NULL);
 		new->content = ft_strdup(arg->content, GC);
 		new->to_replace = arg->to_replace;
+		new->token = arg->token;
 		ft_lstaddback_arg(&res, new);
 		arg = arg->next;
 	}

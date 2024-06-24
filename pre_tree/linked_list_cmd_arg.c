@@ -43,3 +43,24 @@ void ft_lstaddback_cmd_arg(t_cmd_arg **lst, t_cmd_arg *new)
 	last_cmd_arg->next = new;
 	new->prev = last_cmd_arg;
 }
+
+
+void ft_lstiter_cmd_arg(t_cmd_arg *cmd_arg)
+{
+	t_arg *arg;
+
+	printf("Start\n");
+	while(cmd_arg)
+	{
+		arg = cmd_arg->arg;
+		while(arg)
+		{
+			printf("%s //");
+			arg = arg->next;
+		}
+		cmd_arg = cmd_arg->next;
+		printf("\n");
+	}
+	printf("End\n");
+
+}

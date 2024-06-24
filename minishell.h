@@ -27,8 +27,8 @@
 
 enum e_token
 {
-	WORD = -1,
-	COMMAND = -1,
+	WORD = 0,
+	COMMAND = 0,
 	WHITE_SPACE = ' ',
 	NEW_LINE = '\n',
 	QUOTE = '\'',
@@ -108,6 +108,8 @@ enum e_replace_modes
 typedef struct s_env
 {
 	char *value;
+	bool before_joinable;
+	bool after_joinable;
 	struct s_env *next;
 	struct s_env *prev;
 } t_env;
@@ -117,10 +119,12 @@ typedef struct s_arg
 	char *content;
 	int to_replace;
 	int join_count;
+	int token;
+	bool before_joinable;
+	bool after_joinable;
 	struct s_arg *next;
 	struct s_arg *prev;
 }	t_arg;
-
 
 typedef struct s_lex
 {
@@ -185,7 +189,7 @@ typedef struct	s_bool_syntax
 
 typedef struct s_treenode
 {
-	int		token; // COMMAND // OR // AND // PIPE
+	int		token;
 	char	*content;
 	t_arg	*args;
 	t_arg	*command;
@@ -228,6 +232,8 @@ int ft_lstsize_arg(t_arg *arg);
 t_cmd_arg *ft_lstnew_cmd_arg(t_arg *arg);
 void ft_lstaddback_cmd_arg(t_cmd_arg **lst, t_cmd_arg *new);
 t_cmd_arg	*ft_lstlast_cmd_arg(t_cmd_arg *lst);
+void ft_lstiter_arg(t_arg *arg);
+void ft_lstiter_cmd_arg(t_cmd_arg *cmd_arg);
 
 // ABSTRACT SYNTAX TREE
 t_treenode		*new_treenode(t_middle *middled);
@@ -259,7 +265,8 @@ size_t ft_strncpy(char *dst, const char *src, size_t dstsize);
 
 // EXPANDER
 t_env *star_matching(char *to_match);
-char *env_expander(char *to_expand, t_env *env);
+// char *env_expander(char *to_expand, t_env *env);
+void better_env_expander(t_arg **command, t_arg **to_replace, t_env *env);
 char *normalize_pattern(char *pattern);
 
 // BUILTINS
@@ -285,5 +292,6 @@ int ft_lstsize_env(t_env *env);
 char **env_to_array(t_env *env);
 int change_status(t_env **env, int new_status); // CAN FAIL
 void sort_env_list(t_env *head);
+void set_joinables(char *str, bool *before_joinable, bool *after_joinable);
 
 #endif

@@ -24,7 +24,7 @@ void print_ascii_tree(t_treenode *root, int level)
 	{
 		while (command)
 		{
-			printf("%s:%i", command->content, command->to_replace);
+			printf("%s:%i:%s", command->content, command->to_replace, tokenToString(command->token));
 			command = command->next;
 		}
 	}
@@ -39,7 +39,7 @@ void print_ascii_tree(t_treenode *root, int level)
 			args = cmd_arg->arg;
 			while(args)
 			{
-				printf("%s:%i-", args->content, args->to_replace);
+				printf("%s:%i:%s-", args->content, args->to_replace, tokenToString(args->token));
 				args = args->next;
 			}
 			printf(" // ");

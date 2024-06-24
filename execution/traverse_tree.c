@@ -29,6 +29,7 @@ char *args_to_str(t_arg *args)
 	result = NULL;
 	while (args)
 	{
+		printf("%p\n", args);
 		if(args->content && args->content[0] == ' ') // TO REMOVEEEE !!!!
 			fprintf(stderr, "SPACE\n");
 		result = ft_strjoin(result, args->content, GC);
@@ -62,7 +63,33 @@ t_arg *final_args(t_cmd_arg *cmd_arg)
 	}
 	return (head);
 }
+				// if (args->to_replace == REPLACE_ALL)
+				// {
+				// 	star = star_matching(args->content);
+				// 	if (star)
+				// 	{
+				// 		while (star)
+				// 		{
+				// 			tmp_arg = ft_lstnew_arg(NULL);
+				// 			tmp_arg->content = star->value;
+				// 			tmp_cmd_arg = ft_lstnew_cmd_arg(tmp_arg);
+				// 			if (cmd_arg->prev)
+				// 			{
+				// 				cmd_arg->prev->next = tmp_cmd_arg;
+				// 				tmp_cmd_arg->prev = cmd_arg->prev;
+				// 			}
+				// 			else
+				// 				original = tmp_cmd_arg;
+				// 			tmp_cmd_arg->next = cmd_arg->next;
+				// 			cmd_arg->prev = tmp_cmd_arg;
+				// 			star = star->next;
+				// 		}
+				// 	}
+				// }
 
+
+// void arg_env_expander(t_cmd_arg **cmd_arg, t_cmd_arg *current, t_arg)
+void arg_env_setup(t_cmd_arg **cmd_arg, t_cmd_arg *general_list, t_arg *the_env, t_env *env);
 t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
 {
     t_arg *args;
@@ -81,85 +108,64 @@ t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
 	{
 		next_cmd_arg = cmd_arg->next;
 		args = cmd_arg->arg;
-
 		while (args)
 		{
-			if (args->to_replace != NO_REPLACE)
+			if (args->to_replace != NO_REPLACE && args->token == ENV)
 			{
-				args->content = env_expander(args->content, env);
-				if (args->to_replace == REPLACE_ALL)
-				{
-					star = star_matching(args->content);
-					if (star)
-					{
-						while (star)
-						{
-							tmp_arg = ft_lstnew_arg(NULL);
-							tmp_arg->content = star->value;
-							tmp_cmd_arg = ft_lstnew_cmd_arg(tmp_arg);
-							if (cmd_arg->prev)
-							{
-								cmd_arg->prev->next = tmp_cmd_arg;
-								tmp_cmd_arg->prev = cmd_arg->prev;
-							}
-							else
-								original = tmp_cmd_arg;
-							tmp_cmd_arg->next = cmd_arg->next;
-							cmd_arg->prev = tmp_cmd_arg;
-							star = star->next;
-						}
-					}
-				}
+				arg_env_setup(&original, cmd_arg, args, env);
+				break;
 			}
+			
 			args = args->next;
 		}
+		ft_lstiter_arg(cmd_arg->arg);
 		cmd_arg = next_cmd_arg;
 	}
     return (final_args(original));
 }
 
-void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
-{
-	t_env *star;
-	t_arg *arg;
+// void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
+// {
+// 	t_env *star;
+// 	t_arg *arg;
 
-	while (redir)
-	{
-		arg = redir->redir_input;
-		while(arg)
-		{
-			if(arg->to_replace != NO_REPLACE)
-			{
-				arg->content = env_expander(arg->content, *env);
-				if(arg->to_replace == REPLACE_ALL)
-				{
-					star = star_matching(arg->content);
-					if(star)
-					{
-						if(star->next)
-						{
-							ft_putstr_fd(2, redir->redir_string);
-							ft_putstr_fd(2, ": ambiguous redirect\n");
-							change_status(env, 1);
-							init_tree(root);
-							return;
-						}
-						else
-							arg->content = ft_strdup(star->value, GC);
-					}
-				}
-			}
-			arg = arg->next;
-		}
-		arg = redir->redir_input;
-		while(arg)
-		{
-			redir->redir_string = ft_strjoin(redir->redir_string, arg->content, GC);
-			arg = arg->next;
-		}
-		redir = redir->next;
-	}
-}
+// 	while (redir)
+// 	{
+// 		arg = redir->redir_input;
+// 		while(arg)
+// 		{
+// 			if(arg->to_replace != NO_REPLACE)
+// 			{
+// 				arg->content = env_expander(arg->content, *env);
+// 				if(arg->to_replace == REPLACE_ALL)
+// 				{
+// 					star = star_matching(arg->content);
+// 					if(star)
+// 					{
+// 						if(star->next)
+// 						{
+// 							ft_putstr_fd(2, redir->redir_string);
+// 							ft_putstr_fd(2, ": ambiguous redirect\n");
+// 							change_status(env, 1);
+// 							init_tree(root);
+// 							return;
+// 						}
+// 						else
+// 							arg->content = ft_strdup(star->value, GC);
+// 					}
+// 				}
+// 			}
+// 			arg = arg->next;
+// 		}
+// 		arg = redir->redir_input;
+// 		while(arg)
+// 		{
+// 			redir->redir_string = ft_strjoin(redir->redir_string, arg->content, GC);
+// 			arg = arg->next;
+// 		}
+// 		redir = redir->next;
+// 	}
+// }
 
 
 bool is_a_directory(char *path) 
@@ -222,6 +228,29 @@ char *no_stars(char *path)
 	return (no_star);
 }
 
+			// 	command->content = env_expander(command->content, (*env));
+			// no_star = no_stars(command->content);
+			// if(command->to_replace == REPLACE_ALL)
+			// {
+			// 	star = star_matching(command->content);
+			// 	if(star)
+			// 	{
+			// 		command->content = star->value;
+			// 		star = star->next;
+			// 	}
+			// 	while(star)
+			// 	{
+			// 		tmp_arg = ft_lstnew_arg(NULL);
+			// 		tmp_arg->content = ft_strdup((*env)->value, GC);
+			// 		ft_lstaddback_arg(&args, tmp_arg);
+			// 		star = star->next;
+			// 	}
+			// }
+
+
+
+
+
 void expand_node(t_treenode *root, t_env **env)
 {
 	t_arg *command;
@@ -238,47 +267,35 @@ void expand_node(t_treenode *root, t_env **env)
 	{
 		while(command)
 		{
-			if(command->to_replace != NO_REPLACE)
-				command->content = env_expander(command->content, (*env));
-			no_star = no_stars(command->content);
-			if(command->to_replace == REPLACE_ALL)
-			{
-				star = star_matching(command->content);
-				if(star)
-				{
-					command->content = star->value;
-					star = star->next;
-				}
-				while(star)
-				{
-					tmp_arg = ft_lstnew_arg(NULL);
-					tmp_arg->content = ft_strdup((*env)->value, GC);
-					ft_lstaddback_arg(&args, tmp_arg);
-					star = star->next;
-				}
-			}
-			command = command->next;
+			if(command->to_replace != NO_REPLACE && command->token == ENV)
+				better_env_expander(&root->command, &command, *env);
+			else
+				command = command->next;
 		}
-		root->content = args_to_str(root->command);
+		ft_lstiter_arg(root->command);
+		root->content = root->command->content;
+		tmp_arg = root->command->next;
+		root->command->next = NULL;
 	}
-	if(!tmp_arg)
-		root->args = expand_args(root->cmd_arg, *env);
-	else
-	{
-		tmp_arg->next = expand_args(root->cmd_arg, *env);
-		root->args = tmp_arg;
-	}
-	if(no_star && !is_builtin(no_star) && is_a_directory(no_star))
-	{
-		ft_putstr_fd(2, no_star);
-		ft_putstr_fd(2,": Is a directory\n");
-		root->is_a_directory = true;
-		root->content = ft_strdup(no_star, GC);
-		change_status(env, DIRECORY_STATUS);
-		return;
-	}
-	expand_redirs(root->before_redir, env, root);
-	expand_redirs(root->after_redir, env, root);
+	root->args = tmp_arg;
+	// if(!tmp_arg)
+	// 	root->args = expand_args(root->cmd_arg, *env);
+	// else
+	// {
+	// 	tmp_arg->next = expand_args(root->cmd_arg, *env);
+	// 	root->args = tmp_arg;
+	// }
+	// if(no_star && !is_builtin(no_star) && is_a_directory(no_star))
+	// {
+	// 	ft_putstr_fd(2, no_star);
+	// 	ft_putstr_fd(2,": Is a directory\n");
+	// 	root->is_a_directory = true;
+	// 	root->content = ft_strdup(no_star, GC);
+	// 	change_status(env, DIRECORY_STATUS);
+	// 	return;
+	// }
+	// expand_redirs(root->before_redir, env, root);
+	// expand_redirs(root->after_redir, env, root);
 }
 
 

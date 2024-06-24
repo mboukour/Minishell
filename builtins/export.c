@@ -48,6 +48,8 @@ int export_core(t_env **env, char *exp_arg)
 {
 	t_env *find;
 	char *final;
+	bool before_joinable;
+	bool after_joinable;
 	int i;
 
 	i = 0;
@@ -59,11 +61,14 @@ int export_core(t_env **env, char *exp_arg)
 	find = get_env(*env, exp_arg);
 	if(find)
 	{
+		set_joinables(exp_arg, &before_joinable, &after_joinable);
 		final = ft_strdup(exp_arg, MANUAL);
 		if(!final)
 			export_malloc_failure(*env);
 		free(find->value);
 		find->value = final;
+		find->before_joinable = before_joinable;
+		find->after_joinable = after_joinable;
 	}
 	else
 	{

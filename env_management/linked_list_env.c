@@ -1,9 +1,29 @@
 #include "../minishell.h"
 
+void set_joinables(char *str, bool *before_joinable, bool *after_joinable)
+{
+	int i;
+
+	i = 0;
+	*before_joinable = true;
+	*after_joinable = true;
+	while(str[i] && str[i] != '=')
+		i++;
+	i++;
+	if(str[i] == ' ')
+		*before_joinable = false;
+	while(str[i])
+		i++;
+	i--;
+	if(str[i] == ' ')
+		*after_joinable = false;
+}
+
 
 t_env	*ft_lstnew_env(char *env)
 {
 	t_env	*new_node;
+	bool before_joinable;
 
 	new_node = malloc(sizeof(t_env));
 	if(!new_node)
@@ -14,6 +34,7 @@ t_env	*ft_lstnew_env(char *env)
 		free(new_node);
 		return (NULL);
 	}
+	set_joinables(env, &new_node->before_joinable, &new_node->after_joinable);
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -81,17 +102,22 @@ char *new_shlvl(char *new_lvl)
 	return (new_shlvl);
 }
 
+
 t_env *array_to_env(char **env)
 {
     t_env *current;
     t_env *head;
     int i;
 	bool set_shlvl;
+	bool before_joinable;
+	bool after_joinable;
     char *new;
 
     i = 0;
     head = NULL;
 	set_shlvl = false;
+	before_joinable = false;
+	after_joinable = false;
     while (env[i])
     {
         current = ft_lstnew_env(env[i]);

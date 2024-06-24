@@ -11,6 +11,7 @@ EXCUTION = execution/execution.c execution/get_path.c execution/traverse_tree.c
 SRC = minishell.c $(LEXER) $(UTILS) $(AST) $(PRE_TREE) $(GC) $(ENV) $(BUILTINS) $(EXCUTION)
 OBJ = $(SRC:.c=.o)
 INCLUDE = minishell.h
+FLAGS = -g
 
 all: $(NAME)
 
