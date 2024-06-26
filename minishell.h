@@ -268,7 +268,7 @@ t_env *star_matching(char *to_match);
 // char *env_expander(char *to_expand, t_env *env);
 void better_env_expander(t_arg **command, t_arg **to_replace, t_env *env);
 char *normalize_pattern(char *pattern);
-
+char *get_real_env(char *value);
 // BUILTINS
 int cd(t_treenode *cd_root, t_env **env, t_data *data);
 int pwd(t_treenode *pwd_node, t_data *data);

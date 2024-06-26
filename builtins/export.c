@@ -24,9 +24,7 @@ t_env *get_env(t_env *env, char *str)
 	int i;
 	char *to_find;
 
-	i = 0;
-	while(str[i] && str[i] != '=')
-		i++;
+	i = ft_strlen(str);
 	while(env)
 	{
 		if(!ft_strncmp(str, env->value, i) && env->value[i] == '=')

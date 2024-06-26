@@ -245,20 +245,22 @@ void better_env_expander(t_arg **command, t_arg **to_replace, t_env *env)
 	t_arg *hold;
 	t_arg *continue_form;
 	char *real_env;
-	
+
 	mode = (*to_replace)->to_replace;
 	continue_form = (*to_replace)->next;
 	env_node = get_env(env, (*to_replace)->content + 1);
 	if(!env_node)
 	{
 		remove_arg_node(command, (*to_replace));
+		(*to_replace)  = continue_form;
 		return;
 	}
 	real_env = get_real_env(env_node->value);
 	if(mode == ONLY_ENV)
 	{
 		(*to_replace)->content = ft_strdup(real_env, GC);
-		printf("hi: %s\n",(*to_replace)->content);
+		(*to_replace)->before_joinable = true;
+		(*to_replace)->after_joinable = true;
 		return;
 	}
 	arg = env_to_arg(env_node);
@@ -293,9 +295,6 @@ void replace_cmd_arg_node(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_head
     } else {
         new_tail->next = NULL;
     }
-
-    // Free the node if necessary
-    free(node);
 }
 
 
@@ -353,7 +352,7 @@ void arg_env_setup(t_cmd_arg **cmd_arg, t_cmd_arg *general_list, t_arg *the_env,
 		remove_arg_node(&general_list->arg, the_env);
 		return;
 	}
-	if(!the_env->after_joinable && !the_env->before_joinable)
+	if(!env_node->after_joinable && !env_node->before_joinable)
 	{
 		
 		// remove_arg_node(&general_list->arg, the_env);
@@ -362,4 +361,29 @@ void arg_env_setup(t_cmd_arg **cmd_arg, t_cmd_arg *general_list, t_arg *the_env,
 		replace_cmd_arg_node(cmd_arg, general_list, new_cmd_arg);
 	}
 	(*cmd_arg) = next;
+}
+
+void arg_expander(t_arg **arg_list, t_arg **to_replace, t_env *env)
+{
+	t_env *env_node;
+	t_arg *continue_form;
+	t_arg *arg;
+	int mode;
+
+	mode = (*to_replace)->to_replace;
+	continue_form = (*to_replace)->next;
+	env_node = get_env(env, (*to_replace)->content + 1);
+	if(!env_node)
+	{
+		remove_arg_node(arg_list, *to_replace);
+		(*to_replace) = continue_form;
+		return;
+	}
+	arg = env_to_arg(env_node);
+	if(env_node->before_joinable && env_node->after_joinable)
+	{
+		replace_node_with_list(arg_list, (*to_replace), arg);
+	}
+	(*to_replace) = continue_form;
+
 }

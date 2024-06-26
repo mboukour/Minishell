@@ -90,6 +90,7 @@ t_arg *final_args(t_cmd_arg *cmd_arg)
 
 // void arg_env_expander(t_cmd_arg **cmd_arg, t_cmd_arg *current, t_arg)
 void arg_env_setup(t_cmd_arg **cmd_arg, t_cmd_arg *general_list, t_arg *the_env, t_env *env);
+void arg_expander(t_arg **arg_list, t_arg **to_replace, t_env *env);
 t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
 {
     t_arg *args;
@@ -112,11 +113,11 @@ t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
 		{
 			if (args->to_replace != NO_REPLACE && args->token == ENV)
 			{
-				arg_env_setup(&original, cmd_arg, args, env);
-				break;
+				arg_expander(&cmd_arg->arg, &args, env);
+				// break;
 			}
-			
-			args = args->next;
+			else
+				args = args->next;
 		}
 		ft_lstiter_arg(cmd_arg->arg);
 		cmd_arg = next_cmd_arg;
@@ -247,6 +248,21 @@ char *no_stars(char *path)
 			// 	}
 			// }
 
+bool is_env(char *str)
+{
+	int i;
+
+	if(str[0] != '$')
+		return(false);
+	i = 1;
+	while(str[i])
+	{
+		if(is_special(str[i]))
+			return (false);
+		i++;
+	}
+	return (true);
+}
 
 
 
@@ -267,24 +283,29 @@ void expand_node(t_treenode *root, t_env **env)
 	{
 		while(command)
 		{
-			if(command->to_replace != NO_REPLACE && command->token == ENV)
+			if(command->to_replace != NO_REPLACE && (command->token == ENV || is_env(command->content)))
 				better_env_expander(&root->command, &command, *env);
 			else
 				command = command->next;
 		}
 		ft_lstiter_arg(root->command);
+		if(!root->command)
+		{
+			root->command = ft_lstnew_arg(NULL);
+			return;
+		}
 		root->content = root->command->content;
 		tmp_arg = root->command->next;
 		root->command->next = NULL;
 	}
 	root->args = tmp_arg;
-	// if(!tmp_arg)
-	// 	root->args = expand_args(root->cmd_arg, *env);
-	// else
-	// {
-	// 	tmp_arg->next = expand_args(root->cmd_arg, *env);
-	// 	root->args = tmp_arg;
-	// }
+	if(!tmp_arg)
+		root->args = expand_args(root->cmd_arg, *env);
+	else
+	{
+		tmp_arg->next = expand_args(root->cmd_arg, *env);
+		root->args = tmp_arg;
+	}
 	// if(no_star && !is_builtin(no_star) && is_a_directory(no_star))
 	// {
 	// 	ft_putstr_fd(2, no_star);
@@ -303,6 +324,7 @@ int	traverse_tree(t_treenode *root, t_data *data, t_env **env)
 {
 	int		save_in;
 	int		save_out;
+
 
 	save_in = dup(0);
 	save_out = dup(1);
