@@ -126,6 +126,43 @@ t_cmd_arg *env_to_cmd_arg(t_env *env_node);
 void replace_node_with_list(t_arg **head_ref, t_arg *node_to_replace, t_arg *new_list_head);
 void remove_arg_node(t_arg **head_ref, t_arg *node_to_remove);
 
+// void break_args(t_arg **list, t_arg *arg)
+// {
+// 	char *to_break;
+// 	t_arg *broken;
+
+// 	to_break = arg->content;
+
+
+// 	replace_node_with_list(list, arg, broken);
+// }
+bool is_env(char *str)
+{
+	int i;
+
+	if(str[0] != '$')
+		return(false);
+	i = 1;
+	while(str[i])
+	{
+		if(is_special(str[i]))
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+bool is_nextable(t_arg *arg, t_env *env)
+{
+	t_env *env_node;
+
+	env_node = get_env(env, get_real_env(arg->content  + 1));
+	if(!env_node)
+		return (false);
+	else if(env_node->before_joinable)
+		return (true);
+	return (true);
+}
 
 void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 {
@@ -180,7 +217,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 						}
 					break;
 					}
-					else if (env_node->before_joinable && env_node->before_joinable)
+					else if (env_node->before_joinable && env_node->after_joinable)
 					{
 						if(prev)
 						{
@@ -191,8 +228,18 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 						}
 						if(next)
 						{
-							next->prev = NULL;
-							last_expanded->arg->next = next;
+							if(!is_nextable(next, env))
+							{
+								next->prev = NULL;
+								set_cmd = ft_lstnew_cmd_arg(next);
+								insert_after_node(cmd_arg, last_expanded, set_cmd);
+								next_lp_cmd = set_cmd;
+							}
+							else
+							{
+								next->prev = NULL;
+								last_expanded->arg->next = next;
+							}
 						}
 						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
 					break;
@@ -206,7 +253,14 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							set_cmd = ft_lstnew_cmd_arg(prev);
 							insert_before_node(cmd_arg, looping_cmd, set_cmd);
 						}
-						if(next)
+						if(!is_nextable(next, env))
+						{
+							next->prev = NULL;
+							set_cmd = ft_lstnew_cmd_arg(next);
+							insert_after_node(cmd_arg, last_expanded, set_cmd);
+							next_lp_cmd = set_cmd;
+						}
+						else
 						{
 							next->prev = NULL;
 							last_expanded->arg->next = next;
@@ -382,21 +436,7 @@ char *no_stars(char *path)
 			// 	}
 			// }
 
-bool is_env(char *str)
-{
-	int i;
 
-	if(str[0] != '$')
-		return(false);
-	i = 1;
-	while(str[i])
-	{
-		if(is_special(str[i]))
-			return (false);
-		i++;
-	}
-	return (true);
-}
 
 
 
