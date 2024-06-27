@@ -156,12 +156,31 @@ bool is_nextable(t_arg *arg, t_env *env)
 {
 	t_env *env_node;
 
-	env_node = get_env(env, get_real_env(arg->content  + 1));
+	env_node = get_env(env, arg->content  + 1);
 	if(!env_node)
 		return (false);
 	else if(env_node->before_joinable)
 		return (true);
 	return (true);
+}
+
+void treat_insider_arg(t_cmd_arg **cmd_arg,t_cmd_arg *current, t_arg *insider, t_env *env)
+{
+	t_env *env_node;
+	char *real_env;
+	t_cmd_arg *expanded_cmd;
+
+	env_node = get_env(env, insider->content + 1);
+	if(!env_node)
+		return;
+	expanded_cmd = env_to_cmd_arg(env_node);
+	if(env_node->before_joinable && insider->prev)
+			insider->prev->content = ft_strjoin(insider->prev->content, expanded_cmd->arg->content, GC);
+	else
+		insider->content = ft_strdup(expanded_cmd->arg->content, GC);
+	insider->next = NULL;
+	expanded_cmd = expanded_cmd->next;
+	insert_after_node(cmd_arg, current, expanded_cmd);
 }
 
 void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
@@ -178,6 +197,8 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 	t_arg *move;
 	t_arg *last_arg;
 	t_arg *arg_env;
+	bool go;
+
 
 	looping_cmd = *cmd_arg;
 	while (looping_cmd)
@@ -186,6 +207,11 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 		arg = looping_cmd->arg;
 		while (arg)
 		{
+			printf("Treating %s ", arg->content);
+			if(arg->prev)
+				printf("with prev %s", arg->prev->content);
+			printf("\n");
+			go = true;
 			move = arg->next;
 			if(arg->to_replace != NO_REPLACE && (arg->token == ENV))
 			{
@@ -226,6 +252,8 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							prev->next = expanded_env->arg;
 							expanded_env->arg = prev; 
 						}
+						printf("BOTH: ");
+						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
 						if(next)
 						{
 							if(!is_nextable(next, env))
@@ -237,12 +265,21 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							}
 							else
 							{
-								next->prev = NULL;
+								
 								last_expanded->arg->next = next;
+								if(is_env(next->content))
+								{
+									next->prev = last_expanded->arg;
+									move = next;
+									go = false;
+									looping_cmd = last_expanded;
+								}
+								else
+									next->prev = NULL;
 							}
 						}
-						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
-					break;
+					if(go)
+						break;
 					}
 					else if(env_node->after_joinable)
 					{
@@ -253,20 +290,34 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							set_cmd = ft_lstnew_cmd_arg(prev);
 							insert_before_node(cmd_arg, looping_cmd, set_cmd);
 						}
-						if(!is_nextable(next, env))
-						{
-							next->prev = NULL;
-							set_cmd = ft_lstnew_cmd_arg(next);
-							insert_after_node(cmd_arg, last_expanded, set_cmd);
-							next_lp_cmd = set_cmd;
-						}
-						else
-						{
-							next->prev = NULL;
-							last_expanded->arg->next = next;
-						}
+						printf("AFTER");
 						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
-					break;
+						if(next)
+						{
+							if(!is_nextable(next, env))
+							{
+								next->prev = NULL;
+								set_cmd = ft_lstnew_cmd_arg(next);
+								insert_after_node(cmd_arg, last_expanded, set_cmd);
+								next_lp_cmd = set_cmd;
+							}
+							else
+							{
+								last_expanded->arg->next = next;
+								if(is_env(next->content))
+								{
+									printf("HERE\n");
+									next->prev = last_expanded->arg;
+									move = next;
+									go = false;
+									looping_cmd = last_expanded;
+								}
+								else
+									next->prev = NULL;
+							}
+						}
+					if(go)
+						break;
 					}
 					else if (env_node->before_joinable)
 					{
@@ -290,10 +341,15 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 				}
 			}
 			arg = move;
+			if(arg)
+				printf("Next arg: %s\n", arg->content);
+			ft_lstiter_cmd_arg(*cmd_arg);
 		}
 		looping_cmd = next_lp_cmd;
+		ft_lstiter_cmd_arg(*cmd_arg);
 	}
 }
+
 
 t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
 {
@@ -480,6 +536,7 @@ void expand_node(t_treenode *root, t_env **env)
 		tmp_arg->next = expand_args(root->cmd_arg, *env);
 		root->args = tmp_arg;
 	}
+
 	// if(no_star && !is_builtin(no_star) && is_a_directory(no_star))
 	// {
 	// 	ft_putstr_fd(2, no_star);

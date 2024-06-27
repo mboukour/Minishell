@@ -50,7 +50,7 @@ void ft_lstiter_cmd_arg(t_cmd_arg *cmd_arg)
 	t_arg *arg;
 	bool printed;
 
-	printf("Start\n");
+	printf("---------------------\n");
 	while(cmd_arg)
 	{
 		arg = cmd_arg->arg;
@@ -62,6 +62,5 @@ void ft_lstiter_cmd_arg(t_cmd_arg *cmd_arg)
 		cmd_arg = cmd_arg->next;
 		printf("\n");
 	}
-	printf("End\n");
-
+	printf("---------------------\n");
 }
