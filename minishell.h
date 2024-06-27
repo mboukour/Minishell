@@ -227,6 +227,7 @@ void ft_lstiter_middle(t_middle *first);
 t_middle	*ft_lstlast_middle(t_middle *lst);
 t_arg *ft_lstnew_arg(t_lex *word);
 t_arg *ft_lstlast_arg(t_arg *head);
+t_arg *ft_lstfirst_arg(t_arg *tail);
 void ft_lstaddback_arg(t_arg **head, t_arg *new);
 int ft_lstsize_arg(t_arg *arg);
 t_cmd_arg *ft_lstnew_cmd_arg(t_arg *arg);

@@ -236,6 +236,27 @@ t_arg *env_to_arg(t_env *env_node)
 	return (head);
 }
 
+// t_cmd_arg *env_to_cmd_arg(t_env *env_node)
+// {
+// 	t_cmd_arg *head;
+// 	t_cmd_arg *current;
+// 	char **sp_res;
+// 	t_arg *arg;
+// 	int i;
+
+// 	head = NULL;
+// 	i = 0;
+// 	sp_res = ft_split(get_real_env(env_node->value), ' ', GC);
+// 	while(sp_res[i])
+// 	{
+// 		arg = ft_lstnew_arg(NULL);
+// 		arg->content = ft_strdup(sp_res[i], GC);
+// 		current = ft_lstnew_cmd_arg(arg);
+// 		ft_lstaddback_cmd_arg(&head, current);
+// 		i++;
+// 	}
+// 	return (head);
+// }
 
 void better_env_expander(t_arg **command, t_arg **to_replace, t_env *env)
 {
@@ -279,8 +300,18 @@ void replace_cmd_arg_node(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_head
 {
 	t_cmd_arg *new_tail;
     if (node == NULL || new_head == NULL || head == NULL || *head == NULL)
-        return;
-
+	{
+		if (node == NULL) {
+			printf("node pointer is NULL\n");
+			} else if (new_head == NULL) {
+				printf("new_head pointer is NULL\n");
+			} else if (head == NULL) {
+				printf("head pointer is NULL\n");
+			} else if (*head == NULL) 
+				printf("head points to NULL (list is empty)\n");
+			return;
+	}
+	printf("Replacing %s with %s\n", node->arg->content, new_head->arg->content);
     if (node->prev != NULL) {
         node->prev->next = new_head;
         new_head->prev = node->prev;
@@ -289,12 +320,13 @@ void replace_cmd_arg_node(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_head
         new_head->prev = NULL;
     }
 	new_tail = ft_lstlast_cmd_arg(new_head);
-    if (node->next != NULL) {
+    if (node->next != NULL) 
+	{
         node->next->prev = new_tail;
         new_tail->next = node->next;
-    } else {
+	}
+    else 
         new_tail->next = NULL;
-    }
 }
 
 
@@ -325,15 +357,16 @@ t_cmd_arg *env_to_cmd_arg(t_env *env_node)
 	head = NULL;
 	i = 0;
 	real_env = get_real_env(env_node->value);
-	sp_res = ft_split(get_real_env(real_env), ' ', GC);
+	sp_res = ft_split(real_env, ' ', GC);
 	while (sp_res[i])
 	{
 		one = ft_lstnew_arg(NULL);
-		one->content = sp_res[i];
+		one->content = ft_strdup(sp_res[i], GC);
 		current = ft_lstnew_cmd_arg(one);
 		ft_lstaddback_cmd_arg(&head, current);
 		i++;
 	}
+	return (head);
 }
 
 void arg_env_setup(t_cmd_arg **cmd_arg, t_cmd_arg *general_list, t_arg *the_env, t_env *env)

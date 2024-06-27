@@ -52,6 +52,13 @@ t_arg *ft_lstlast_arg(t_arg *head)
 	return (head);
 }
 
+t_arg *ft_lstfirst_arg(t_arg *tail)
+{
+	while(tail->prev)
+		tail = tail->prev;
+	return(tail);
+}
+
 int ft_lstsize_arg(t_arg *arg)
 {
 	int i;

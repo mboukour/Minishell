@@ -91,6 +91,156 @@ t_arg *final_args(t_cmd_arg *cmd_arg)
 // void arg_env_expander(t_cmd_arg **cmd_arg, t_cmd_arg *current, t_arg)
 void arg_env_setup(t_cmd_arg **cmd_arg, t_cmd_arg *general_list, t_arg *the_env, t_env *env);
 void arg_expander(t_arg **arg_list, t_arg **to_replace, t_env *env);
+
+
+void insert_before_node(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_node)
+{
+    if (!node) 
+        return;
+
+    new_node->next = node;
+    new_node->prev = node->prev;
+    if (node->prev)
+        node->prev->next = new_node;
+    else 
+        *head = new_node;
+    node->prev = new_node;
+}
+
+
+void insert_after_node(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_node)
+{
+    if (!node) 
+        return;
+	// printf("Inserting %s after %s\n", new_node->arg->content, node->arg->content);
+    new_node->prev = node;
+    new_node->next = node->next;
+    if (node->next)
+        node->next->prev = new_node;
+    node->next = new_node;
+}
+void replace_cmd_arg_node(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_head);
+void remove_arg_node(t_arg **head_ref, t_arg *node_to_remove);
+t_arg *env_to_arg(t_env *env_node);
+t_cmd_arg *env_to_cmd_arg(t_env *env_node);
+void replace_node_with_list(t_arg **head_ref, t_arg *node_to_replace, t_arg *new_list_head);
+void remove_arg_node(t_arg **head_ref, t_arg *node_to_remove);
+
+
+void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
+{
+	t_arg *arg;
+	t_env *env_node;
+	t_cmd_arg *looping_cmd;
+	t_cmd_arg *next_lp_cmd;
+	t_cmd_arg *set_cmd;
+	t_cmd_arg *expanded_env;
+	t_cmd_arg *last_expanded;
+	t_arg *next;
+	t_arg *prev;
+	t_arg *move;
+	t_arg *last_arg;
+	t_arg *arg_env;
+
+	looping_cmd = *cmd_arg;
+	while (looping_cmd)
+	{
+		next_lp_cmd = looping_cmd->next;
+		arg = looping_cmd->arg;
+		while (arg)
+		{
+			move = arg->next;
+			if(arg->to_replace != NO_REPLACE && (arg->token == ENV))
+			{
+				env_node = get_env(env, arg->content + 1);
+				if(!env_node)
+					remove_arg_node(&looping_cmd->arg, arg);
+				else
+				{
+					prev = arg->prev;
+					next = arg->next;
+					expanded_env = env_to_cmd_arg(env_node);
+					last_expanded = ft_lstlast_cmd_arg(expanded_env);
+					if(!env_node->after_joinable && !env_node->before_joinable)
+					{
+						if(prev)
+						{
+							prev->next = NULL;
+							prev = ft_lstfirst_arg(prev);
+							set_cmd = ft_lstnew_cmd_arg(prev);
+							insert_before_node(cmd_arg, looping_cmd, set_cmd);
+						}
+						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
+						if(next)
+						{
+							next->prev = NULL;
+							set_cmd = ft_lstnew_cmd_arg(next);
+							insert_after_node(cmd_arg, last_expanded, set_cmd);
+							next_lp_cmd = set_cmd;
+						}
+					break;
+					}
+					else if (env_node->before_joinable && env_node->before_joinable)
+					{
+						if(prev)
+						{
+							prev->next = NULL;
+							prev = ft_lstfirst_arg(prev);
+							prev->next = expanded_env->arg;
+							expanded_env->arg = prev; 
+						}
+						if(next)
+						{
+							next->prev = NULL;
+							last_expanded->arg->next = next;
+						}
+						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
+					break;
+					}
+					else if(env_node->after_joinable)
+					{
+						if(prev)
+						{
+							prev->next = NULL;
+							prev = ft_lstfirst_arg(prev);
+							set_cmd = ft_lstnew_cmd_arg(prev);
+							insert_before_node(cmd_arg, looping_cmd, set_cmd);
+						}
+						if(next)
+						{
+							next->prev = NULL;
+							last_expanded->arg->next = next;
+						}
+						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
+					break;
+					}
+					else if (env_node->before_joinable)
+					{
+						if(prev)
+						{
+							prev->next = NULL;
+							prev = ft_lstfirst_arg(prev);
+							prev->next = expanded_env->arg;
+							expanded_env->arg = prev; 
+						}
+						if(next)
+						{
+							next->prev = NULL;
+							set_cmd = ft_lstnew_cmd_arg(next);
+							insert_after_node(cmd_arg, last_expanded, set_cmd);
+							next_lp_cmd = set_cmd;
+						}
+						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
+					break;
+					}
+				}
+			}
+			arg = move;
+		}
+		looping_cmd = next_lp_cmd;
+	}
+}
+
 t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
 {
     t_arg *args;
@@ -105,24 +255,8 @@ t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
 
     original = cmd_arg;
 	new_cmd_arg = NULL;
-	while (cmd_arg)
-	{
-		next_cmd_arg = cmd_arg->next;
-		args = cmd_arg->arg;
-		while (args)
-		{
-			if (args->to_replace != NO_REPLACE && args->token == ENV)
-			{
-				arg_expander(&cmd_arg->arg, &args, env);
-				// break;
-			}
-			else
-				args = args->next;
-		}
-		ft_lstiter_arg(cmd_arg->arg);
-		cmd_arg = next_cmd_arg;
-	}
-    return (final_args(original));
+	prep_cmd_arg(&cmd_arg, env);
+    return (final_args(cmd_arg));
 }
 
 // void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
