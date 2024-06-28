@@ -151,3 +151,21 @@ t_env *star_matching(char *to_match)
     sort_env_list(head);
     return (head);
 }
+
+t_arg *arg_star_matching(char *to_match)
+{
+	t_arg *head;
+	t_arg *current;
+	t_env *star_res;
+
+	head = NULL;
+	star_res = star_matching(to_match);
+	while(star_res)
+	{
+		current = ft_lstnew_arg(NULL);
+		current->content = ft_strdup(star_res->value, GC);
+		ft_lstaddback_arg(&head, current);
+		star_res = star_res->next;
+	}
+	return (head);
+}

@@ -267,10 +267,12 @@ int	ft_isalpha(int c);
 
 // EXPANDER
 t_env *star_matching(char *to_match);
+t_arg *arg_star_matching(char *to_match);
 // char *env_expander(char *to_expand, t_env *env);
 void better_env_expander(t_arg **command, t_arg **to_replace, t_env *env);
 char *normalize_pattern(char *pattern);
 char *get_real_env(char *value);
+void expand_node(t_treenode *root, t_env **env);
 // BUILTINS
 int cd(t_treenode *cd_root, t_env **env, t_data *data);
 int pwd(t_treenode *pwd_node, t_data *data);
@@ -295,5 +297,12 @@ char **env_to_array(t_env *env);
 int change_status(t_env **env, int new_status); // CAN FAIL
 void sort_env_list(t_env *head);
 void set_joinables(char *str, bool *before_joinable, bool *after_joinable);
+
+
+
+// STAR STUFF
+char *no_stars(char *path);
+bool is_a_directory(char *path);
+bool is_path(char *str);
 
 #endif

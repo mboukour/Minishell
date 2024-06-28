@@ -75,12 +75,18 @@ void handle_word(char *input, int *i, t_lex **head, int *join_count)
 	t_lex *current_node;
     char *content;
     int hold;
+	int type;
 
 	hold = *i;
-    while (input[*i] && !is_special(input[*i]) && input[*i] != ' ')
+	type = COMMAND;
+    while (input[*i] && (input[*i] == '*' || !is_special(input[*i])) && input[*i] != ' ')
+	{
+		if(input[*i] == '*')
+			type = STAR;
         (*i)++;
+	}
     content = ft_substr(input, hold, *i - hold, GC);
-    current_node = ft_lstnew_lex(content, WORD, *i - hold, *join_count);
+    current_node = ft_lstnew_lex(content, type , *i - hold, *join_count);
     ft_lstadd_back_lex(head, current_node);
 }
 

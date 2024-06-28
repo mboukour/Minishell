@@ -133,6 +133,7 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	char *absolute_path;
 	t_arg *args;
 	char *under;
+	char *no_star;
 
 	if(!root->content)
 		return;
@@ -157,6 +158,7 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	}
 	else if (pid == 0)
 	{
+		no_star = no_stars(root->content);
 		data->env = env_to_array(*env);
 		args = ft_lstnew_arg(NULL);
 		args->content = ft_strdup(root->content, GC);
@@ -166,6 +168,7 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 		get_path(root, *env, data);
 		if (execve(data->path, data->cmd, data->env) == -1)
 		{
+
 			write(2, root->content, ft_strlen(root->content));
 			write(2, ": command not found\n", 20);
 			// ft_lstclear_env(*env);
