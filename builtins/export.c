@@ -1,22 +1,32 @@
 #include "../minishell.h"
 
 
-bool is_valid_export(char *str)
+int get_export_type(char *str)
 {
-	int i;
+    int i;
 
 	i = 0;
-	if(!*str)
-		return (false);
-	if(*str == '=')
-		return (false);
-	while(str[i])
+	if(str[0] == '?' && str[1] == '=')
+		return(1);
+	if(str[0] == '_' && str[1] == '=')
+		return(1);
+	while(str[i] && str[i] != '=')
 	{
-		if(str[i] == '=')
-			return (true);
+		if(!ft_isalpha(str[i]))
+			return(0);
 		i++;
 	}
-	return (false);
+	if(!str[i] || (str[i] == '=' && !str[i + 1]))
+		return (2);
+	return (1);
+}
+
+
+void export_error(char *str)
+{
+	ft_putstr_fd(2, "export: `");
+	ft_putstr_fd(2, str);
+	ft_putstr_fd(2, "' : not a valid identifier\n");
 }
 
 t_env *get_env(t_env *env, char *str)
@@ -24,7 +34,9 @@ t_env *get_env(t_env *env, char *str)
 	int i;
 	char *to_find;
 
-	i = ft_strlen(str);
+	i = 0;
+	while(str[i] && str[i] != '=')
+		i++;
 	while(env)
 	{
 		if(!ft_strncmp(str, env->value, i) && env->value[i] == '=')
@@ -48,14 +60,18 @@ int export_core(t_env **env, char *exp_arg)
 	char *final;
 	bool before_joinable;
 	bool after_joinable;
+	int exp_type;
 	int i;
 
 	i = 0;
-	if(!is_valid_export(exp_arg))
+	exp_type = get_export_type(exp_arg);
+	if(!exp_type)
 	{
-		fprintf(stderr, "Not valid\n");
-		return (NONE);
+		export_error(exp_arg);
+		return (1);
 	}
+	if(exp_type == 2)
+		return (0);
 	find = get_env(*env, exp_arg);
 	if(find)
 	{
@@ -65,6 +81,7 @@ int export_core(t_env **env, char *exp_arg)
 			export_malloc_failure(*env);
 		free(find->value);
 		find->value = final;
+	
 		find->before_joinable = before_joinable;
 		find->after_joinable = after_joinable;
 	}
@@ -78,12 +95,15 @@ int export_core(t_env **env, char *exp_arg)
 	return (0);
 }
 
-// EXPORT WITH NO ARGS PRINTS IN ALPHABETIC ORDER
 int export(t_env **env, t_treenode *export_root)
 {
 	int status;
 	t_arg *args;
+	int ret;
+	bool error;
 
+	ret = 0;
+	error = false;
 	args = export_root->args;
 	if(!args)
 	{
@@ -94,13 +114,18 @@ int export(t_env **env, t_treenode *export_root)
 	{
 		if(args->content[0] == '?' && args->content[1] == '=')
 		{
-			ft_putstr_fd(2, "export: `");
-			ft_putstr_fd(2,args->content);
-			ft_putstr_fd(2, "' : not a valid identifier\n");
+			export_error(args->content);
+			error = true;
 		}
 		else
-			export_core(env, args->content);
+		{
+			ret = export_core(env, args->content);
+			if(ret)
+				error = true;
+		}
 		args = args->next;
 	}
+	if(error)
+		return (1);
 	return (0);
 }

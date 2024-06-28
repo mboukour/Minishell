@@ -29,9 +29,6 @@ char *args_to_str(t_arg *args)
 	result = NULL;
 	while (args)
 	{
-		printf("%p\n", args);
-		if(args->content && args->content[0] == ' ') // TO REMOVEEEE !!!!
-			fprintf(stderr, "SPACE\n");
 		result = ft_strjoin(result, args->content, GC);
 		args = args->next;
 	}
@@ -207,17 +204,15 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 		arg = looping_cmd->arg;
 		while (arg)
 		{
-			printf("Treating %s ", arg->content);
-			if(arg->prev)
-				printf("with prev %s", arg->prev->content);
-			printf("\n");
 			go = true;
 			move = arg->next;
-			if(arg->to_replace != NO_REPLACE && (arg->token == ENV))
+			if(arg->to_replace != NO_REPLACE && (arg->token == ENV || is_env(arg->content)))
 			{
 				env_node = get_env(env, arg->content + 1);
 				if(!env_node)
 					remove_arg_node(&looping_cmd->arg, arg);
+				else if(arg->to_replace == ONLY_ENV)
+					arg->content = ft_strdup(get_real_env(env_node->value), GC);
 				else
 				{
 					prev = arg->prev;
@@ -252,7 +247,6 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							prev->next = expanded_env->arg;
 							expanded_env->arg = prev; 
 						}
-						printf("BOTH: ");
 						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
 						if(next)
 						{
@@ -290,7 +284,6 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							set_cmd = ft_lstnew_cmd_arg(prev);
 							insert_before_node(cmd_arg, looping_cmd, set_cmd);
 						}
-						printf("AFTER");
 						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
 						if(next)
 						{
@@ -306,7 +299,6 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 								last_expanded->arg->next = next;
 								if(is_env(next->content))
 								{
-									printf("HERE\n");
 									next->prev = last_expanded->arg;
 									move = next;
 									go = false;
@@ -341,12 +333,8 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 				}
 			}
 			arg = move;
-			if(arg)
-				printf("Next arg: %s\n", arg->content);
-			ft_lstiter_cmd_arg(*cmd_arg);
 		}
 		looping_cmd = next_lp_cmd;
-		ft_lstiter_cmd_arg(*cmd_arg);
 	}
 }
 
@@ -379,9 +367,11 @@ t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
 // 		arg = redir->redir_input;
 // 		while(arg)
 // 		{
+// 			if(arg->to_replace ==)
 // 			if(arg->to_replace != NO_REPLACE)
 // 			{
-// 				arg->content = env_expander(arg->content, *env);
+// 				arg->content = redirect_env_expander(arg->content, *env);
+// 				printf("I have: %s\n", arg->content);
 // 				if(arg->to_replace == REPLACE_ALL)
 // 				{
 // 					star = star_matching(arg->content);
@@ -518,7 +508,6 @@ void expand_node(t_treenode *root, t_env **env)
 			else
 				command = command->next;
 		}
-		ft_lstiter_arg(root->command);
 		if(!root->command)
 		{
 			root->command = ft_lstnew_arg(NULL);

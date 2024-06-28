@@ -17,6 +17,7 @@ int change_status(t_env **env, int new_status)
 {
 	char *current_status;
 	char *final;
+	int res;
 
 	current_status = ft_itoa(new_status, MANUAL);
 	if(!current_status)
@@ -25,7 +26,7 @@ int change_status(t_env **env, int new_status)
 	if(!final)
 		return (free(current_status), 1);
 	free(current_status);
-	export_core(env, final);
+	res = export_core(env, final);
 	return (0);
 }
 
