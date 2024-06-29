@@ -268,6 +268,7 @@ int	ft_isalpha(int c);
 // EXPANDER
 t_env *star_matching(char *to_match);
 t_arg *arg_star_matching(char *to_match);
+t_cmd_arg *cmd_arg_star_matching(char *to_match);
 // char *env_expander(char *to_expand, t_env *env);
 void better_env_expander(t_arg **command, t_arg **to_replace, t_env *env);
 char *normalize_pattern(char *pattern);
@@ -297,7 +298,7 @@ char **env_to_array(t_env *env);
 int change_status(t_env **env, int new_status); // CAN FAIL
 void sort_env_list(t_env *head);
 void set_joinables(char *str, bool *before_joinable, bool *after_joinable);
-
+t_env	*ft_lstlast_env(t_env *lst);
 
 
 // STAR STUFF

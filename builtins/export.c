@@ -12,10 +12,12 @@ int get_export_type(char *str)
 		return(1);
 	while(str[i] && str[i] != '=')
 	{
-		if(!ft_isalpha(str[i]))
-			return(0);
+		if(ft_isalpha(str[i]))
+			break;
 		i++;
 	}
+	if(str[i] && str[i] == '=')
+		return (0);
 	if(!str[i] || (str[i] == '=' && !str[i + 1]))
 		return (2);
 	return (1);

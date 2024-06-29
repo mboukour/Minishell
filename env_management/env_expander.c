@@ -509,6 +509,7 @@ bool is_env(char *str)
 	return (true);
 }
 
+
 bool is_nextable(t_arg *arg, t_env *env)
 {
 	t_env *env_node;
@@ -520,6 +521,20 @@ bool is_nextable(t_arg *arg, t_env *env)
 		return (true);
 	return (true);
 }
+
+int after_env_star(char *str)
+{
+	int i;
+	char *res;
+	
+	i = 0;
+	while(str[i] != '.' && str[i] == '*')
+		i++;
+	if(!str[i])
+		return (NONE);
+	return(i - 1);
+}
+
 
 void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 {
@@ -536,6 +551,9 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 	t_arg *last_arg;
 	t_arg *arg_env;
 	bool go;
+	int after_star;
+	char *look_for;
+	char *append_after;
 
 
 	looping_cmd = *cmd_arg;
@@ -549,7 +567,19 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 			move = arg->next;
 			if(arg->to_replace != NO_REPLACE && (arg->token == ENV || is_env(arg->content)))
 			{
-				env_node = get_env(env, arg->content + 1);
+				look_for = arg->content + 1;
+				append_after = NULL;
+				after_star = after_env_star(arg->content);
+				printf()
+				if(after_star != NONE)
+				{
+					look_for = ft_substr(arg->content, 0, after_star, GC);
+					append_after = ft_substr(arg->content, after_star, ft_strlen(arg->content), GC);
+					printf("LOOK FOR: %s // APPEND AFTER: %s\n", look_for, append_after);
+				}
+				env_node = get_env(env, look_for);
+				if(env_node && append_after)
+					ft_lstlast_env(env_node)->value = ft_strjoin(env_node->value, append_after, GC);
 				if(!env_node)
 					remove_arg_node(&looping_cmd->arg, arg);
 				else if(arg->to_replace == ONLY_ENV)
@@ -679,6 +709,73 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 	}
 }
 
+bool is_arg_star(t_arg *arg)
+{
+	int i;
+	char *str;
+
+	i = 0;
+	if (arg->to_replace != REPLACE_ALL)
+		return (false);
+	str = arg->content;
+	while (str[i])
+	{
+		if(str[i] == '*')
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+void star_expander(t_cmd_arg **cmd_arg)
+{
+	t_cmd_arg *looping_cmd;
+	t_cmd_arg *next_lp_cmd;
+	t_cmd_arg *set_cmd;
+	t_cmd_arg *expanded_star;
+	t_arg *arg;
+	t_arg *next;
+	t_arg *prev;
+	t_arg *move;
+
+	looping_cmd = *cmd_arg;
+	while(looping_cmd)
+	{
+		next_lp_cmd = looping_cmd->next;
+		arg = looping_cmd->arg;
+		while(arg)
+		{
+			if(is_arg_star(arg))
+			{
+				expanded_star = cmd_arg_star_matching(arg->content);
+				if(expanded_star)
+				{
+					next = arg->next;
+					prev = arg->prev;
+					if(prev)
+					{
+						prev->next = NULL;
+						prev = ft_lstfirst_arg(prev);
+						set_cmd = ft_lstnew_cmd_arg(prev);
+						insert_before_node(cmd_arg, looping_cmd, set_cmd);
+					}
+					replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_star);
+					if(next)
+					{
+						next->prev = NULL;
+						set_cmd = ft_lstnew_cmd_arg(next);
+						insert_after_node(cmd_arg, expanded_star, set_cmd);
+						next_lp_cmd = set_cmd;
+						break;
+					}
+				}
+			}
+			arg = arg->next;
+		}
+		looping_cmd = next_lp_cmd;
+	}
+}
+
 
 t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
 {
@@ -695,6 +792,7 @@ t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
     original = cmd_arg;
 	new_cmd_arg = NULL;
 	prep_cmd_arg(&cmd_arg, env);
+	star_expander(&cmd_arg);
     return (final_args(cmd_arg));
 }
 
