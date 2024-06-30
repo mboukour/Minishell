@@ -219,7 +219,6 @@ int open_checker(t_lex *token);
 char **args_to_arr(t_arg *arg);
 bool is_special(char c);
 
-
 // MIDDLE MAN
 t_middle	*ft_lstnew_middle(t_arg *command, t_cmd_arg *cmd_arg, int token);
 void	ft_lstadd_back_middle(t_middle **lst, t_middle *new);
@@ -306,5 +305,6 @@ t_env	*ft_lstlast_env(t_env *lst);
 char *no_stars(char *path);
 bool is_a_directory(char *path);
 bool is_path(char *str);
+void expand_arg_as_star(t_arg **head);
 
 #endif

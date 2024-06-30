@@ -69,3 +69,4 @@ char *no_stars(char *path)
 	no_star[j] = '\0';
 	return (no_star);
 }
+

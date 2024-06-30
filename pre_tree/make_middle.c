@@ -90,7 +90,7 @@ void ft_lstiter_arg(t_arg *arg)
 {
 	while(arg)
 	{
-		printf("%s\n", arg->content);
+		printf("%s:%i\n", arg->content, arg->to_replace);
 		arg = arg->next;
 	}
 }

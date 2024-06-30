@@ -402,6 +402,7 @@ t_cmd_arg *env_to_cmd_arg(t_env *env_node)
 	return (head);
 }
 
+
 char *args_to_str(t_arg *args)
 {
 	char *result;
@@ -415,6 +416,19 @@ char *args_to_str(t_arg *args)
 	return (result);
 }
 
+bool am_i_a_star(char *str)
+{
+	int i;
+
+	i = 0;
+	while(str[i])
+	{
+		if(str[i] == '*')
+			return (true);
+		i++;
+	}
+	return (false);
+}
 
 t_arg *final_args(t_cmd_arg *cmd_arg)
 {
@@ -422,25 +436,31 @@ t_arg *final_args(t_cmd_arg *cmd_arg)
 	t_arg *head;
 	t_arg *current;
 	char *ready_arg;
+	int to_replace;
 
 	head = NULL;
 	ready_arg = NULL;
+	to_replace = REPLACE_ALL;
 	while(cmd_arg)
 	{
 		args = cmd_arg->arg;
 		while(args)
 		{
+			if(am_i_a_star(args->content) && args->to_replace < to_replace)
+				to_replace = args->to_replace;
 			ready_arg = ft_strjoin(ready_arg, args->content, GC);
 			args = args->next;
 		}
 		current = ft_lstnew_arg(NULL);
 		current->content = ready_arg;
+		current->to_replace = to_replace;
 		ft_lstaddback_arg(&head, current);
 		cmd_arg = cmd_arg->next;
 		ready_arg = NULL;
 	}
 	return (head);
 }
+
 				// if (args->to_replace == REPLACE_ALL)
 				// {
 				// 	star = star_matching(args->content);
@@ -786,6 +806,7 @@ void star_expander(t_cmd_arg **cmd_arg)
 }
 
 
+
 t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
 {
     t_arg *args;
@@ -801,10 +822,12 @@ t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
     original = cmd_arg;
 	new_cmd_arg = NULL;
 	prep_cmd_arg(&cmd_arg, env);
-	printf("LE:");
-	ft_lstiter_cmd_arg(cmd_arg);
-	star_expander(&cmd_arg);
-    return (final_args(cmd_arg));
+	args = final_args(cmd_arg);
+	// printf("LE:");
+	// ft_lstiter_cmd_arg(cmd_arg);
+	// star_expander(&cmd_arg);
+	expand_arg_as_star(&args);
+    return (args);
 }
 
 // void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
