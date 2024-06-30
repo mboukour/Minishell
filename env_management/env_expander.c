@@ -1,167 +1,6 @@
 #include "../minishell.h"
 
 
-int get_current_path(char *str)
-{
-	int i;
-	
-	i = 0;
-	while(str[i] && str[i] != '$' && str[i] != '*')
-		i++;
-	return i;
-}
-
-t_lex	*ft_mini_lstnew_lex(char *content, int token, int len)
-{
-	t_lex	*new_node;
-
-	new_node = smart_malloc(sizeof(t_lex));
-	new_node->content = content;
-	new_node->len = len;
-	new_node->token = token;
-	new_node->to_replace = REPLACE_ALL;
-	new_node->next = NULL;
-	new_node->prev = NULL;
-	return (new_node);
-}
-
-
-
-void mini_handle_word(char *input, int *i, t_lex **head)
-{
-	t_lex *current_node;
-    char *content;
-    int hold;
-
-	hold = *i;
-    while (input[*i] && input[*i] != '$' && input[*i] != '*' && input[*i] != ' ')
-        (*i)++;
-    content = ft_substr(input, hold, *i - hold, GC);
-    current_node = ft_mini_lstnew_lex(content, WORD, *i - hold);
-    ft_lstadd_back_lex(head, current_node);
-}
-
-
-void mini_handle_space(char *input, int *i, t_lex **head)
-{
-    int hold;
-    char *content;
-    t_lex *current_node;
-
-	hold = *i;
-    while (input[*i] == ' ')
-        (*i)++;
-    content = ft_substr(input, hold, *i - hold, GC);
-    current_node = ft_mini_lstnew_lex(content, WHITE_SPACE, *i - hold);
-    ft_lstadd_back_lex(head, current_node);
-}
-
-
-void mini_handle_star(char *input, int *i, t_lex **head)
-{
-	t_lex *current_node;
-    int hold;
-    int c;
-    char *content;
-
-    c = input[*i];
-	hold = *i;
-    (*i)++;
-    while (input[*i] && input[*i] == '*' && input[*i] != '$' && input[*i] != ' ')
-        (*i)++;
-    content = ft_substr(input, hold, *i - hold, GC);
-    current_node = ft_mini_lstnew_lex(content, c, *i - hold);
-    ft_lstadd_back_lex(head, current_node);
-}
-
-void mini_handle_env(char *input, int *i, t_lex **head)
-{
-	t_lex *current_node;
-    int hold;
-    int c;
-    char *content;
-    bool star_bool;
-
-    star_bool = false;
-    c = input[*i];
-	hold = *i;
-    (*i)++;
-    while (input[*i] && input[*i] != '$' && input[*i] != '*' && input[*i] != ' ')
-        (*i)++;
-    content = ft_substr(input, hold, *i - hold, GC);
-    current_node = ft_mini_lstnew_lex(content, c, *i - hold);
-    ft_lstadd_back_lex(head, current_node);
-}
-
-t_lex *mini_lexer(char *str)
-{
-	int i;
-	t_lex *head;
-	t_lex *current;
-
-	i = 0;
-	head = NULL;
-	while(str[i])
-	{
-		if(str[i] == ' ')
-			mini_handle_space(str, &i, &head);
-		else if (str[i] == '*')
-			mini_handle_star(str, &i, &head);
-		else if (str[i] == '$')
-			mini_handle_env(str, &i, &head);
-		else
-			mini_handle_word(str, &i, &head);
-	}
-	return (head);
-}
-
-t_arg *lex_to_arg(t_lex *lex)
-{
-	t_arg *head;
-	t_arg *current;
-
-	head = NULL;
-	while(lex)
-	{
-		current = ft_lstnew_arg(lex);
-		ft_lstaddback_arg(&head, current);
-		lex = lex->next;
-	}
-	return (head);
-}
-
-char *env_expander(char *to_expand, t_env *env)
-{
-	t_lex *mini_lexed;
-	t_lex *original;
-	t_env *env_node;
-	t_arg *result;
-	char *me;
-
-	mini_lexed = mini_lexer(to_expand);
-	original = mini_lexed;
-	while(mini_lexed)
-	{ 
-		if(mini_lexed->token == ENV)
-		{
-			env_node = get_env(env, mini_lexed->content + 1);
-			if(!env_node)
-				mini_lexed->content = ft_strdup("", GC);
-			else
-			{
-				me = env_node->value;
-				while(*me && *me != '=')
-					me++;
-				me++;
-				mini_lexed->content = ft_strdup(me, GC);
-			}
-		}
-		mini_lexed = mini_lexed->next;
-	}
-	result = lex_to_arg(original); // RETURN THIS
-	return (me);
-}
-
 void remove_arg_node(t_arg **head_ref, t_arg *node_to_remove)
 {
     if (*head_ref == NULL || node_to_remove == NULL)
@@ -229,121 +68,75 @@ t_arg *env_to_arg(t_env *env_node)
 		current->content = ft_strdup(sp_res[i], GC);
 		current->after_joinable = env_node->after_joinable;
 		current->before_joinable = env_node->before_joinable;
+		current->to_replace = env_node->star_to_replace;
 		ft_lstaddback_arg(&head, current);
 		i++;
 	}
 	return (head);
 }
 
-// t_cmd_arg *env_to_cmd_arg(t_env *env_node)
+
+
+// char *redirect_env_expander(char *to_expand, t_env *env)
 // {
-// 	t_cmd_arg *head;
-// 	t_cmd_arg *current;
-// 	char **sp_res;
-// 	t_arg *arg;
-// 	int i;
+// 	t_lex *mini_lexed;
+// 	t_lex *original;
+// 	t_env *env_node;
+// 	char *me;
 
-// 	head = NULL;
-// 	i = 0;
-// 	sp_res = ft_split(get_real_env(env_node->value), ' ', GC);
-// 	while(sp_res[i])
-// 	{
-// 		arg = ft_lstnew_arg(NULL);
-// 		arg->content = ft_strdup(sp_res[i], GC);
-// 		current = ft_lstnew_cmd_arg(arg);
-// 		ft_lstaddback_cmd_arg(&head, current);
-// 		i++;
+// 	mini_lexed = mini_lexer(to_expand);
+// 	original = mini_lexed;
+// 	while(mini_lexed)
+// 	{ 
+// 		if(mini_lexed->token == ENV)
+// 		{
+// 			env_node = get_env(env, mini_lexed->content + 1);
+// 			if(!env_node)
+// 				mini_lexed->content = ft_strdup("", GC);
+// 			else
+// 			{
+// 				me = env_node->value;
+// 				while(*me && *me != '=')
+// 					me++;
+// 				me++;
+// 				mini_lexed->content = ft_strdup(me, GC);
+// 			}
+// 		}
+// 		mini_lexed = mini_lexed->next;
 // 	}
-// 	return (head);
+// 	me = NULL;
+// 	while(original)
+// 	{
+// 		me = ft_strjoin(me, original->content, GC);
+// 		original = original->next;
+// 	}
+// 	return (me);
 // }
-
-char *redirect_env_expander(char *to_expand, t_env *env)
+bool is_env(char *str);
+int after_env_star(char *str)
 {
-	t_lex *mini_lexed;
-	t_lex *original;
-	t_env *env_node;
-	char *me;
-
-	mini_lexed = mini_lexer(to_expand);
-	original = mini_lexed;
-	while(mini_lexed)
-	{ 
-		if(mini_lexed->token == ENV)
-		{
-			env_node = get_env(env, mini_lexed->content + 1);
-			if(!env_node)
-				mini_lexed->content = ft_strdup("", GC);
-			else
-			{
-				me = env_node->value;
-				while(*me && *me != '=')
-					me++;
-				me++;
-				mini_lexed->content = ft_strdup(me, GC);
-			}
-		}
-		mini_lexed = mini_lexed->next;
-	}
-	me = NULL;
-	while(original)
-	{
-		me = ft_strjoin(me, original->content, GC);
-		original = original->next;
-	}
-	return (me);
+	int i;
+	char *make_sure;
+	char *res;
+	
+	i = 1;
+	while(str[i] && str[i] != '.' && str[i] != '*')
+		i++;
+	make_sure = ft_substr(str, 0, i, GC);
+	if(!is_env(make_sure))
+		return(NONE);
+	if(!str[i])
+		return (NONE);
+	return(i);
 }
 
-void better_env_expander(t_arg **command, t_arg **to_replace, t_env *env)
-{
-	int mode;
-	t_env *env_node;
-	t_arg *arg;
-	t_arg *hold;
-	t_arg *continue_form;
-	char *real_env;
 
-	mode = (*to_replace)->to_replace;
-	continue_form = (*to_replace)->next;
-	env_node = get_env(env, (*to_replace)->content + 1);
-	if(!env_node)
-	{
-		remove_arg_node(command, (*to_replace));
-		(*to_replace)  = continue_form;
-		return;
-	}
-	real_env = get_real_env(env_node->value);
-	if(mode == ONLY_ENV)
-	{
-		(*to_replace)->content = ft_strdup(real_env, GC);
-		(*to_replace)->before_joinable = true;
-		(*to_replace)->after_joinable = true;
-		return;
-	}
-	arg = env_to_arg(env_node);
-	if ((*to_replace)->prev && (*to_replace)->prev->after_joinable && arg->before_joinable)
-	{
-		arg->content = ft_strjoin((*to_replace)->prev->content, arg->content, GC);
-		remove_arg_node(command, (*to_replace)->prev);
-		replace_node_with_list(command, (*to_replace), arg);
-	}
-	else
-		replace_node_with_list(command, (*to_replace), arg);
-	(*to_replace)  = continue_form;
-}
 
 void replace_cmd_arg_node(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_head) 
 {
 	t_cmd_arg *new_tail;
     if (node == NULL || new_head == NULL || head == NULL || *head == NULL)
 	{
-		// if (node == NULL) {
-		// 	printf("node pointer is NULL\n");
-		// 	} else if (new_head == NULL) {
-		// 		printf("new_head pointer is NULL\n");
-		// 	} else if (head == NULL) {
-		// 		printf("head pointer is NULL\n");
-		// 	} else if (*head == NULL) 
-		// 		printf("head points to NULL (list is empty)\n");
 			return;
 	}
     if (node->prev != NULL) {
@@ -403,18 +196,6 @@ t_cmd_arg *env_to_cmd_arg(t_env *env_node)
 }
 
 
-char *args_to_str(t_arg *args)
-{
-	char *result;
-
-	result = NULL;
-	while (args)
-	{
-		result = ft_strjoin(result, args->content, GC);
-		args = args->next;
-	}
-	return (result);
-}
 
 bool am_i_a_star(char *str)
 {
@@ -451,39 +232,19 @@ t_arg *final_args(t_cmd_arg *cmd_arg)
 			ready_arg = ft_strjoin(ready_arg, args->content, GC);
 			args = args->next;
 		}
-		current = ft_lstnew_arg(NULL);
-		current->content = ready_arg;
-		current->to_replace = to_replace;
-		ft_lstaddback_arg(&head, current);
+		if(ready_arg)
+		{
+			current = ft_lstnew_arg(NULL);
+			current->content = ready_arg;
+			current->to_replace = to_replace;
+			ft_lstaddback_arg(&head, current);
+		}
 		cmd_arg = cmd_arg->next;
 		ready_arg = NULL;
 	}
 	return (head);
 }
 
-				// if (args->to_replace == REPLACE_ALL)
-				// {
-				// 	star = star_matching(args->content);
-				// 	if (star)
-				// 	{
-				// 		while (star)
-				// 		{
-				// 			tmp_arg = ft_lstnew_arg(NULL);
-				// 			tmp_arg->content = star->value;
-				// 			tmp_cmd_arg = ft_lstnew_cmd_arg(tmp_arg);
-				// 			if (cmd_arg->prev)
-				// 			{
-				// 				cmd_arg->prev->next = tmp_cmd_arg;
-				// 				tmp_cmd_arg->prev = cmd_arg->prev;
-				// 			}
-				// 			else
-				// 				original = tmp_cmd_arg;
-				// 			tmp_cmd_arg->next = cmd_arg->next;
-				// 			cmd_arg->prev = tmp_cmd_arg;
-				// 			star = star->next;
-				// 		}
-				// 	}
-				// }
 
 
 
@@ -544,19 +305,6 @@ bool is_nextable(t_arg *arg, t_env *env)
 	return (false);
 }
 
-int after_env_star(char *str)
-{
-	int i;
-	char *res;
-	
-	i = 1;
-	while(str[i] && str[i] != '.' && str[i] != '*')
-		i++;
-	if(!str[i])
-		return (NONE);
-	return(i);
-}
-
 
 void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 {
@@ -587,12 +335,11 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 		{
 			go = true;
 			move = arg->next;
-			if(arg->to_replace != NO_REPLACE && (arg->token == ENV || is_env(arg->content)))
+			after_star = after_env_star(arg->content);
+			if(arg->to_replace != NO_REPLACE && (arg->token == ENV || is_env(arg->content) || after_star != NONE))
 			{
 				look_for = arg->content;
-				printf("I am %s\n", look_for);
 				append_after = NULL;
-				after_star = after_env_star(arg->content);
 				if(after_star != NONE)
 				{
 					look_for = ft_substr(arg->content, 0, after_star, GC);
@@ -605,8 +352,16 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 					env_node->value = ft_strjoin(env_node->value, append_after, GC);
 					env_node->star_to_replace = arg->to_replace;
 				}
-				if(!env_node)
+				else if(!env_node && append_after)
+				{
+					arg->content = append_after;
+					break;
+				}
+				else if(!env_node)
+				{
 					remove_arg_node(&looping_cmd->arg, arg);
+					return;
+				}
 				else if(arg->to_replace == ONLY_ENV)
 					arg->content = ft_strdup(get_real_env(env_node->value), GC);
 				else
@@ -614,8 +369,6 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 					prev = arg->prev;
 					next = arg->next;
 					expanded_env = env_to_cmd_arg(env_node);
-
-					ft_lstiter_cmd_arg(expanded_env);
 					last_expanded = ft_lstlast_cmd_arg(expanded_env);
 					if(!env_node->after_joinable && !env_node->before_joinable)
 					{
@@ -810,98 +563,11 @@ void star_expander(t_cmd_arg **cmd_arg)
 t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
 {
     t_arg *args;
-    t_cmd_arg *original;
-	t_arg *tmp_arg;
-    t_cmd_arg *tmp_cmd_arg;
-	t_cmd_arg *new_cmd_arg;
-    t_arg *hold_args;
-    t_env *star;
-	t_cmd_arg *add;
-	t_cmd_arg *next_cmd_arg;
 
-    original = cmd_arg;
-	new_cmd_arg = NULL;
 	prep_cmd_arg(&cmd_arg, env);
 	args = final_args(cmd_arg);
-	// printf("LE:");
-	// ft_lstiter_cmd_arg(cmd_arg);
-	// star_expander(&cmd_arg);
-	expand_arg_as_star(&args);
     return (args);
 }
-
-// void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
-// {
-// 	t_env *star;
-// 	t_arg *arg;
-
-// 	while (redir)
-// 	{
-// 		arg = redir->redir_input;
-// 		while(arg)
-// 		{
-// 			if(arg->to_replace ==)
-// 			if(arg->to_replace != NO_REPLACE)
-// 			{
-// 				arg->content = redirect_env_expander(arg->content, *env);
-// 				printf("I have: %s\n", arg->content);
-// 				if(arg->to_replace == REPLACE_ALL)
-// 				{
-// 					star = star_matching(arg->content);
-// 					if(star)
-// 					{
-// 						if(star->next)
-// 						{
-// 							ft_putstr_fd(2, redir->redir_string);
-// 							ft_putstr_fd(2, ": ambiguous redirect\n");
-// 							change_status(env, 1);
-// 							init_tree(root);
-// 							return;
-// 						}
-// 						else
-// 							arg->content = ft_strdup(star->value, GC);
-// 					}
-// 				}
-// 			}
-// 			arg = arg->next;
-// 		}
-// 		arg = redir->redir_input;
-// 		while(arg)
-// 		{
-// 			redir->redir_string = ft_strjoin(redir->redir_string, arg->content, GC);
-// 			arg = arg->next;
-// 		}
-// 		redir = redir->next;
-// 	}
-// }
-
-
-
-
-bool is_builtin(char *command)
-{
-	return (!ft_strcmp(command, "env") || !ft_strcmp(command, "echo") || !ft_strcmp(command, "pwd") || !ft_strcmp(command, "export") || !ft_strcmp(command, "unset") || !ft_strcmp(command, "cd") || !ft_strcmp(command, "exit"));
-}
-
-
-			// 	command->content = env_expander(command->content, (*env));
-			// no_star = no_stars(command->content);
-			// if(command->to_replace == REPLACE_ALL)
-			// {
-			// 	star = star_matching(command->content);
-			// 	if(star)
-			// 	{
-			// 		command->content = star->value;
-			// 		star = star->next;
-			// 	}
-			// 	while(star)
-			// 	{
-			// 		tmp_arg = ft_lstnew_arg(NULL);
-			// 		tmp_arg->content = ft_strdup((*env)->value, GC);
-			// 		ft_lstaddback_arg(&args, tmp_arg);
-			// 		star = star->next;
-			// 	}
-			// }
 
 
 
@@ -926,50 +592,49 @@ void expand_arg_as_star(t_arg **head)
 
 }
 
+int get_to_replace(t_arg *arg)
+{
+	int to_replace;
+
+	to_replace = REPLACE_ALL;
+	while(arg)
+	{
+		if(is_arg_star(arg) && arg->to_replace < to_replace)
+			to_replace = arg->to_replace;
+		arg = arg->next;
+	}
+	return (to_replace);
+}
 
 void expand_node(t_treenode *root, t_env **env)
 {
-	t_arg *command;
-	t_env *star;
 	t_arg *args;
 	char *no_star;
 	t_arg *tmp_arg;
-	t_arg *next;
-	int changers;
+	t_cmd_arg *for_command;
 
-	command = root->command;
-	args = NULL;
-	tmp_arg = NULL;
-	no_star = NULL;
-	if(command)
+
+	for_command = ft_lstnew_cmd_arg(root->command);
+	root->command = expand_args(for_command, *env);
+	if(!root->command)
 	{
-		while(command)
-		{
-			if(command->to_replace != NO_REPLACE && (command->token == ENV || is_env(command->content)))
-				better_env_expander(&root->command, &command, *env);
-			else
-				command = command->next;
-		}
-		if(!root->command)
-		{
-			root->command = ft_lstnew_arg(NULL);
-			return;
-		}
-		expand_arg_as_star(&root->command);
-		root->content = root->command->content;
-		no_star = no_stars(root->content);
-		if(no_star && is_path(no_star) && is_a_directory(no_star))
-		{
-			ft_putstr_fd(2, no_star);
-			ft_putstr_fd(2,": Is a directory\n");
-			root->is_a_directory = true;
-			root->content = ft_strdup(no_star, GC);
-			change_status(env, DIRECORY_STATUS);
-			return;
-		}
-		tmp_arg = root->command->next;
-		root->command->next = NULL;
+		root->command = ft_lstnew_arg(NULL);
+		return;
 	}
+	expand_arg_as_star(&root->command);
+	root->content = root->command->content;
+	no_star = no_stars(root->content);
+	if(no_star && is_path(no_star) && is_a_directory(no_star))
+	{
+		ft_putstr_fd(2, no_star);
+		ft_putstr_fd(2,": Is a directory\n");
+		root->is_a_directory = true;
+		root->content = ft_strdup(no_star, GC);
+		change_status(env, DIRECORY_STATUS);
+		return;
+	}
+	tmp_arg = root->command->next;
+	root->command->next = NULL;
 	root->args = tmp_arg;
 	if(!tmp_arg)
 		root->args = expand_args(root->cmd_arg, *env);
@@ -979,8 +644,6 @@ void expand_node(t_treenode *root, t_env **env)
 		root->args = tmp_arg;
 	}
 	expand_arg_as_star(&root->args);
-
-
 	// expand_redirs(root->before_redir, env, root);
 	// expand_redirs(root->after_redir, env, root);
 }

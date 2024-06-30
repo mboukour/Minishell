@@ -1,7 +1,7 @@
 #include "../minishell.h"
 
 
-t_env *get_star() // HANDLE STAR MATCHING
+t_env *get_star(int mode) // HANDLE STAR MATCHING
 {
 	DIR *current_wd;
     struct dirent *read;
@@ -9,6 +9,7 @@ t_env *get_star() // HANDLE STAR MATCHING
 	int last_type;
 	t_env *current;
 	t_env *head;
+	bool condition;
 
 	ret = NULL;
 	current = NULL;
@@ -19,7 +20,11 @@ t_env *get_star() // HANDLE STAR MATCHING
 	read = readdir(current_wd);
 	while (read != NULL)
 	{
-		if (read->d_type == DT_REG || read->d_type == DT_DIR && read->d_name[0] != '.')
+		if(mode == SEEN && read->d_name[0] == '.')
+			condition = false;
+		else
+			condition = true;
+		if ((read->d_type == DT_REG || read->d_type == DT_DIR) && condition)
 		{
 			current = ft_lstnew_env(read->d_name);
 			ft_lstadd_back_env(&head, current);
@@ -127,7 +132,10 @@ t_env *star_matching(char *to_match)
 
     head = NULL;
     result = NULL;
-    current_star = get_star();
+	if(to_match[0] == '.')
+    	current_star = get_star(HIDDEN);
+	else
+		current_star = get_star(SEEN);
     if (!current_star)
     {
         // ft_putstr_fd(2, "opendir: can't opendir()");

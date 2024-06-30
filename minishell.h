@@ -105,6 +105,12 @@ enum e_replace_modes
 	REPLACE_ALL
 };
 
+enum e_star_modes
+{
+	SEEN,
+	HIDDEN
+};
+
 typedef struct s_env
 {
 	char *value;
