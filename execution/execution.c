@@ -200,7 +200,6 @@ void	init_tree(t_treenode *root)
 	root->left = NULL;
 	root->right = NULL;
 	root->to_replace = -1;
-	root->token = -1;
 }
 
 

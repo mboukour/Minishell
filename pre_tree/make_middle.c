@@ -102,6 +102,8 @@ t_arg *make_args(t_lex **first_arg)
 	int current_jc;
 	t_lex *prev;
 
+	if(!(*first_arg))
+		return (NULL);
 	current_jc = (*first_arg)->join_count;
 	args = NULL;
 	prev = NULL;
@@ -118,17 +120,20 @@ t_arg *make_args(t_lex **first_arg)
     return args;
 }
 
+
+
 // REPLACE REDIR STRING WITH REDIR ARG FOR EXPANDING
 void process_redirection_token(t_lex **lex, t_middle **head, int token)
 {
 	t_middle *current;
 	t_arg *arg;
 	t_arg *arg_head;
-	char *redir_string;
 	int current_jc;
+	t_cmd_arg *after_head;
+	t_cmd_arg *after_current;
+	t_middle *new_cmd;
 
 	arg_head = NULL;
-	redir_string = NULL;
     *lex = (*lex)->next;
     jump_spaces(lex);
 	current_jc = (*lex)->join_count;
@@ -142,7 +147,33 @@ void process_redirection_token(t_lex **lex, t_middle **head, int token)
 	}
     // current->redir_string = redir_string;
 	current->redirections = arg_head;
+	after_head = NULL;
+	jump_spaces(lex);
+	while((*lex) && (*lex)->token != AND && (*lex)->token != OR && (*lex)->token != PIPE_LINE && (*lex)->token != CLOSE_PARANTHESE && (*lex)->token != OPEN_PARANTHESE)
+	{
+		jump_spaces(lex);
+		arg = make_args(lex);
+		if(!arg)
+			break;
+		after_current = ft_lstnew_cmd_arg(arg);
+		ft_lstaddback_cmd_arg(&after_head, after_current);
+	}
     ft_lstadd_back_middle(head, current);
+	if(current->prev && current->prev->token == COMMAND)
+	{
+		if(!current->prev->cmd_arg)
+			// printf("NO CMD ARG\n");
+			current->prev->cmd_arg = after_head;
+		else
+			current->prev->cmd_arg->next = after_head;
+	}
+	else
+	{
+		new_cmd = ft_lstnew_middle(after_head->arg, after_head->next, COMMAND);
+		current->prev = new_cmd;
+		new_cmd->next = current;
+		(*head) = new_cmd;
+	}
 }
 
 void process_other_token(t_lex **lex, t_middle **head)
