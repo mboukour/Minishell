@@ -631,9 +631,7 @@ void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 		return;
 	for_redir = ft_lstnew_cmd_arg(redir->redir_input);
 	if(!for_redir)
-	{
 		printf("NO FOR REDIR!!!\n");
-	}
 	arg = expand_args(for_redir, *env);
 	expand_arg_as_star(&arg);
 	if(arg->next)
@@ -657,33 +655,33 @@ void expand_node(t_treenode *root, t_env **env)
 	for_command = ft_lstnew_cmd_arg(root->command);
 	root->command = expand_args(for_command, *env);
 	if(!root->command)
-	{
 		root->command = ft_lstnew_arg(NULL);
-		return;
-	}
-	expand_arg_as_star(&root->command);
-	root->content = root->command->content;
-	no_star = no_stars(root->content);
-	if(no_star && is_path(no_star) && is_a_directory(no_star))
-	{
-		ft_putstr_fd(2, no_star);
-		ft_putstr_fd(2,": Is a directory\n");
-		root->is_a_directory = true;
-		root->content = ft_strdup(no_star, GC);
-		change_status(env, DIRECORY_STATUS);
-		return;
-	}
-	tmp_arg = root->command->next;
-	root->command->next = NULL;
-	root->args = tmp_arg;
-	if(!tmp_arg)
-		root->args = expand_args(root->cmd_arg, *env);
 	else
 	{
-		tmp_arg->next = expand_args(root->cmd_arg, *env);
+		expand_arg_as_star(&root->command);
+		root->content = root->command->content;
+		no_star = no_stars(root->content);
+		if(no_star && is_path(no_star) && is_a_directory(no_star))
+		{
+			ft_putstr_fd(2, no_star);
+			ft_putstr_fd(2,": Is a directory\n");
+			root->is_a_directory = true;
+			root->content = ft_strdup(no_star, GC);
+			change_status(env, DIRECORY_STATUS);
+			return;
+		}
+		tmp_arg = root->command->next;
+		root->command->next = NULL;
 		root->args = tmp_arg;
+		if(!tmp_arg)
+			root->args = expand_args(root->cmd_arg, *env);
+		else
+		{
+			tmp_arg->next = expand_args(root->cmd_arg, *env);
+			root->args = tmp_arg;
+		}
+		expand_arg_as_star(&root->args);
 	}
-	expand_arg_as_star(&root->args);
 	expand_redirs(root->before_redir, env, root);
 	expand_redirs(root->after_redir, env, root);
 }

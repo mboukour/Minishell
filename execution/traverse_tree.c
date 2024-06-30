@@ -56,11 +56,8 @@ int	traverse_tree(t_treenode *root, t_data *data, t_env **env)
 		if (traverse_tree(root->left, data, env) == 0 || data->status != 0)
 			traverse_tree(root->right, data, env);
 	}
-	else
-	{
-		fprintf(stderr, "ERROR: %i\n", root->token); // REMOVE THIS: DUBGGING
-		print_ascii_tree(root, 0);
-	}
+	else if (!root->before_redir && !root->after_redir)
+		fprintf(stderr, "Error\n");
 	dup2(save_in, 0);
 	dup2(save_out, 1);
 	close(save_in);
