@@ -394,6 +394,7 @@ t_cmd_arg *env_to_cmd_arg(t_env *env_node)
 	{
 		one = ft_lstnew_arg(NULL);
 		one->content = ft_strdup(sp_res[i], GC);
+		one->to_replace = env_node->star_to_replace;
 		current = ft_lstnew_cmd_arg(one);
 		ft_lstaddback_cmd_arg(&head, current);
 		i++;
@@ -413,6 +414,7 @@ char *args_to_str(t_arg *args)
 	}
 	return (result);
 }
+
 
 t_arg *final_args(t_cmd_arg *cmd_arg)
 {
@@ -516,10 +518,10 @@ bool is_nextable(t_arg *arg, t_env *env)
 
 	env_node = get_env(env, arg->content  + 1);
 	if(!env_node)
-		return (false);
+		return (true);
 	else if(env_node->before_joinable)
 		return (true);
-	return (true);
+	return (false);
 }
 
 int after_env_star(char *str)
@@ -527,12 +529,12 @@ int after_env_star(char *str)
 	int i;
 	char *res;
 	
-	i = 0;
-	while(str[i] != '.' && str[i] == '*')
+	i = 1;
+	while(str[i] && str[i] != '.' && str[i] != '*')
 		i++;
 	if(!str[i])
 		return (NONE);
-	return(i - 1);
+	return(i);
 }
 
 
@@ -567,19 +569,22 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 			move = arg->next;
 			if(arg->to_replace != NO_REPLACE && (arg->token == ENV || is_env(arg->content)))
 			{
-				look_for = arg->content + 1;
+				look_for = arg->content;
+				printf("I am %s\n", look_for);
 				append_after = NULL;
 				after_star = after_env_star(arg->content);
-				printf()
 				if(after_star != NONE)
 				{
 					look_for = ft_substr(arg->content, 0, after_star, GC);
 					append_after = ft_substr(arg->content, after_star, ft_strlen(arg->content), GC);
-					printf("LOOK FOR: %s // APPEND AFTER: %s\n", look_for, append_after);
 				}
-				env_node = get_env(env, look_for);
+				env_node = get_env(env, look_for + 1);
 				if(env_node && append_after)
-					ft_lstlast_env(env_node)->value = ft_strjoin(env_node->value, append_after, GC);
+				{
+					env_node = ft_lstnew_env(env_node->value);
+					env_node->value = ft_strjoin(env_node->value, append_after, GC);
+					env_node->star_to_replace = arg->to_replace;
+				}
 				if(!env_node)
 					remove_arg_node(&looping_cmd->arg, arg);
 				else if(arg->to_replace == ONLY_ENV)
@@ -589,6 +594,8 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 					prev = arg->prev;
 					next = arg->next;
 					expanded_env = env_to_cmd_arg(env_node);
+
+					ft_lstiter_cmd_arg(expanded_env);
 					last_expanded = ft_lstlast_cmd_arg(expanded_env);
 					if(!env_node->after_joinable && !env_node->before_joinable)
 					{
@@ -630,7 +637,6 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							}
 							else
 							{
-								
 								last_expanded->arg->next = next;
 								if(is_env(next->content))
 								{
@@ -716,7 +722,10 @@ bool is_arg_star(t_arg *arg)
 
 	i = 0;
 	if (arg->to_replace != REPLACE_ALL)
+	{
+		printf("i am: %i for %s\n", arg->to_replace, arg->content);
 		return (false);
+	}
 	str = arg->content;
 	while (str[i])
 	{
@@ -792,6 +801,8 @@ t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
     original = cmd_arg;
 	new_cmd_arg = NULL;
 	prep_cmd_arg(&cmd_arg, env);
+	printf("LE:");
+	ft_lstiter_cmd_arg(cmd_arg);
 	star_expander(&cmd_arg);
     return (final_args(cmd_arg));
 }

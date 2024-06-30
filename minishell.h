@@ -110,6 +110,7 @@ typedef struct s_env
 	char *value;
 	bool before_joinable;
 	bool after_joinable;
+	int star_to_replace;
 	struct s_env *next;
 	struct s_env *prev;
 } t_env;

@@ -35,6 +35,7 @@ t_env	*ft_lstnew_env(char *env)
 		return (NULL);
 	}
 	set_joinables(env, &new_node->before_joinable, &new_node->after_joinable);
+	new_node->star_to_replace = REPLACE_ALL;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
