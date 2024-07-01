@@ -149,6 +149,7 @@ typedef struct s_redir
 {
 	int token;
 	int to_replace;
+	int here_doc_replacer;
 	t_arg *redir_input;
 	char *redir_string;
 	struct s_redir *next;
@@ -241,7 +242,7 @@ void ft_lstaddback_cmd_arg(t_cmd_arg **lst, t_cmd_arg *new);
 t_cmd_arg	*ft_lstlast_cmd_arg(t_cmd_arg *lst);
 void ft_lstiter_arg(t_arg *arg);
 void ft_lstiter_cmd_arg(t_cmd_arg *cmd_arg);
-
+int after_env_star(char *str);
 // ABSTRACT SYNTAX TREE
 t_treenode		*new_treenode(t_middle *middled);
 int counter(t_lex *current, char c);
@@ -272,6 +273,8 @@ size_t ft_strncpy(char *dst, const char *src, size_t dstsize);
 int	ft_isalpha(int c);
 
 // EXPANDER
+void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env);
+char *args_to_str(t_arg *args);
 t_env *star_matching(char *to_match);
 t_arg *arg_star_matching(char *to_match);
 t_cmd_arg *cmd_arg_star_matching(char *to_match);
@@ -280,6 +283,8 @@ void better_env_expander(t_arg **command, t_arg **to_replace, t_env *env);
 char *normalize_pattern(char *pattern);
 char *get_real_env(char *value);
 void expand_node(t_treenode *root, t_env **env);
+t_lex *heredoc_tokenizer(char *input);
+
 // BUILTINS
 int cd(t_treenode *cd_root, t_env **env, t_data *data);
 int pwd(t_treenode *pwd_node, t_data *data);
@@ -293,6 +298,7 @@ int export_core(t_env **env, char *exp_arg);
 int exit_core(int status, t_env *env);
 
 // ENV STUFF
+bool is_env(char *str);
 t_env *array_to_env(char **env);
 void ft_lstiter_env(t_env *env, bool add_declare); // DEBUG
 void ft_lstclear_env(t_env *env);

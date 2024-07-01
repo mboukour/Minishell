@@ -112,7 +112,7 @@ t_arg *env_to_arg(t_env *env_node)
 // 	}
 // 	return (me);
 // }
-bool is_env(char *str);
+
 int after_env_star(char *str)
 {
 	int i;
@@ -618,7 +618,23 @@ char *args_to_str(t_arg *args)
 	return (result);
 }
 
+void set_arg(t_redir *redir, t_arg *args)
+{
+	int to_replace;
+	char *result;
 
+	result = NULL;
+	to_replace = REPLACE_ALL;
+	while (args)
+	{
+		if(args->to_replace < to_replace)
+			to_replace = args->to_replace;
+		result = ft_strjoin(result, args->content, GC);
+		args = args->next;
+	}
+	redir->redir_string = result;
+	redir->here_doc_replacer = to_replace;
+}
 
 void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 {
@@ -642,7 +658,7 @@ void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 		init_tree(root);
 		return;
 	}
-	redir->redir_string = args_to_str(arg);
+	set_arg(redir, arg);
 }
 
 void expand_node(t_treenode *root, t_env **env)

@@ -1,7 +1,7 @@
 #include "../minishell.h"
 
 
-bool is_special(char c) 
+bool is_special(char c)
 {
     return (c == '\'' || c == '"' || c == '|' || c == '$' || c == '&' ||  c == '*' || c == '>' || c == '<' || c == ' ' || c == '*' || c == '(' || c == ')');
 }

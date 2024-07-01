@@ -64,6 +64,7 @@ t_redir *ft_lstnew_redir(t_middle *middled)
 	new_node->redir_string = NULL;
 	new_node->redir_input = middled->redirections;
 	new_node->to_replace = middled->to_replace;
+	new_node->here_doc_replacer = REPLACE_ALL;
 	new_node->next = NULL;
 	return (new_node);
 }
@@ -121,4 +122,3 @@ void ft_lstiter_redir(t_redir *first)
 		first = first->next;
 	}
 }
-

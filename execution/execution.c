@@ -203,7 +203,69 @@ void	init_tree(t_treenode *root)
 }
 
 
-void	handle_heredoc(t_redir *redir)
+
+void remove_lex_node(t_lex **head, t_lex *node) 
+{
+    if (node == NULL || head == NULL || *head == NULL) 
+        return;
+    if (node == *head)
+        *head = node->next;
+    if (node->prev != NULL)
+        node->prev->next = node->next;
+    if (node->next != NULL) 
+        node->next->prev = node->prev;
+}
+
+
+void expand_mini_lexed(t_lex **mini, t_env *env)
+{
+	t_env *env_node;
+	t_lex *looping_node;
+	t_lex *next;
+
+	looping_node = *mini;
+	while (looping_node)
+	{
+		next = looping_node->next;
+		if(looping_node->token == ENV)
+		{
+			env_node = get_env(env, looping_node->content + 1);
+			if(!env_node)
+				remove_lex_node(mini, looping_node);
+			else
+			{
+				looping_node->content = ft_strdup(env_node->value, GC);
+				looping_node->content = get_real_env(looping_node->content);
+			}
+		}
+		looping_node = next;
+	}
+	
+}
+
+
+char *expnaded_line(t_redir *redir, char *line, t_env *env)
+{
+	t_env *env_node;
+	t_arg *arg;
+	t_cmd_arg *for_redir;
+	t_lex *mini_lexed;
+	char *result;
+
+	result = NULL;
+	if(redir->to_replace != REPLACE_ALL)
+		return (line);
+	mini_lexed = heredoc_tokenizer(line);
+	expand_mini_lexed(&mini_lexed, env);
+	while(mini_lexed)
+	{
+		result = ft_strjoin(result, mini_lexed->content, GC);
+		mini_lexed = mini_lexed->next;
+	}
+	return (result);
+}
+
+void	handle_heredoc(t_redir *redir, t_env *env)
 {
 	char	*line;
 	int		fd;
@@ -219,7 +281,9 @@ void	handle_heredoc(t_redir *redir)
 		line = readline("> ");
 		if (!line || !ft_strcmp(line, redir->redir_string))
 			break ;
-		write(fd, line, ft_strlen(line));
+		line = expnaded_line(redir, line, env);
+		if(line)
+			write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
 	}
 	close(fd);
@@ -251,7 +315,7 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 		if (tmp->token == HERE_DOC)
 		{
 			info = 1;
-			handle_heredoc(tmp);
+			handle_heredoc(tmp, *env);
 		}
 		tmp = tmp->next;
 	}
