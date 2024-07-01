@@ -148,8 +148,15 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	}
 	export_core(env, exp);
 	free(exp);
-	if (!execute_builtin(root, env, data) || root->is_a_directory)
+	if (!execute_builtin(root, env, data))
 		return;
+	if(root->is_a_directory)
+	{
+		ft_putstr_fd(2, root->content);
+		ft_putstr_fd(2, ": Is a directory\n");
+		change_status(env, DIRECORY_STATUS);
+		return;
+	}
 	pid = fork();
 	if (pid == -1)
 	{

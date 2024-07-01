@@ -77,41 +77,6 @@ t_arg *env_to_arg(t_env *env_node)
 
 
 
-// char *redirect_env_expander(char *to_expand, t_env *env)
-// {
-// 	t_lex *mini_lexed;
-// 	t_lex *original;
-// 	t_env *env_node;
-// 	char *me;
-
-// 	mini_lexed = mini_lexer(to_expand);
-// 	original = mini_lexed;
-// 	while(mini_lexed)
-// 	{ 
-// 		if(mini_lexed->token == ENV)
-// 		{
-// 			env_node = get_env(env, mini_lexed->content + 1);
-// 			if(!env_node)
-// 				mini_lexed->content = ft_strdup("", GC);
-// 			else
-// 			{
-// 				me = env_node->value;
-// 				while(*me && *me != '=')
-// 					me++;
-// 				me++;
-// 				mini_lexed->content = ft_strdup(me, GC);
-// 			}
-// 		}
-// 		mini_lexed = mini_lexed->next;
-// 	}
-// 	me = NULL;
-// 	while(original)
-// 	{
-// 		me = ft_strjoin(me, original->content, GC);
-// 		original = original->next;
-// 	}
-// 	return (me);
-// }
 
 int after_env_star(char *str)
 {
@@ -618,29 +583,6 @@ char *args_to_str(t_arg *args)
 	return (result);
 }
 
-// void set_arg(t_redir *redir, t_arg *args)
-// {
-// 	int to_replace;
-// 	char *result;
-
-// 	result = NULL;
-// 	to_replace = REPLACE_ALL;
-// 	while (args)
-// 	{
-// 		if(args->to_replace < to_replace)
-// 		{
-// 			to_replace = args->to_replace;
-// 			printf("OK: %i\n", to_replace);
-
-// 		}
-// 		result = ft_strjoin(result, args->content, GC);
-// 		args = args->next;
-// 	}
-// 	redir->redir_string = result;
-// 	redir->here_doc_replacer = to_replace;
-// 	printf("FINAL: %i\n", to_replace);
-// }
-
 int get_least_replace(t_arg *args)
 {
 	int to_replace;
@@ -699,12 +641,8 @@ void expand_node(t_treenode *root, t_env **env)
 		no_star = no_stars(root->content);
 		if(no_star && is_path(no_star) && is_a_directory(no_star))
 		{
-			ft_putstr_fd(2, no_star);
-			ft_putstr_fd(2,": Is a directory\n");
 			root->is_a_directory = true;
 			root->content = ft_strdup(no_star, GC);
-			change_status(env, DIRECORY_STATUS);
-			return;
 		}
 		tmp_arg = root->command->next;
 		root->command->next = NULL;
