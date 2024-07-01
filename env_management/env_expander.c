@@ -618,22 +618,41 @@ char *args_to_str(t_arg *args)
 	return (result);
 }
 
-void set_arg(t_redir *redir, t_arg *args)
+// void set_arg(t_redir *redir, t_arg *args)
+// {
+// 	int to_replace;
+// 	char *result;
+
+// 	result = NULL;
+// 	to_replace = REPLACE_ALL;
+// 	while (args)
+// 	{
+// 		if(args->to_replace < to_replace)
+// 		{
+// 			to_replace = args->to_replace;
+// 			printf("OK: %i\n", to_replace);
+
+// 		}
+// 		result = ft_strjoin(result, args->content, GC);
+// 		args = args->next;
+// 	}
+// 	redir->redir_string = result;
+// 	redir->here_doc_replacer = to_replace;
+// 	printf("FINAL: %i\n", to_replace);
+// }
+
+int get_least_replace(t_arg *args)
 {
 	int to_replace;
-	char *result;
 
-	result = NULL;
 	to_replace = REPLACE_ALL;
 	while (args)
 	{
 		if(args->to_replace < to_replace)
 			to_replace = args->to_replace;
-		result = ft_strjoin(result, args->content, GC);
 		args = args->next;
 	}
-	redir->redir_string = result;
-	redir->here_doc_replacer = to_replace;
+	return (to_replace);
 }
 
 void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
@@ -658,7 +677,8 @@ void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 		init_tree(root);
 		return;
 	}
-	set_arg(redir, arg);
+	redir->redir_string = args_to_str(arg);
+	redir->here_doc_replacer = get_least_replace(redir->redir_input);
 }
 
 void expand_node(t_treenode *root, t_env **env)

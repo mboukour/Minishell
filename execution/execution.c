@@ -253,7 +253,7 @@ char *expnaded_line(t_redir *redir, char *line, t_env *env)
 	char *result;
 
 	result = NULL;
-	if(redir->to_replace != REPLACE_ALL)
+	if(redir->here_doc_replacer != REPLACE_ALL)
 		return (line);
 	mini_lexed = heredoc_tokenizer(line);
 	expand_mini_lexed(&mini_lexed, env);
