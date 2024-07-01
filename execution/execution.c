@@ -251,7 +251,7 @@ void expand_mini_lexed(t_lex **mini, t_env *env)
 }
 
 
-char *expnaded_line(t_redir *redir, char *line, t_env *env)
+char *expanded_line(t_redir *redir, char *line, t_env *env)
 {
 	t_env *env_node;
 	t_arg *arg;
@@ -288,7 +288,7 @@ void	handle_heredoc(t_redir *redir, t_env *env)
 		line = readline("> ");
 		if (!line || !ft_strcmp(line, redir->redir_string))
 			break ;
-		line = expnaded_line(redir, line, env);
+		line = expanded_line(redir, line, env);
 		if(line)
 			write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);

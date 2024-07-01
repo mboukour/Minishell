@@ -604,23 +604,26 @@ void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 	t_arg *arg;
 	char *original;
 
-	if(!redir)
-		return;
-	for_redir = ft_lstnew_cmd_arg(redir->redir_input);
-	if(!for_redir)
-		printf("NO FOR REDIR!!!\n");
-	arg = expand_args(for_redir, *env);
-	expand_arg_as_star(&arg);
-	if(arg->next)
+	while (redir)
 	{
-		ft_putstr_fd(2, args_to_str(redir->redir_input));
-		ft_putstr_fd(2, ": ambiguous redirect\n");
-		export_core(env, "?=1");
-		init_tree(root);
-		return;
+		for_redir = ft_lstnew_cmd_arg(redir->redir_input);
+		if(!for_redir)
+			printf("NO FOR REDIR!!!\n");
+		arg = expand_args(for_redir, *env);
+		expand_arg_as_star(&arg);
+		if(arg->next)
+		{
+			ft_putstr_fd(2, args_to_str(redir->redir_input));
+			ft_putstr_fd(2, ": ambiguous redirect\n");
+			export_core(env, "?=1");
+			init_tree(root);
+			return;
+		}
+		redir->redir_string = args_to_str(arg);
+		redir->here_doc_replacer = get_least_replace(redir->redir_input);
+		redir = redir->next;
 	}
-	redir->redir_string = args_to_str(arg);
-	redir->here_doc_replacer = get_least_replace(redir->redir_input);
+	
 }
 
 void expand_node(t_treenode *root, t_env **env)
