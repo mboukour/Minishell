@@ -199,37 +199,15 @@ t_env *copy_env(t_env *env)
 	return (head);
 }
 
-void ft_lstiter_env(t_env *env, bool add_declare)
+void ft_lstiter_env(t_env *env)
 {
     int i;
-    t_env *copy;
-
-    i = 0;
-    if (add_declare)
-    {
-        copy = copy_env(env);
-        if (!copy)
-        {
-            perror("Failed to copy environment");
-            exit(EXIT_FAILURE);
-        }
-        sort_env_list(copy);
-        env = copy;
-    }
 
     while (env)
     {
         i++;
         if (ft_strncmp(env->value, "?=", 2))
-        {
-            if (add_declare)
-			{
-				if(ft_strncmp(env->value, "_=", 2))
-					printf("declare -x %s\n", env->value);
-			}
-			else
-				printf("%s\n", env->value);
-        }
+			printf("%s\n", env->value);
         env = env->next;
     }
 }

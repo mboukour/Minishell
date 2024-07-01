@@ -300,7 +300,7 @@ int exit_core(int status, t_env *env);
 // ENV STUFF
 bool is_env(char *str);
 t_env *array_to_env(char **env);
-void ft_lstiter_env(t_env *env, bool add_declare); // DEBUG
+void ft_lstiter_env(t_env *env); // DEBUG
 void ft_lstclear_env(t_env *env);
 t_env	*ft_lstnew_env(char *env);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
@@ -311,7 +311,7 @@ int change_status(t_env **env, int new_status); // CAN FAIL
 void sort_env_list(t_env *head);
 void set_joinables(char *str, bool *before_joinable, bool *after_joinable);
 t_env	*ft_lstlast_env(t_env *lst);
-
+t_env *copy_env(t_env *env);
 
 // STAR STUFF
 char *no_stars(char *path);

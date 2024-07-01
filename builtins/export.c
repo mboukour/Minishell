@@ -97,6 +97,36 @@ int export_core(t_env **env, char *exp_arg)
 	return (0);
 }
 
+void export_no_arg(t_env *env)
+{
+	int i;
+
+	env = copy_env(env);
+	sort_env_list(env);
+	while (env)
+	{
+		if(ft_strncmp(env->value, "?=", 2) && ft_strncmp(env->value, "_=", 2))
+		{
+			printf("declare -x ");
+			i = 0;
+			while (env->value[i] && env->value[i] != '=')
+			{
+				printf("%c", env->value[i]);
+				i++;
+			}
+			printf("=\"");
+			i++;
+			while(env->value[i])
+			{
+				printf("%c", env->value[i]);
+				i++;
+			}
+			printf("\"\n");
+		}
+		env = env->next;
+	}
+}
+
 int export(t_env **env, t_treenode *export_root)
 {
 	int status;
@@ -109,7 +139,7 @@ int export(t_env **env, t_treenode *export_root)
 	args = export_root->args;
 	if(!args)
 	{
-		ft_lstiter_env(*env, true);
+		export_no_arg(*env);
 		return (0);
 	}
 	while(args)

@@ -4,6 +4,6 @@
 
 int env(t_env *env)
 {
-	ft_lstiter_env(env, false);
+	ft_lstiter_env(env);
 	return (0);
 }
