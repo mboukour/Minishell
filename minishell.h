@@ -152,7 +152,9 @@ typedef struct s_redir
 	int here_doc_replacer;
 	t_arg *redir_input;
 	char *redir_string;
+	bool actual_here_doc;
 	struct s_redir *next;
+	struct s_redir *prev;
 }	t_redir;
 
 
@@ -252,6 +254,7 @@ t_treenode *parse_pipeline(t_middle **middled);
 t_redir *ft_lstnew_redir(t_middle *middled);
 void ft_lstaddback_redir(t_redir **head, t_redir *new);
 void ft_lstiter_redir(t_redir *first);
+t_redir *ft_lstlast_redir(t_redir *first);
 void print_ascii_tree(t_treenode *root, int level); // FOR DEBUGGING -- SHOULD BE REMOVED LATER
 
 // UTILS

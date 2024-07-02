@@ -147,34 +147,37 @@ void process_redirection_token(t_lex **lex, t_middle **head, int token)
 	}
     // current->redir_string = redir_string;
 	current->redirections = arg_head;
-	after_head = NULL;
-	jump_spaces(lex);
-	while((*lex) && (*lex)->token != AND && (*lex)->token != OR && (*lex)->token != PIPE_LINE && (*lex)->token != CLOSE_PARANTHESE && (*lex)->token != OPEN_PARANTHESE)
+	ft_lstadd_back_middle(head, current);
+	if(token != HERE_DOC)
 	{
+		after_head = NULL;
 		jump_spaces(lex);
-		arg = make_args(lex);
-		if(!arg)
-			break;
-		after_current = ft_lstnew_cmd_arg(arg);
-		ft_lstaddback_cmd_arg(&after_head, after_current);
-	}
-    ft_lstadd_back_middle(head, current);
-	if(after_head)
-	{
-		if(current->prev && current->prev->token == COMMAND)
+		while((*lex) && (*lex)->token != AND && (*lex)->token != OR && (*lex)->token != PIPE_LINE && (*lex)->token != CLOSE_PARANTHESE && (*lex)->token != OPEN_PARANTHESE)
 		{
-			if(!current->prev->cmd_arg)
-				// printf("NO CMD ARG\n");
-				current->prev->cmd_arg = after_head;
-			else
-				current->prev->cmd_arg->next = after_head;
+			jump_spaces(lex);
+			arg = make_args(lex);
+			if(!arg)
+				break;
+			after_current = ft_lstnew_cmd_arg(arg);
+			ft_lstaddback_cmd_arg(&after_head, after_current);
 		}
-		else
+		if(after_head)
 		{
-			new_cmd = ft_lstnew_middle(after_head->arg, after_head->next, COMMAND);
-			current->prev = new_cmd;
-			new_cmd->next = current;
-			(*head) = new_cmd;
+			if(current->prev && current->prev->token == COMMAND)
+			{
+				if(!current->prev->cmd_arg)
+					// printf("NO CMD ARG\n");
+					current->prev->cmd_arg = after_head;
+				else
+					current->prev->cmd_arg->next = after_head;
+			}
+			else
+			{
+				new_cmd = ft_lstnew_middle(after_head->arg, after_head->next, COMMAND);
+				current->prev = new_cmd;
+				new_cmd->next = current;
+				(*head) = new_cmd;
+			}
 		}
 	}
 }

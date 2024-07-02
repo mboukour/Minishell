@@ -32,6 +32,7 @@ fclean: clean
 	@echo "Cleaning $(NAME)"
 	@rm -f $(NAME)
 
+re: fclean all
 
 # NAME = minishell
 # SRC = minishell.c lexer/*.c utils/*.c ast/*.c pre_tree/*.c garbage_collector/*.c env_management/*.c builtins/*.c execution/*.c

@@ -65,7 +65,9 @@ t_redir *ft_lstnew_redir(t_middle *middled)
 	new_node->redir_input = middled->redirections;
 	new_node->to_replace = middled->to_replace;
 	new_node->here_doc_replacer = REPLACE_ALL;
+	new_node->actual_here_doc = false;
 	new_node->next = NULL;
+	new_node->prev = NULL;
 	return (new_node);
 }
 
@@ -92,6 +94,7 @@ void ft_lstaddback_redir(t_redir **head, t_redir *new)
 	}
 	last = ft_lstlast_redir(*head);
 	last->next = new;
+	new->prev = last;
 }
 
 char *redir_to_str(int token)

@@ -57,7 +57,5 @@ t_lex *heredoc_tokenizer(char *input)
         else
             heredoc_handle_word(input, &i, &head, &join_count);
     }
-	if(!head)
-		fprintf(stderr, "No head\n");
 	return (head);
 }

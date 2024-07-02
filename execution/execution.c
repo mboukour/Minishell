@@ -300,13 +300,29 @@ void	handle_heredoc(t_redir *redir, t_env *env)
 		perror("Error in heredoc fd");
 		exit(EXIT_FAILURE);
 	}
-	if (dup2(fd, 0) == -1)
+	if (redir->actual_here_doc && dup2(fd, 0) == -1)
 	{
 		perror("handle heredoc dup failed");
 		close(fd);
 		exit(EXIT_FAILURE);
 	}
 	close(fd);
+}
+
+void flag_last_here_doc(t_redir *redir)
+{
+	t_redir *last;
+
+	last = ft_lstlast_redir(redir);
+	while(last)
+	{
+		if(last->token == HERE_DOC)
+		{
+			last->actual_here_doc = true;
+			break;
+		}
+		last = last->prev;
+	}
 }
 
 void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
@@ -316,6 +332,7 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 	t_redir	*tmp;
 
 	info = 0;
+	flag_last_here_doc(redir);
 	tmp = redir;
 	while (tmp)
 	{
