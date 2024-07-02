@@ -132,11 +132,10 @@ int cd_core(char *path, t_env **env, t_data *data)
         return 1;
     }
 
-    safe_free(&data->pwd);
     safe_free(&data->old_pwd);
-
+    data->old_pwd = ft_strdup(data->pwd, MANUAL);
+    safe_free(&data->pwd);
     data->pwd = wd;
-    data->old_pwd = ft_strdup(wd, MANUAL);
     if (ft_strcmp("..", data->pwd))
     {
         safe_free((char **)data->foolproof_wd);
