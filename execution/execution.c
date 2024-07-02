@@ -345,6 +345,23 @@ void flag_last_here_doc(t_redir *redir)
 	}
 }
 
+char	*get_here_doc_path()
+{
+	int		i;
+	char	*str;
+	char	*num;
+
+	i = 0;
+	while (true)
+	{
+		num = ft_itoa(i, GC);
+		str = ft_strjoin("/tmp/.here_doc", num, GC);
+		if (access(str, F_OK) == -1)
+			return (str);
+		i++;
+	}
+}
+
 void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 {
 	int		fd;
@@ -352,11 +369,10 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 	t_redir	*tmp;
 	char	*line;
 	char *buffer;
-
+	char *here_doc_path;
 	info = 0;
 	flag_last_here_doc(redir);
 	tmp = redir;
-
 	while (redir)
 	{
 		if (redir->token == REDIR_IN)
@@ -404,7 +420,14 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 		}
 		else if(redir->token == HERE_DOC)
 		{
-			fd = open("/tmp/heredoc", O_CREAT | O_RDWR | O_TRUNC, 0777);
+			here_doc_path = get_here_doc_path();
+			fd = open(here_doc_path, O_CREAT | O_RDWR | O_TRUNC, 0777);
+			if(fd == -1)
+			{
+				ft_putstr_fd(2, "Error: can't open heredoc fd:");
+				perror("");
+				exit(EXIT_FAILURE); // IMPLEMNT BETTER ERROR MANAGEMENT
+			}
 			if(redir->here_doc_buffer)
 			{
 				buffer = redir->here_doc_buffer;
@@ -412,19 +435,21 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 				{
 					line = get_line_from_buffer(&buffer);
 					if(!line)
-					{
 						break;
-					}
 					line = expanded_line(redir, line, *env);
 					if(line)
-					{
 						write(fd, line, ft_strlen(line));
-					}
 					write(fd, "\n", 1);
 				}
 			}
 			close(fd);
-			fd = open("/tmp/heredoc", O_RDONLY);
+			fd = open(here_doc_path, O_RDONLY);
+			if(fd == -1)
+			{
+				ft_putstr_fd(2, "Error: can't open heredoc fd:");
+				perror("");
+				exit(EXIT_FAILURE); // IMPLEMNT BETTER ERROR MANAGEMENT
+			}
 			if(redir->actual_here_doc)
 			{
 				if (dup2(fd, 0) == -1)
@@ -434,6 +459,7 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 					exit(EXIT_FAILURE);
 				}
 			}
+			unlink(here_doc_path);
 		}
 		redir = redir->next;
 	}
