@@ -35,6 +35,7 @@ t_middle	*ft_lstnew_middle(t_arg *command, t_cmd_arg *cmd_arg, int token)
 	new_node->redir_string = NULL;
 	new_node->to_replace = REPLACE_ALL;
 	// new_node->builtin = assing_builtin(content);
+	new_node->here_doc_buffer = NULL;
 	new_node->builtin = NONE;
 	new_node->next = NULL;
 	new_node->prev = NULL;

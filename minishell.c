@@ -27,6 +27,7 @@ void display_error(int error_checker, t_lex *lex, t_data *data, t_env **env)
     ft_putstr_fd(2, "\n");
 }
 
+
 t_treenode *parsing(char *input, t_data *data, t_env **env)
 {
     t_lex *lexed;
@@ -49,6 +50,7 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
     else
     {
         middled = make_middle(lexed);
+		valid_here_doc(middled);
         return (ruined_tree(middled));
     }
     return (NULL);

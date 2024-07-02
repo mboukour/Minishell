@@ -66,6 +66,7 @@ t_redir *ft_lstnew_redir(t_middle *middled)
 	new_node->to_replace = middled->to_replace;
 	new_node->here_doc_replacer = REPLACE_ALL;
 	new_node->actual_here_doc = false;
+	new_node->here_doc_buffer = middled->here_doc_buffer;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);

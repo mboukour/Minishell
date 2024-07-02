@@ -152,6 +152,7 @@ typedef struct s_redir
 	int here_doc_replacer;
 	t_arg *redir_input;
 	char *redir_string;
+	char *here_doc_buffer;
 	bool actual_here_doc;
 	struct s_redir *next;
 	struct s_redir *prev;
@@ -174,6 +175,7 @@ typedef struct s_middle
 	t_arg	*redirections;
 	t_cmd_arg *cmd_arg;
 	char	*redir_string;
+	char	*here_doc_buffer;
 	int		to_replace;
 	int		builtin;
 	struct	s_middle *next;
@@ -246,7 +248,9 @@ void ft_lstaddback_cmd_arg(t_cmd_arg **lst, t_cmd_arg *new);
 t_cmd_arg	*ft_lstlast_cmd_arg(t_cmd_arg *lst);
 void ft_lstiter_arg(t_arg *arg);
 void ft_lstiter_cmd_arg(t_cmd_arg *cmd_arg);
+void valid_here_doc(t_middle *middle);
 int after_env_star(char *str);
+
 // ABSTRACT SYNTAX TREE
 t_treenode		*new_treenode(t_middle *middled);
 int counter(t_lex *current, char c);

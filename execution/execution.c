@@ -264,6 +264,8 @@ char *expanded_line(t_redir *redir, char *line, t_env *env)
 		return (line);
 	mini_lexed = heredoc_tokenizer(line);
 	expand_mini_lexed(&mini_lexed, env);
+	if(!mini_lexed)
+		fprintf(stderr, "No mini lexed\n");
 	while(mini_lexed)
 	{
 		result = ft_strjoin(result, mini_lexed->content, GC);
@@ -272,41 +274,59 @@ char *expanded_line(t_redir *redir, char *line, t_env *env)
 	return (result);
 }
 
-void	handle_heredoc(t_redir *redir, t_env *env)
-{
-	char	*line;
-	int		fd;
+// void	handle_heredoc(t_redir *redir, t_env *env)
+// {
+// 	char	*line;
+// 	int		fd;
 
-	fd = open("/tmp/heredoc", O_CREAT | O_RDWR | O_TRUNC, 0777);
-	if (fd == -1)
-	{
-		perror("Error in heredoc fd");
-		exit(EXIT_FAILURE);
-	}
-	while (1)
-	{
-		line = readline("> ");
-		if (!line || !ft_strcmp(line, redir->redir_string))
-			break ;
-		line = expanded_line(redir, line, env);
-		if(line)
-			write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-	}
-	close(fd);
-	fd = open("/tmp/heredoc", O_RDONLY);
-	if (fd == -1)
-	{
-		perror("Error in heredoc fd");
-		exit(EXIT_FAILURE);
-	}
-	if (redir->actual_here_doc && dup2(fd, 0) == -1)
-	{
-		perror("handle heredoc dup failed");
-		close(fd);
-		exit(EXIT_FAILURE);
-	}
-	close(fd);
+// 	fd = open("/tmp/heredoc", O_CREAT | O_RDWR | O_TRUNC, 0777);
+// 	if (fd == -1)
+// 	{
+// 		perror("Error in heredoc fd");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	while (1)
+// 	{
+// 		line = readline("> ");
+// 		if (!line || !ft_strcmp(line, redir->redir_string))
+// 			break ;
+// 		line = expanded_line(redir, line, env);
+// 		if(line)
+// 			write(fd, line, ft_strlen(line));
+// 		write(fd, "\n", 1);
+// 	}
+// 	close(fd);
+// 	fd = open("/tmp/heredoc", O_RDONLY);
+// 	if (fd == -1)
+// 	{
+// 		perror("Error in heredoc fd");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	if (redir->actual_here_doc && dup2(fd, 0) == -1)
+// 	{
+// 		perror("handle heredoc dup failed");
+// 		close(fd);
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	close(fd);
+// }
+
+char *get_line_from_buffer(char **buffer)
+{
+	char *result;
+	int i;
+
+	i = 0;
+    if (!*buffer || **buffer == '\0')
+        return (NULL);
+
+	while ((*buffer)[i] && (*buffer)[i] != '\n')
+		i++;
+	result = ft_substr(*buffer, 0, i, GC);
+	if ((*buffer)[i] == '\n')
+        i++;
+	*buffer += i;
+	return(result);
 }
 
 void flag_last_here_doc(t_redir *redir)
@@ -330,19 +350,13 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 	int		fd;
 	int		info;
 	t_redir	*tmp;
+	char	*line;
+	char *buffer;
 
 	info = 0;
 	flag_last_here_doc(redir);
 	tmp = redir;
-	while (tmp)
-	{
-		if (tmp->token == HERE_DOC)
-		{
-			info = 1;
-			handle_heredoc(tmp, *env);
-		}
-		tmp = tmp->next;
-	}
+
 	while (redir)
 	{
 		if (redir->token == REDIR_IN)
@@ -387,6 +401,39 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 			}
 			change_status(env, 0);
 			close(fd);
+		}
+		else if(redir->token == HERE_DOC)
+		{
+			fd = open("/tmp/heredoc", O_CREAT | O_RDWR | O_TRUNC, 0777);
+			if(redir->here_doc_buffer)
+			{
+				buffer = redir->here_doc_buffer;
+				while(true)
+				{
+					line = get_line_from_buffer(&buffer);
+					if(!line)
+					{
+						break;
+					}
+					line = expanded_line(redir, line, *env);
+					if(line)
+					{
+						write(fd, line, ft_strlen(line));
+					}
+					write(fd, "\n", 1);
+				}
+			}
+			close(fd);
+			fd = open("/tmp/heredoc", O_RDONLY);
+			if(redir->actual_here_doc)
+			{
+				if (dup2(fd, 0) == -1)
+				{
+					perror("handle heredoc dup failed");
+					close(fd);
+					exit(EXIT_FAILURE);
+				}
+			}
 		}
 		redir = redir->next;
 	}
