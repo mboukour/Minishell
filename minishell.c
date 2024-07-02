@@ -12,7 +12,7 @@ void sigint_handler(int sig)
 
 void display_error(int error_checker, t_lex *lex, t_data *data, t_env **env)
 {
-    data->status = SYNTAX_ERROR_STATUS;
+	data->status = SYNTAX_ERROR_STATUS;
     change_status(env, data->status);
     if(error_checker != NONE)
     {
@@ -36,14 +36,16 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
     int error_checker;
 
     lexed = tokenizer(input);
-
     error_checker = open_checker(lexed);
     if(error_checker != NONE)
         return (display_error(error_checker, NULL, data, env), NULL);
     quotes_handler(lexed);
     we_check_lex = lex_input_checker(lexed);
     if(we_check_lex)
-         display_error(NONE, we_check_lex, data, env);
+	{
+		fake_open(lexed, we_check_lex);
+        display_error(NONE, we_check_lex, data, env);
+	}
     else
     {
         middled = make_middle(lexed);

@@ -606,21 +606,29 @@ void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 
 	while (redir)
 	{
-		for_redir = ft_lstnew_cmd_arg(redir->redir_input);
-		if(!for_redir)
-			printf("NO FOR REDIR!!!\n");
-		arg = expand_args(for_redir, *env);
-		expand_arg_as_star(&arg);
-		if(arg->next)
+		if(redir->token != HERE_DOC)
 		{
-			ft_putstr_fd(2, args_to_str(redir->redir_input));
-			ft_putstr_fd(2, ": ambiguous redirect\n");
-			export_core(env, "?=1");
-			init_tree(root);
-			return;
+			for_redir = ft_lstnew_cmd_arg(redir->redir_input);
+			if(!for_redir)
+				printf("NO FOR REDIR!!!\n");
+			arg = expand_args(for_redir, *env);
+			expand_arg_as_star(&arg);
+			if(arg->next)
+			{
+				ft_putstr_fd(2, args_to_str(redir->redir_input));
+				ft_putstr_fd(2, ": ambiguous redirect\n");
+				export_core(env, "?=1");
+				init_tree(root);
+				return;
+			}
+			redir->redir_string = args_to_str(arg);
+			redir->here_doc_replacer = get_least_replace(redir->redir_input);
 		}
-		redir->redir_string = args_to_str(arg);
-		redir->here_doc_replacer = get_least_replace(redir->redir_input);
+		else
+		{
+			redir->redir_string = args_to_str(redir->redir_input);
+			redir->here_doc_replacer = get_least_replace(redir->redir_input);
+		}
 		redir = redir->next;
 	}
 	
@@ -660,5 +668,6 @@ void expand_node(t_treenode *root, t_env **env)
 		expand_arg_as_star(&root->args);
 	}
 	expand_redirs(root->before_redir, env, root);
+
 	expand_redirs(root->after_redir, env, root);
 }

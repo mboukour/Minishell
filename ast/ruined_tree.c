@@ -104,7 +104,7 @@ t_treenode *parse_command(t_middle **middled)
 		return (l_node);
 	}
 	before_redir = handle_before_redirs(middled);
-	if((*middled) && ((*middled)->token != REDIR_OUT && (*middled)->token != DREDIR_OUT))
+	if((*middled) && ((*middled)->token != REDIR_OUT && (*middled)->token != DREDIR_OUT) && (*middled)->token != AND && (*middled)->token != OR && (*middled)->token != PIPE_LINE)
 	{
 		command_flag = true;
 		l_node = new_treenode(*middled);  // ls

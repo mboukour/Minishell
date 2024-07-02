@@ -12,6 +12,7 @@ bool is_valid_prev_token(t_lex *token)
     if (!token || (token->token != WORD && token->token != ENV && token->token != STAR &&
                    token->token != QUOTE && token->token != DOUBLE_QUOTE && token->token != CLOSE_PARANTHESE))
         return false;
+	// printf("Token: %i is valid for prev: %s\n", token->token, token->content);
     return true;
 }
 
@@ -22,6 +23,7 @@ bool is_valid_next_token(t_lex *token)
     if (!token || (token->token != WORD && token->token != ENV && token->token != STAR &&
                    token->token != QUOTE && token->token != DOUBLE_QUOTE && token->token != OPEN_PARANTHESE && !is_redir(token)))
         return false;
+	// printf("Token: %i is valid for next: %s\n", token->token, token->content);
     return true;
 }
 

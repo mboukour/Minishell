@@ -140,7 +140,7 @@ typedef struct s_lex
 	int to_replace;
 	int	join_count;
 	enum e_token token;
-	enum e_state state;
+	int here_doc_fd; 
 	struct s_lex *prev;
 	struct s_lex *next;
 } t_lex;
@@ -227,6 +227,8 @@ const char* tokenToString(enum e_token t);
 int open_checker(t_lex *token);
 char **args_to_arr(t_arg *arg);
 bool is_special(char c);
+void fake_open(t_lex *lex, t_lex *final);
+t_lex* skip_sp(t_lex *lex, int mode);
 
 // MIDDLE MAN
 t_middle	*ft_lstnew_middle(t_arg *command, t_cmd_arg *cmd_arg, int token);
