@@ -261,42 +261,6 @@ char *expanded_line(t_redir *redir, char *line, t_env *env)
 	return (result);
 }
 
-// void	handle_heredoc(t_redir *redir, t_env *env)
-// {
-// 	char	*line;
-// 	int		fd;
-
-// 	fd = open("/tmp/heredoc", O_CREAT | O_RDWR | O_TRUNC, 0777);
-// 	if (fd == -1)
-// 	{
-// 		perror("Error in heredoc fd");
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	while (1)
-// 	{
-// 		line = readline("> ");
-// 		if (!line || !ft_strcmp(line, redir->redir_string))
-// 			break ;
-// 		line = expanded_line(redir, line, env);
-// 		if(line)
-// 			write(fd, line, ft_strlen(line));
-// 		write(fd, "\n", 1);
-// 	}
-// 	close(fd);
-// 	fd = open("/tmp/heredoc", O_RDONLY);
-// 	if (fd == -1)
-// 	{
-// 		perror("Error in heredoc fd");
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	if (redir->actual_here_doc && dup2(fd, 0) == -1)
-// 	{
-// 		perror("handle heredoc dup failed");
-// 		close(fd);
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	close(fd);
-// }
 
 char *get_line_from_buffer(char **buffer)
 {

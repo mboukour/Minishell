@@ -280,6 +280,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n);
 int	numlen(int n);
 size_t ft_strncpy(char *dst, const char *src, size_t dstsize);
 int	ft_isalpha(int c);
+bool is_c_num(char c);
 
 // EXPANDER
 void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env);

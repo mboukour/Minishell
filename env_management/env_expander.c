@@ -270,6 +270,7 @@ bool is_nextable(t_arg *arg, t_env *env)
 }
 
 
+
 void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 {
 	t_arg *arg;
@@ -300,6 +301,12 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 			after_star = after_env_star(arg->content);
 			if(arg->to_replace != NO_REPLACE && (arg->token == ENV || is_env(arg->content) || after_star != NONE))
 			{
+				if(arg->content[1] && is_c_num(arg->content[1]))
+				{
+					arg->content += 2;
+					arg = move;
+					continue;
+				}
 				look_for = arg->content;
 				append_after = NULL;
 				if(after_star != NONE)
@@ -628,6 +635,8 @@ void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 	
 }
 
+// void only_env_arg
+
 void expand_node(t_treenode *root, t_env **env)
 {
 	char *no_star;
@@ -661,6 +670,5 @@ void expand_node(t_treenode *root, t_env **env)
 		expand_arg_as_star(&root->args);
 	}
 	expand_redirs(root->before_redir, env, root);
-
 	expand_redirs(root->after_redir, env, root);
 }
