@@ -1,6 +1,20 @@
 #include "../minishell.h"
 
 
+bool no_equal(char *str)
+{
+	int i;
+
+	i = 0;
+	while(str[i])
+	{
+		if(str[i] == '=')
+			return(false);
+		i++;
+	}
+	return(true);
+}
+
 int get_export_type(char *str)
 {
     int i;
@@ -10,6 +24,10 @@ int get_export_type(char *str)
 		return(1);
 	if(str[0] == '_' && str[1] == '=')
 		return(1);
+	if(is_c_num(str[0]))
+		return(1);
+	if(no_equal(str))
+		return(3);
 	while(str[i] && str[i] != '=')
 	{
 		if(ft_isalpha(str[i]))
@@ -70,7 +88,7 @@ int export_core(t_env **env, char *exp_arg)
 		set_joinables(exp_arg, &before_joinable, &after_joinable);
 		final = ft_strdup(exp_arg, MANUAL);
 		store_malloced(final);
-		free(find->value); // REMOVE FROM STORED
+		free(find->value);
 		remove_ptr(find->value);
 		find->value = final;
 		find->before_joinable = before_joinable;
@@ -83,6 +101,8 @@ int export_core(t_env **env, char *exp_arg)
 		store_malloced(find);
 		ft_lstadd_back_env(env, find);
 	}
+	if(exp_type == 3)
+		find->envyable = false;
 	return (0);
 }
 
@@ -103,14 +123,19 @@ void export_no_arg(t_env *env)
 				printf("%c", env->value[i]);
 				i++;
 			}
-			printf("=\"");
-			i++;
-			while(env->value[i])
+			if(env->value[i] && env->value[i] == '=')
 			{
-				printf("%c", env->value[i]);
+				printf("=\"");
 				i++;
+				while(env->value[i])
+				{
+					printf("%c", env->value[i]);
+					i++;
+				}
+				printf("\"\n");
 			}
-			printf("\"\n");
+			else
+				printf("\n");
 		}
 		env = env->next;
 	}

@@ -40,6 +40,7 @@ t_env	*ft_lstnew_env(char *env, int mode)
 	}
 	set_joinables(env, &new_node->before_joinable, &new_node->after_joinable);
 	new_node->star_to_replace = REPLACE_ALL;
+	new_node->envyable = true;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -159,7 +160,7 @@ char **env_to_array(t_env *env)
 	arr = smart_malloc((ft_lstsize_env(env)) * sizeof(char *));
 	while(env)
 	{
-		if((env->value[0] != '?' || env->value[1] != '='))
+		if((env->value[0] != '?' || env->value[1] != '=') && env->envyable)
 		{
 			arr[i] = ft_strdup(env->value, GC);
 			i++;
@@ -192,7 +193,7 @@ void ft_lstiter_env(t_env *env)
     while (env)
     {
         i++;
-        if (ft_strncmp(env->value, "?=", 2))
+        if (ft_strncmp(env->value, "?=", 2) && env->envyable)
 			printf("%s\n", env->value);
         env = env->next;
     }

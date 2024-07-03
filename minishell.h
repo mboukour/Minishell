@@ -103,7 +103,6 @@ enum e_replace_modes
 	NO_REPLACE,
 	ONLY_ENV,
 	REPLACE_ALL,
-	EXPORT_SPECIAL
 };
 
 enum e_star_modes
@@ -118,6 +117,7 @@ typedef struct s_env
 	bool before_joinable;
 	bool after_joinable;
 	int star_to_replace;
+	bool envyable;
 	struct s_env *next;
 	struct s_env *prev;
 } t_env;
@@ -289,8 +289,6 @@ char *args_to_str(t_arg *args);
 t_env *star_matching(char *to_match);
 t_arg *arg_star_matching(char *to_match);
 t_cmd_arg *cmd_arg_star_matching(char *to_match);
-// char *env_expander(char *to_expand, t_env *env);
-void better_env_expander(t_arg **command, t_arg **to_replace, t_env *env);
 char *normalize_pattern(char *pattern);
 char *get_real_env(char *value);
 void expand_node(t_treenode *root, t_env **env);

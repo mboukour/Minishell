@@ -331,7 +331,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 					remove_arg_node(&looping_cmd->arg, arg);
 					return;
 				}
-				else if(arg->to_replace == ONLY_ENV || arg->to_replace == EXPORT_SPECIAL)
+				else if(arg->to_replace == ONLY_ENV)
 					arg->content = ft_strdup(get_real_env(env_node->value), GC);
 				else
 				{
@@ -546,7 +546,7 @@ void expand_arg_as_star(t_arg **head)
 	t_arg *next;
 
 	arg = *head;
-	while(arg && (arg->to_replace == REPLACE_ALL || arg->to_replace == EXPORT_SPECIAL))
+	while(arg && (arg->to_replace == REPLACE_ALL))
 	{
 		next = arg->next;
 		tmp_arg = arg_star_matching(arg->content);
@@ -635,22 +635,6 @@ void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 	
 }
 
-void only_env_arg(t_cmd_arg *cmd_arg)
-{
-	t_arg *arg;
-
-	while(cmd_arg)
-	{
-		arg = cmd_arg->arg;
-		while(arg)
-		{
-			if(arg->to_replace == REPLACE_ALL)
-				arg->to_replace = EXPORT_SPECIAL;
-			arg = arg->next;
-		}
-		cmd_arg = cmd_arg->next;
-	}
-}
 
 void expand_node(t_treenode *root, t_env **env)
 {
@@ -675,8 +659,6 @@ void expand_node(t_treenode *root, t_env **env)
 		tmp_arg = root->command->next;
 		root->command->next = NULL;
 		root->args = tmp_arg;
-		if(!ft_strcmp(root->content, "export"))
-			only_env_arg(root->cmd_arg);
 		if(!tmp_arg)
 			root->args = expand_args(root->cmd_arg, *env);
 		else

@@ -46,8 +46,6 @@ void store_malloced(void *ptr_to_add)
         ft_lstadd_back(head, new_node);
 }
 
-
-
 void free_program()
 {
     t_node *head;
@@ -56,7 +54,6 @@ void free_program()
     ft_lstclear(&head);
     globalizer_manual(SET, NULL);
 }
-
 
 void remove_ptr(void *ptr_to_rm)
 {

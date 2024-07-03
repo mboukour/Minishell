@@ -3,14 +3,20 @@
 
 
 
-int main(char ac, char **av)
+int main(char ac, char **av, char **envp)
 {
    int i = 0;
 
-   while(av[i])
+//    while(av[i])
+//    {
+// 		printf("{%s} ", av[i]);
+// 		i++;
+//    }
+   i = 0;
+   while (envp[i])
    {
-		printf("{%s} ", av[i]);
+		printf("%s\n", envp[i]);
 		i++;
    }
-   printf("\n");
+
 }
