@@ -1,9 +1,9 @@
 #include "../minishell.h"
 // FIX EXIT
 
-int exit_core(int status, t_env *env)
+int exit_core(int status)
 {
-	// ft_lstclear_env(env);
+	rl_clear_history();
 	free_program();
 	smart_free();
 	exit(status);
@@ -24,20 +24,20 @@ bool is_num(char *str)
 	return (true);
 }
 
-int exit_cmd(t_treenode *root, t_env *env)
+int exit_cmd(t_treenode *root)
 {
 	t_arg *args;
 
 	args = root->args;
 	ft_putstr_fd(1, "exit\n");
 	if(!args)
-		exit_core(0, env);
+		exit_core(0);
 	else if(!is_num(args->content))
 	{
 		ft_putstr_fd(2,"exit: ");
 		ft_putstr_fd(2,args->content);
 		ft_putstr_fd(2, ": numeric argument required\n");
-		exit_core(2, env);
+		exit_core(2);
 		return (1);
 	}
 	else if(args->next)
@@ -45,6 +45,6 @@ int exit_cmd(t_treenode *root, t_env *env)
 		ft_putstr_fd(2,"exit: too many arguments\n");
 		return (1);
 	}
-	exit_core(ft_atoi(args->content), env);
+	exit_core(ft_atoi(args->content));
 	return (0);
 }

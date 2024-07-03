@@ -25,12 +25,7 @@ int store_mallocs(void *ptr_to_add)
     head = globalizer_head(GET, NULL);
     new_node = ft_lstnew(ptr_to_add);
     if (!new_node)
-    {
-        smart_free();
-        ft_putstr_fd(2, FAILURE_MSG);
-        exit(EXIT_FAILURE);
-        return (ERROR);
-    }
+		error_procedure();
     if (!head)
     {
         globalizer_head(SET, new_node);

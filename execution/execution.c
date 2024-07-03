@@ -102,7 +102,7 @@ int execute_builtin(t_treenode *root, t_env **envp, t_data *data)
 	else if (!ft_strcmp(command, "cd"))
 		data->status = cd(root, envp, data);
 	else if (!ft_strcmp(command, "exit"))
-		data->status = exit_cmd(root, *envp);
+		data->status = exit_cmd(root);
 	else
 		return (NONE);
 	change_status(envp, data->status);

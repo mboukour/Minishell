@@ -1,5 +1,6 @@
 #include "../minishell.h"
 
+
 char *get_here_doc_input(t_middle *middle)
 {
 	char *line;
@@ -12,8 +13,13 @@ char *get_here_doc_input(t_middle *middle)
 	while (true)
 	{
 		line = readline("> ");
-		if(!line || !ft_strcmp(line, delimiter))
+		if(!line)
 			break;
+		if(!ft_strcmp(line, delimiter))
+		{
+			free(line);
+			break;
+		}
 		tmp = line;
 		line = ft_strjoin(line, "\n", GC);
 		free(tmp);

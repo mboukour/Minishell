@@ -104,9 +104,8 @@ void get_input(t_env **env, t_data *data)
 		store_mallocs(input);
         if (!input)
         {
-            rl_clear_history();
         	ft_putstr_fd(1, "exit\n");
-            exit_core(0, *env);
+            exit_core(0);
         }
         else if (is_all_space(input))
             continue;

@@ -3,6 +3,7 @@
 
 void error_procedure()
 {
+    rl_clear_history();
 	free_program();
 	smart_free();
 	ft_putstr_fd(2, FAILURE_MSG);

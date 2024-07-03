@@ -28,6 +28,7 @@ void store_malloced(void *ptr_to_add);
 void free_program();
 void null_protector(void *to_check);
 void remove_ptr(void *ptr_to_rm);
+void error_procedure();
 
 // Linked list utils
 t_node	*ft_lstnew(void *ptr_to_store);

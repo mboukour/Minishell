@@ -302,9 +302,9 @@ char *get_pwd(void); // GC does not free this!
 int export(t_env **env, t_treenode *export_root);
 int unset(t_env **env, t_treenode *unset_root);
 int echo(t_treenode *echo_root);
-int exit_cmd(t_treenode *root, t_env *env);
+int exit_cmd(t_treenode *root);
 int export_core(t_env **env, char *exp_arg);
-int exit_core(int status, t_env *env);
+int exit_core(int status);
 
 // ENV STUFF
 bool is_env(char *str);
