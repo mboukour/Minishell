@@ -34,7 +34,6 @@ void export_error(char *str)
 t_env *get_env(t_env *env, char *str)
 {
 	int i;
-	char *to_find;
 
 	i = 0;
 	while(str[i] && str[i] != '=')
@@ -56,9 +55,7 @@ int export_core(t_env **env, char *exp_arg)
 	bool before_joinable;
 	bool after_joinable;
 	int exp_type;
-	int i;
 
-	i = 0;
 	exp_type = get_export_type(exp_arg);
 	if(!exp_type)
 	{
@@ -121,7 +118,6 @@ void export_no_arg(t_env *env)
 
 int export(t_env **env, t_treenode *export_root)
 {
-	int status;
 	t_arg *args;
 	int ret;
 	bool error;

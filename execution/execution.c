@@ -17,7 +17,6 @@ int change_status(t_env **env, int new_status)
 {
 	char *current_status;
 	char *final;
-	int res;
 
 	current_status = ft_itoa(new_status, MANUAL);
 	null_protector(current_status);
@@ -33,7 +32,6 @@ void	pipeline(t_treenode *root, t_data *data, t_env **env)
 {
 	pid_t	pid1;
 	pid_t	pid2;
-	char	*exp;
 
 	if (pipe(data->end) == -1)
 	{
@@ -94,7 +92,7 @@ int execute_builtin(t_treenode *root, t_env **envp, t_data *data)
 	else if (!ft_strcmp(command, "echo"))
 		data->status = echo(root);
 	else if (!ft_strcmp(command, "pwd"))
-		data->status = pwd(root, data);
+		data->status = pwd(data);
 	else if (!ft_strcmp(command, "export"))
 		data->status = export(envp, root);
 	else if (!ft_strcmp(command, "unset"))
@@ -129,10 +127,8 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 {
 	pid_t pid;
 	char *exp;
-	char *absolute_path;
 	t_arg *args;
 	char *under;
-	char *no_star;
 
 	if(!root->content)
 		return;
@@ -160,7 +156,6 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	}
 	else if (pid == 0)
 	{
-		no_star = no_stars(root->content);
 		data->env = env_to_array(*env);
 		args = ft_lstnew_arg(NULL);
 		args->content = ft_strdup(root->content, GC);
@@ -248,9 +243,6 @@ void expand_mini_lexed(t_lex **mini, t_env *env)
 
 char *expanded_line(t_redir *redir, char *line, t_env *env)
 {
-	t_env *env_node;
-	t_arg *arg;
-	t_cmd_arg *for_redir;
 	t_lex *mini_lexed;
 	char *result;
 
@@ -312,14 +304,14 @@ char *get_line_from_buffer(char **buffer)
 	int i;
 
 	i = 0;
-    if (!*buffer || **buffer == '\0')
-        return (NULL);
 
+	if (!*buffer || **buffer == '\0')
+		return (NULL);
 	while ((*buffer)[i] && (*buffer)[i] != '\n')
 		i++;
 	result = ft_substr(*buffer, 0, i, GC);
 	if ((*buffer)[i] == '\n')
-        i++;
+		i++;
 	*buffer += i;
 	return(result);
 }
@@ -361,13 +353,11 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 {
 	int		fd;
 	int		info;
-	t_redir	*tmp;
 	char	*line;
 	char *buffer;
 	char *here_doc_path;
 	info = 0;
 	flag_last_here_doc(redir);
-	tmp = redir;
 	while (redir)
 	{
 		if (redir->token == REDIR_IN)

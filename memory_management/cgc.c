@@ -41,9 +41,7 @@ int store_mallocs(void *ptr_to_add)
 void *smart_malloc(size_t size)
 {
     void *ptr;
-    t_node *head;
 
-    head = globalizer_head(GET, NULL);
     ptr = malloc(size);
     if(ptr && store_mallocs(ptr))
         return (ptr);

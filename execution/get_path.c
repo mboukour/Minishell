@@ -37,9 +37,7 @@ void	get_path(t_treenode *root, t_env *env, t_data *data) // Copy
 {
 	char	**path;
 	t_env	*path_node;
-	int		i;
 
-	i = 0;
 	path_node = get_env(env, "PATH");
 	if(!path_node)
 	{

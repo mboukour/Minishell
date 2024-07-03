@@ -150,7 +150,6 @@ int cd_core(char *path, t_env **env, t_data *data)
 int cd_home(t_env **env, t_data *data)
 {
     t_env *home_env;
-    char *home;
 
     home_env = get_env(*env, "HOME");
     if (!home_env)

@@ -100,19 +100,16 @@ t_arg *make_args(t_lex **first_arg)
     t_arg *args;
 	t_arg *new_arg;
 	int current_jc;
-	t_lex *prev;
 
 	if(!(*first_arg))
 		return (NULL);
 	current_jc = (*first_arg)->join_count;
 	args = NULL;
-	prev = NULL;
-    while ((*first_arg)->token == WORD || (*first_arg)->token == ENV || (*first_arg)->token == STAR && (*first_arg)->join_count == current_jc)
+    while (((*first_arg)->token == WORD || (*first_arg)->token == ENV || (*first_arg)->token == STAR) && (*first_arg)->join_count == current_jc)
     {
 		jump_spaces(first_arg);
 		new_arg = ft_lstnew_arg(*first_arg);
 		ft_lstaddback_arg(&args, new_arg);
-		prev = *first_arg;
         *first_arg = (*first_arg)->next;
 		if(!(*first_arg))
 			break;
@@ -287,7 +284,6 @@ void initialize_vars(t_middle_vars *vars)
 t_middle *make_middle(t_lex *lex)
 {
 	t_middle_vars vars;
-	t_middle *last;
 
 	initialize_vars(&vars);
     while (lex)

@@ -17,6 +17,7 @@
 
 void sigint_handler_cmd(int sig)
 {
+	(void)sig;
     printf("\n");
     rl_on_new_line();
     rl_replace_line("", 0);

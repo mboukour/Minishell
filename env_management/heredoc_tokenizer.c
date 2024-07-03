@@ -8,9 +8,7 @@ void heredoc_handle_env(char *input, int *i, t_lex **head, int *join_count)
     int hold;
     int c;
     char *content;
-    bool star_bool;
 
-    star_bool = false;
     c = input[*i];
 	hold = *i;
     (*i)++;
@@ -44,7 +42,6 @@ t_lex *heredoc_tokenizer(char *input)
 {
     int i;
     t_lex *head;
-    char *content;
 	int join_count;
 
 	head = NULL;

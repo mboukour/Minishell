@@ -3,20 +3,17 @@
 void remove_node(t_env **env, t_env *node_to_remove) 
 {
 
-    if (node_to_remove == *env)
-        *env = node_to_remove->next;
+	if (node_to_remove == *env)
+		*env = node_to_remove->next;
+	if (node_to_remove->prev != NULL)
+		node_to_remove->prev->next = node_to_remove->next;
+	if (node_to_remove->next != NULL)
+		node_to_remove->next->prev = node_to_remove->prev;
 
-    if (node_to_remove->prev != NULL)
-        node_to_remove->prev->next = node_to_remove->next;
-
-    if (node_to_remove->next != NULL)
-        node_to_remove->next->prev = node_to_remove->prev;
-
-
-    free(node_to_remove->value);
+	free(node_to_remove->value);
 	remove_ptr(node_to_remove->value);
-    free(node_to_remove);
 	remove_ptr(node_to_remove);
+	free(node_to_remove);
 }
 
 

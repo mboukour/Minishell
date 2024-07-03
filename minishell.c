@@ -4,6 +4,7 @@
 
 void sigint_handler(int sig)
 {
+	(void)sig;
     printf("\n");
     rl_on_new_line();
     rl_replace_line("", 0);
@@ -32,7 +33,6 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
 {
     t_lex *lexed;
     t_lex *we_check_lex;
-    t_middle *we_check_middled;
     t_middle *middled;
     int error_checker;
 
@@ -56,7 +56,7 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
     return (NULL);
 }
 
-void init_t_data(t_data *data, t_env **env)
+void init_t_data(t_data *data)
 {
     data->infile = -1;
     data->outfile = -1;
@@ -150,7 +150,7 @@ int main(int ac, char **av, char **envp)
     if(!isatty(0))
         return 0;
     rl_catch_signals = 0;
-    init_t_data(&data, &env);
+    init_t_data(&data);
     if(!envp || !*envp)
     {
         env = NULL;

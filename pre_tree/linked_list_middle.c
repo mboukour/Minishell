@@ -76,12 +76,10 @@ void	ft_lstadd_back_middle(t_middle **lst, t_middle *new)
 // DEBUGGING FUNCTIONS
 void print_middle(t_middle *node)
 {
-	int i;
 	t_arg *command;
 	t_cmd_arg *loop;
 	t_arg *mini_args;
 
-	i = 0;
 	command = node->command;
 
 	if(!command)

@@ -42,9 +42,7 @@ void handle_env(char *input, int *i, t_lex **head, int *join_count)
     int hold;
     int c;
     char *content;
-    bool star_bool;
 
-    star_bool = false;
     c = input[*i];
 	hold = *i;
     (*i)++;
@@ -60,14 +58,14 @@ void handle_general_special(char *input, int *i, t_lex **head, int type, int *jo
 	t_lex *current_node;
     char *content;
 
-    if(*input == '&')
-        type = WORD;
-    else if(*input == '|')
-        (*join_count)++;
+	if(*input == '&')
+		type = WORD;
+	else if (*input == '|')
+		(*join_count)++;
 	content = ft_substr(input, *i, 1, GC);
-    current_node = ft_lstnew_lex(content, type, 1, *join_count);
-    ft_lstadd_back_lex(head, current_node);
-    (*i)++;
+	current_node = ft_lstnew_lex(content, type, 1, *join_count);
+	ft_lstadd_back_lex(head, current_node);
+	(*i)++;
 }
 
 void handle_word(char *input, int *i, t_lex **head, int *join_count)
@@ -131,7 +129,6 @@ t_lex *tokenizer(char *input)
 {
     int i;
     t_lex *head;
-    char *content;
 	int join_count;
 
 	head = NULL;

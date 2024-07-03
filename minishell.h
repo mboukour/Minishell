@@ -15,7 +15,7 @@
 #include <signal.h>
 #include <dirent.h>
 #include <limits.h>
-#include "./garbage_collector/cgc.h"
+#include "memory_management/cgc.h"
 #include "execution/execution.h"
 
 # define NONE -1
@@ -225,7 +225,7 @@ t_lex	*ft_lstfirst_lex(t_lex *lst);
 void	ft_lstadd_back_lex(t_lex **lst, t_lex *new);
 void ft_lstiter_lex(t_lex *lex);
 t_lex *lex_input_checker(t_lex *tokens);
-const char* tokenToString(enum e_token t);
+const char* tokenToString(int t);
 int open_checker(t_lex *token);
 char **args_to_arr(t_arg *arg);
 bool is_special(char c);
@@ -296,7 +296,7 @@ t_lex *heredoc_tokenizer(char *input);
 
 // BUILTINS
 int cd(t_treenode *cd_root, t_env **env, t_data *data);
-int pwd(t_treenode *pwd_node, t_data *data);
+int pwd(t_data *data);
 int env(t_env *env);
 char *get_pwd(void); // GC does not free this!
 int export(t_env **env, t_treenode *export_root);

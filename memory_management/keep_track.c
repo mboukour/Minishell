@@ -61,7 +61,6 @@ void free_program()
 void remove_ptr(void *ptr_to_rm)
 {
 	t_node *head;
-	t_node *target_node;
 
 	head = globalizer_manual(GET, NULL);
 	if(!head)

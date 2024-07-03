@@ -48,7 +48,6 @@ void ft_lstaddback_cmd_arg(t_cmd_arg **lst, t_cmd_arg *new)
 void ft_lstiter_cmd_arg(t_cmd_arg *cmd_arg)
 {
 	t_arg *arg;
-	bool printed;
 
 	printf("---------------------\n");
 	while(cmd_arg)

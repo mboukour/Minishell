@@ -5,7 +5,6 @@ bool handle_on_error_heredoc(t_lex *token, t_lex *final)
 {
 	char *delimiter;
 	int join_count;
-	int fd;
 	char *line;
 	int to_replace;
 

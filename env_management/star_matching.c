@@ -5,13 +5,10 @@ t_env *get_star(int mode) // HANDLE STAR MATCHING
 {
 	DIR *current_wd;
     struct dirent *read;
-    char *ret;
-	int last_type;
 	t_env *current;
 	t_env *head;
 	bool condition;
 
-	ret = NULL;
 	current = NULL;
 	head = NULL;
 	current_wd = opendir(".");
@@ -28,7 +25,6 @@ t_env *get_star(int mode) // HANDLE STAR MATCHING
 		{
 			current = ft_lstnew_env(read->d_name, GC);
 			ft_lstadd_back_env(&head, current);
-			last_type = read->d_type;
 		}
 		read = readdir(current_wd);
 	}
@@ -123,15 +119,12 @@ bool is_star(char *to_match)
 
 t_env *star_matching(char *to_match)
 {
-    char *temp;
-    char *result;
     t_env *current_star;
     t_env *head;
     t_env *current;
     char *normal;
 
     head = NULL;
-    result = NULL;
 	if(to_match[0] == '.')
     	current_star = get_star(HIDDEN);
 	else

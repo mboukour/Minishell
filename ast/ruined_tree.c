@@ -3,17 +3,16 @@
 // DEBUG MODE:
 void print_ascii_tree(t_treenode *root, int level)
 {
-	t_middle *lol;
 	t_arg *args;
 	t_cmd_arg *cmd_arg;
 	t_arg *command;
-    if (root == NULL)
+	if (root == NULL)
 	{
 		printf("\n");
-        return;
+		return;
 	}
-    print_ascii_tree(root->right, level + 1);
-    for (int i = 0; i < level; i++)
+	print_ascii_tree(root->right, level + 1);
+	for (int i = 0; i < level; i++)
         printf("    ");
 	if(root->before_redir)
 		ft_lstiter_redir(root->before_redir);
@@ -92,7 +91,6 @@ t_redir *handle_before_redirs(t_middle **middled)
 t_treenode *parse_command(t_middle **middled)
 {
 	t_redir *before_redir;
-	t_redir *after_redir;
 	t_treenode *l_node;
 	bool command_flag;
 

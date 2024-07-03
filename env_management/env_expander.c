@@ -19,26 +19,25 @@ void replace_node_with_list(t_arg **head_ref, t_arg *node_to_replace, t_arg *new
 {
 	t_arg *new_list_tail;
 
-    if (*head_ref == NULL || node_to_replace == NULL || new_list_head == NULL)
-        return;
-	
-    if (*head_ref == node_to_replace)
-        *head_ref = new_list_head;
-    if (node_to_replace->prev != NULL)
-    {
-        node_to_replace->prev->next = new_list_head;
-        new_list_head->prev = node_to_replace->prev;
-    }
-    else
-        new_list_head->prev = NULL;
+	if (*head_ref == NULL || node_to_replace == NULL || new_list_head == NULL)
+		return;
+	if (*head_ref == node_to_replace)
+		*head_ref = new_list_head;
+	if (node_to_replace->prev != NULL)
+	{
+		node_to_replace->prev->next = new_list_head;
+		new_list_head->prev = node_to_replace->prev;
+	}
+	else
+		new_list_head->prev = NULL;
 	new_list_tail = ft_lstlast_arg(new_list_head);
-    if (node_to_replace->next != NULL)
-    {
-        node_to_replace->next->prev = new_list_tail;
-        new_list_tail->next = node_to_replace->next;
-    }
-    else
-        new_list_tail->next = NULL;
+	if (node_to_replace->next != NULL)
+	{
+		node_to_replace->next->prev = new_list_tail;
+		new_list_tail->next = node_to_replace->next;
+	}
+	else
+		new_list_tail->next = NULL;
 }
 
 char *get_real_env(char *value)
@@ -82,7 +81,7 @@ int after_env_star(char *str)
 {
 	int i;
 	char *make_sure;
-	char *res;
+
 	
 	i = 1;
 	while(str[i] && str[i] != '.' && str[i] != '*')
@@ -229,7 +228,7 @@ void insert_before_node(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_node)
 }
 
 
-void insert_after_node(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_node)
+void insert_after_node(t_cmd_arg *node, t_cmd_arg *new_node)
 {
     if (!node) 
         return;
@@ -283,8 +282,6 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 	t_arg *next;
 	t_arg *prev;
 	t_arg *move;
-	t_arg *last_arg;
-	t_arg *arg_env;
 	bool go;
 	int after_star;
 	char *look_for;
@@ -349,7 +346,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 						{
 							next->prev = NULL;
 							set_cmd = ft_lstnew_cmd_arg(next);
-							insert_after_node(cmd_arg, last_expanded, set_cmd);
+							insert_after_node(last_expanded, set_cmd);
 							next_lp_cmd = set_cmd;
 						}
 					break;
@@ -370,7 +367,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							{
 								next->prev = NULL;
 								set_cmd = ft_lstnew_cmd_arg(next);
-								insert_after_node(cmd_arg, last_expanded, set_cmd);
+								insert_after_node(last_expanded, set_cmd);
 								next_lp_cmd = set_cmd;
 							}
 							else
@@ -406,7 +403,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							{
 								next->prev = NULL;
 								set_cmd = ft_lstnew_cmd_arg(next);
-								insert_after_node(cmd_arg, last_expanded, set_cmd);
+								insert_after_node(last_expanded, set_cmd);
 								next_lp_cmd = set_cmd;
 							}
 							else
@@ -439,7 +436,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 						{
 							next->prev = NULL;
 							set_cmd = ft_lstnew_cmd_arg(next);
-							insert_after_node(cmd_arg, last_expanded, set_cmd);
+							insert_after_node(last_expanded, set_cmd);
 							next_lp_cmd = set_cmd;
 						}
 						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
@@ -483,7 +480,6 @@ void star_expander(t_cmd_arg **cmd_arg)
 	t_arg *arg;
 	t_arg *next;
 	t_arg *prev;
-	t_arg *move;
 
 	looping_cmd = *cmd_arg;
 	while(looping_cmd)
@@ -511,7 +507,7 @@ void star_expander(t_cmd_arg **cmd_arg)
 					{
 						next->prev = NULL;
 						set_cmd = ft_lstnew_cmd_arg(next);
-						insert_after_node(cmd_arg, expanded_star, set_cmd);
+						insert_after_node(expanded_star, set_cmd);
 						next_lp_cmd = set_cmd;
 						break;
 					}
@@ -600,9 +596,7 @@ int get_least_replace(t_arg *args)
 void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 {
 	t_cmd_arg *for_redir;
-	char *last_arg;
 	t_arg *arg;
-	char *original;
 
 	while (redir)
 	{
@@ -636,7 +630,6 @@ void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 
 void expand_node(t_treenode *root, t_env **env)
 {
-	t_arg *args;
 	char *no_star;
 	t_arg *tmp_arg;
 	t_cmd_arg *for_command;

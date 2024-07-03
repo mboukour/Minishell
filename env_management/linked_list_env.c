@@ -23,7 +23,6 @@ void set_joinables(char *str, bool *before_joinable, bool *after_joinable)
 t_env	*ft_lstnew_env(char *env, int mode)
 {
 	t_env	*new_node;
-	bool before_joinable;
 
 	if(mode == MANUAL)
 	{
@@ -94,12 +93,9 @@ int ft_lstsize_env(t_env *env)
 
 char *new_shlvl(char *new_lvl)
 {
-	int i;
 	char *new_shlvl;
-	char *temp;
 	char *lvl;
 
-	i = 0;
 	lvl = ft_itoa(ft_atoi(new_lvl + 6) + 1, MANUAL);
 	null_protector(lvl);
 	new_shlvl = ft_strjoin("SHLVL=", lvl, MANUAL);
@@ -115,15 +111,11 @@ t_env *array_to_env(char **env)
     t_env *head;
     int i;
 	bool set_shlvl;
-	bool before_joinable;
-	bool after_joinable;
     char *new;
 
     i = 0;
     head = NULL;
 	set_shlvl = false;
-	before_joinable = false;
-	after_joinable = false;
     while (env[i])
     {
         current = ft_lstnew_env(env[i], MANUAL);
@@ -161,7 +153,6 @@ void free_until_k(char **args, int k)
 char **env_to_array(t_env *env)
 {
 	char **arr;
-	char *str;
 	int i;
 
 	i = 0;

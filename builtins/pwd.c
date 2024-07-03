@@ -9,7 +9,7 @@ char *get_pwd(void)
 	return (pwd);
 }
 
-int pwd(t_treenode *pwd_node, t_data *data)
+int pwd(t_data *data)
 {
 	char *pwd;
 

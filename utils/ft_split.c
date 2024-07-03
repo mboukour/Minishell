@@ -89,7 +89,6 @@ static char	**split_into_words(char const *s, char c, size_t word_count, int mod
 char	**ft_split(char const *s, char c, int mode)
 {
 	size_t	word_count;
-	char	**empty;
 
 	if (!s || !*s)
 		return (NULL);
