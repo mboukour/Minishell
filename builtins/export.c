@@ -58,8 +58,8 @@ t_env *get_env(t_env *env, char *str)
 		i++;
 	while(env)
 	{
-		if(!ft_strncmp(str, env->value, i) && env->value[i] == '=')
-			return (env);
+		if(!ft_strncmp(str, env->value, i) && (env->value[i] == '=' || (!env->envyable && !env->value[i])))
+				return (env);
 		env = env->next;
 	}
 	return (NULL);
@@ -85,6 +85,8 @@ int export_core(t_env **env, char *exp_arg)
 	find = get_env(*env, exp_arg);
 	if(find)
 	{
+		if(exp_type == 3)
+			return (0);
 		set_joinables(exp_arg, &before_joinable, &after_joinable);
 		final = ft_strdup(exp_arg, MANUAL);
 		store_malloced(final);
@@ -93,6 +95,7 @@ int export_core(t_env **env, char *exp_arg)
 		find->value = final;
 		find->before_joinable = before_joinable;
 		find->after_joinable = after_joinable;
+		find->envyable = true;
 	}
 	else
 	{
@@ -100,9 +103,11 @@ int export_core(t_env **env, char *exp_arg)
 		store_malloced(find->value);
 		store_malloced(find);
 		ft_lstadd_back_env(env, find);
+		if(exp_type == 3)
+			find->envyable = false;
+		else
+			find->envyable = true;
 	}
-	if(exp_type == 3)
-		find->envyable = false;
 	return (0);
 }
 

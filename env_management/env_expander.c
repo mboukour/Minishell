@@ -326,10 +326,11 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 					arg->content = append_after;
 					break;
 				}
-				else if(!env_node)
+				else if(!env_node || !env_node->envyable)
 				{
 					remove_arg_node(&looping_cmd->arg, arg);
-					return;
+					arg = move;
+					continue;
 				}
 				else if(arg->to_replace == ONLY_ENV)
 					arg->content = ft_strdup(get_real_env(env_node->value), GC);
