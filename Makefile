@@ -34,16 +34,11 @@ fclean: clean
 
 re: fclean all
 
-# NAME = minishell
-# SRC = minishell.c lexer/*.c utils/*.c ast/*.c pre_tree/*.c memory_management/*.c env_management/*.c builtins/*.c execution/*.c
+
+
+# FOR MAC OS
 # LINKREADLINELIB = $(shell brew --prefix readline)/lib
 # LINKREADLINEINCLUDE = $(shell brew --prefix readline)/include
-# CC = cc
-
-# all: fclean $(NAME)
-
 # $(NAME): 
 # 	$(CC) -I$(LINKREADLINEINCLUDE) -L$(LINKREADLINELIB) -lreadline $(SRC) -o $(NAME)
 
-# fclean:
-# 	rm -f $(NAME)
