@@ -4,7 +4,7 @@
 int assing_builtin(char *commad) 
 {
     if (!ft_strcmp(commad, "echo"))
-        return (ECHO);
+        return (ECHO_CMD);
     else if (!ft_strcmp(commad, "exit"))
         return (EXIT);
     else if (!ft_strcmp(commad, "cd"))

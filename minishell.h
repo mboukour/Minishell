@@ -15,6 +15,7 @@
 #include <signal.h>
 #include <dirent.h>
 #include <limits.h>
+#include <termios.h>
 #include "memory_management/cgc.h"
 #include "execution/execution.h"
 
@@ -89,7 +90,7 @@ enum e_error_codes
 
 enum e_bulitins
 {
-	ECHO,
+	ECHO_CMD,
 	EXIT,
 	CD,
 	PWD,
@@ -327,5 +328,12 @@ char *no_stars(char *path);
 bool is_a_directory(char *path);
 bool is_path(char *str);
 void expand_arg_as_star(t_arg **head);
+
+
+
+// MISCELLANEOUS
+void save_terminal_settings(struct termios *orig_termios);
+void restore_terminal_settings(struct termios *orig_termios);
+
 
 #endif
