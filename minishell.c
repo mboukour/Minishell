@@ -93,7 +93,6 @@ bool is_all_space(char *str)
 
 void get_input(t_env **env, t_data *data)
 {
-	struct termios orig_termios;
     char *input;
     t_treenode *root;
 
@@ -101,7 +100,6 @@ void get_input(t_env **env, t_data *data)
     while (true)
 	{
         signal(SIGINT, sigint_handler);
-		save_terminal_settings(&orig_termios);
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
 		store_mallocs(input);
         if (!input)
@@ -120,7 +118,6 @@ void get_input(t_env **env, t_data *data)
                 traverse_tree(root, data, env);
             }
         }
-		restore_terminal_settings(&orig_termios);
         add_history(input);
         smart_free();
     }

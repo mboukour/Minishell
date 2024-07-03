@@ -331,9 +331,7 @@ void expand_arg_as_star(t_arg **head);
 
 
 
-// MISCELLANEOUS
-void save_terminal_settings(struct termios *orig_termios);
-void restore_terminal_settings(struct termios *orig_termios);
+
 
 
 #endif

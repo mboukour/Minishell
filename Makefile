@@ -8,7 +8,6 @@ GC = memory_management/cgc.c memory_management/linked_list_utils.c memory_manage
 ENV = env_management/env_expander.c env_management/linked_list_env.c env_management/sort_env_list.c env_management/star_matching.c env_management/star_utils.c env_management/heredoc_tokenizer.c
 BUILTINS = builtins/cd.c builtins/echo.c builtins/env.c builtins/exit.c builtins/export.c builtins/pwd.c builtins/unset.c
 EXCUTION = execution/execution.c execution/get_path.c execution/traverse_tree.c
-MISCELLANEOUS = miscellaneous/keep_it_working.c
 SRC = minishell.c $(LEXER) $(UTILS) $(AST) $(PRE_TREE) $(GC) $(ENV) $(BUILTINS) $(EXCUTION) $(MISCELLANEOUS)
 OBJ = $(SRC:.c=.o)
 INCLUDE = minishell.h
