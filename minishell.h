@@ -102,7 +102,8 @@ enum e_replace_modes
 {
 	NO_REPLACE,
 	ONLY_ENV,
-	REPLACE_ALL
+	REPLACE_ALL,
+	EXPORT_SPECIAL
 };
 
 enum e_star_modes
