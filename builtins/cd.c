@@ -26,8 +26,8 @@ char *remove_last_slash(char *str)
     if (last_slash_index == -1)
         return str;
     result = malloc(last_slash_index + 1);
-    if (!result)
-        return NULL;
+    if(!result)
+		return (free(str), null_protector(result), NULL);
     ft_strncpy(result, str, last_slash_index + 1);
     result[last_slash_index] = '\0';
     free(str);
@@ -47,34 +47,33 @@ int check_removed(char *path, t_data *data, t_env **env)
     char *new;
     char *result;
     int r;
+	char *temp;
 
     dir = getcwd(NULL, 0);
     r = 0;
     if (!dir)
     {
         new = ft_strjoin(data->pwd, "/", MANUAL);
-        if (new)
-        {
-            char *temp = new;
-            new = ft_strjoin(new, path, MANUAL);
-            free(temp);
-        }
+		null_protector(new);
+		temp = new;
+		new = ft_strjoin(new, path, MANUAL);
+		free(temp);
+		null_protector(new);
         safe_free(&data->old_pwd);
         data->old_pwd = data->pwd;
         data->pwd = new;
         r = 1;
-
         if (!ft_strcmp("..", path))
         {
             *(data->foolproof_wd) = remove_last_slash(*(data->foolproof_wd));
-
             if (!chdir(*(data->foolproof_wd)))
             {
                 data->pwd = remove_last_slash(data->pwd);
                 safe_free(&data->old_pwd);
                 data->old_pwd = data->pwd;
                 data->pwd = ft_strdup(*(data->foolproof_wd), MANUAL);
-                safe_free((char **)data->foolproof_wd);
+				store_malloced(data->pwd);
+                safe_free(data->foolproof_wd);
             }
             else
                 cd_error();
@@ -87,19 +86,14 @@ int check_removed(char *path, t_data *data, t_env **env)
         }
         else
             cd_error();
-
         result = ft_strjoin("PWD=", data->pwd, MANUAL);
-        if (result)
-        {
-            export_core(env, result);
-            free(result);
-        }
+		null_protector(result);
+		export_core(env, result);
+		free(result);
         result = ft_strjoin("OLDPWD=", data->old_pwd, MANUAL);
-        if (result)
-        {
-            export_core(env, result);
-            free(result);
-        }
+		null_protector(result);
+		export_core(env, result);
+		free(result);
     }
     safe_free(&dir);
     return r;
@@ -124,35 +118,32 @@ int cd_core(char *path, t_env **env, t_data *data)
         ft_putstr_fd(2, " no such file or directory\n");
         return 1;
     }
-
     wd = getcwd(NULL, 0);
     if (!wd)
     {
         ft_putstr_fd(2, "cd: can't get current working directory\n");
         return 1;
     }
-
     safe_free(&data->old_pwd);
     data->old_pwd = ft_strdup(data->pwd, MANUAL);
+	store_malloced(data->old_pwd);
     safe_free(&data->pwd);
     data->pwd = wd;
+	store_malloced(data->pwd);
     if (ft_strcmp("..", data->pwd))
     {
-        safe_free((char **)data->foolproof_wd);
+        safe_free(data->foolproof_wd);
         *(data->foolproof_wd) = ft_strdup(data->pwd, MANUAL);
+		store_malloced(*(data->foolproof_wd));
     }
     result = ft_strjoin("OLDPWD=", data->old_pwd, MANUAL);
-    if (result)
-    {
-        export_core(env, result);
-        free(result);
-    }
+	null_protector(result);
+	export_core(env, result);
+	free(result);
     result = ft_strjoin("PWD=", data->pwd, MANUAL);
-    if (result)
-    {
-        export_core(env, result);
-        free(result);
-    }
+	null_protector(result);
+	export_core(env, result);
+	free(result);
     return 0;
 }
 

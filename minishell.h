@@ -311,7 +311,7 @@ bool is_env(char *str);
 t_env *array_to_env(char **env);
 void ft_lstiter_env(t_env *env); // DEBUG
 void ft_lstclear_env(t_env *env);
-t_env	*ft_lstnew_env(char *env);
+t_env	*ft_lstnew_env(char *env, int mode);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
 t_env *get_env(t_env *env, char *str);
 int ft_lstsize_env(t_env *env);

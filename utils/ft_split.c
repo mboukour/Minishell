@@ -61,13 +61,13 @@ static char	**split_into_words(char const *s, char c, size_t word_count, int mod
 	char	**all_words;
 
 	if (mode == MANUAL)
-		all_words = malloc(sizeof(char *) * (word_count + 1));
-	else
 	{
-		all_words = (char **)smart_malloc(sizeof(char *) * (word_count + 1));
+		all_words = malloc(sizeof(char *) * (word_count + 1));
 		if (!all_words)
 			return (NULL);
 	}
+	else
+		all_words = (char **)smart_malloc(sizeof(char *) * (word_count + 1));
 	i = 0;
 	j = 0;
 	while (j < word_count)
@@ -92,11 +92,7 @@ char	**ft_split(char const *s, char c, int mode)
 	char	**empty;
 
 	if (!s || !*s)
-	{
-		empty = malloc(sizeof(char *));
-		empty[0] = NULL;
-		return (empty);
-	}
+		return (NULL);
 	word_count = ft_word_count(s, c);
 	return (split_into_words(s, c, word_count, mode));
 }

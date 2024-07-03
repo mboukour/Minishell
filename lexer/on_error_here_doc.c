@@ -44,7 +44,9 @@ void fake_open(t_lex *lex, t_lex *final)
 	{
 		if(lex->token == HERE_DOC)
 		{
-			if(handle_on_error_heredoc(lex, final))
+			if(lex == final)
+				break;
+			else if(handle_on_error_heredoc(lex, final))
 				return;
 		}
 		lex = lex->next;

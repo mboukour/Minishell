@@ -20,6 +20,8 @@ int store_mallocs(void *ptr_to_add)
     t_node *head;
     t_node *new_node;
 
+	if(!ptr_to_add)
+		return (ERROR);
     head = globalizer_head(GET, NULL);
     new_node = ft_lstnew(ptr_to_add);
     if (!new_node)

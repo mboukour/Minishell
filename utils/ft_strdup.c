@@ -12,7 +12,7 @@ char	*ft_strdup(const char *s1, int mode)
 	if(mode == MANUAL)
 	{
 		copy = (char *)malloc(sizeof(char) * (len + 1));
-		if (!copy)
+		if(!copy)
 			return (NULL);
 	}
 	else

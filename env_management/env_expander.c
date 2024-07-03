@@ -313,7 +313,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 				env_node = get_env(env, look_for + 1);
 				if(env_node && append_after)
 				{
-					env_node = ft_lstnew_env(env_node->value);
+					env_node = ft_lstnew_env(env_node->value, GC);
 					env_node->value = ft_strjoin(env_node->value, append_after, GC);
 					env_node->star_to_replace = arg->to_replace;
 				}

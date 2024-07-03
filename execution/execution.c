@@ -20,13 +20,12 @@ int change_status(t_env **env, int new_status)
 	int res;
 
 	current_status = ft_itoa(new_status, MANUAL);
-	if(!current_status)
-		return (1);
+	null_protector(current_status);
 	final = ft_strjoin("?=", current_status, MANUAL);
-	if(!final)
-		return (free(current_status), 1);
+	null_protector(final);
 	free(current_status);
-	res = export_core(env, final);
+	export_core(env, final);
+	free(final);
 	return (0);
 }
 
@@ -141,11 +140,7 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	if(!under)
 		under = root->content;
 	exp = ft_strjoin("_=",  under, MANUAL);
-	if(!exp)
-	{
-		ft_putstr_fd(2, FAILURE_MSG);
-		exit(EXIT_FAILURE);
-	}
+	null_protector(exp);
 	export_core(env, exp);
 	free(exp);
 	if (!execute_builtin(root, env, data))

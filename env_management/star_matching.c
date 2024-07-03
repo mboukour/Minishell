@@ -26,7 +26,7 @@ t_env *get_star(int mode) // HANDLE STAR MATCHING
 			condition = true;
 		if ((read->d_type == DT_REG || read->d_type == DT_DIR) && condition)
 		{
-			current = ft_lstnew_env(read->d_name);
+			current = ft_lstnew_env(read->d_name, GC);
 			ft_lstadd_back_env(&head, current);
 			last_type = read->d_type;
 		}
@@ -148,9 +148,7 @@ t_env *star_matching(char *to_match)
         {
             if (match_pattern(current_star->value, normal))
             {
-                current = ft_lstnew_env(current_star->value);
-                if (!current)
-                    return NULL;
+                current = ft_lstnew_env(current_star->value, GC);
                 ft_lstadd_back_env(&head, current);
             }
         }

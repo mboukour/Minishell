@@ -21,7 +21,7 @@ char	*ft_strjoin(const char *s1, const char *s2, int mode)
 		finalstr = (char *)malloc((ft_strlen(s1) + ft_strlen(s2) + 1)
 			* sizeof(char));
 		if(!finalstr)
-			return(NULL);
+			return (NULL);
 	}
 	else
 		finalstr = (char *)smart_malloc((ft_strlen(s1) + ft_strlen(s2) + 1)

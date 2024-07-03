@@ -3,7 +3,8 @@
 
 int exit_core(int status, t_env *env)
 {
-	ft_lstclear_env(env);
+	// ft_lstclear_env(env);
+	free_program();
 	smart_free();
 	exit(status);
 	return (0);

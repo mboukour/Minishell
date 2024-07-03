@@ -101,6 +101,7 @@ void get_input(t_env **env, t_data *data)
 	{
         signal(SIGINT, sigint_handler);
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
+		store_mallocs(input);
         if (!input)
         {
             rl_clear_history();
@@ -119,7 +120,6 @@ void get_input(t_env **env, t_data *data)
             }
         }
         add_history(input);
-        free(input);
         smart_free();
     }
 }
@@ -131,9 +131,9 @@ int no_envp_export(t_env **env, t_data *data)
     if(data->pwd)
     {
         pwd = ft_strjoin("PWD=", data->pwd, MANUAL);
-        if(!pwd)
-            return (1);
+		null_protector(pwd);
         export_core(env, pwd);
+		free(pwd);
     }
     export_core(env, "SHLVL=1");
     export_core(env, SECURE_PATH);

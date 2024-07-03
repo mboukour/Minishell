@@ -48,13 +48,6 @@ t_env *get_env(t_env *env, char *str)
 	return (NULL);
 }
 
-void export_malloc_failure(t_env *env)
-{
-	ft_lstclear_env(env);
-	smart_free();
-	ft_putstr_fd(2, FAILURE_MSG);
-	exit(EXIT_FAILURE);
-}
 
 int export_core(t_env **env, char *exp_arg)
 {
@@ -79,19 +72,18 @@ int export_core(t_env **env, char *exp_arg)
 	{
 		set_joinables(exp_arg, &before_joinable, &after_joinable);
 		final = ft_strdup(exp_arg, MANUAL);
-		if(!final)
-			export_malloc_failure(*env);
-		free(find->value);
+		store_malloced(final);
+		free(find->value); // REMOVE FROM STORED
+		remove_ptr(find->value);
 		find->value = final;
-	
 		find->before_joinable = before_joinable;
 		find->after_joinable = after_joinable;
 	}
 	else
 	{
-		find = ft_lstnew_env(exp_arg);
-		if(!find)
-			export_malloc_failure(*env);
+		find = ft_lstnew_env(exp_arg, MANUAL);
+		store_malloced(find->value);
+		store_malloced(find);
 		ft_lstadd_back_env(env, find);
 	}
 	return (0);

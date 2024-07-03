@@ -17,7 +17,7 @@ char	*ft_substr(const char *s, unsigned int start, size_t len, int mode)
 	{
 		substr = malloc((len + 1) * sizeof(char));
 		if(!substr)
-			return(NULL);
+			return (NULL);
 	}
 	else
 		substr = smart_malloc((len + 1) * sizeof(char));

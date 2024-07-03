@@ -28,13 +28,11 @@ t_middle	*ft_lstnew_middle(t_arg *command, t_cmd_arg *cmd_arg, int token)
 	if (!new_node)
 		return (NULL);
 	new_node->token = token;
-	// new_node->content = content;
 	new_node->command = command;
 	new_node->args = NULL;
 	new_node->cmd_arg = cmd_arg;
 	new_node->redir_string = NULL;
 	new_node->to_replace = REPLACE_ALL;
-	// new_node->builtin = assing_builtin(content);
 	new_node->here_doc_buffer = NULL;
 	new_node->builtin = NONE;
 	new_node->next = NULL;

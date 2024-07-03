@@ -14,7 +14,9 @@ void remove_node(t_env **env, t_env *node_to_remove)
 
 
     free(node_to_remove->value);
+	remove_ptr(node_to_remove->value);
     free(node_to_remove);
+	remove_ptr(node_to_remove);
 }
 
 

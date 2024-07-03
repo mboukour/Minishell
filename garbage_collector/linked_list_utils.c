@@ -9,6 +9,7 @@ t_node	*ft_lstnew(void *ptr_to_store)
 		return (NULL);
 	new_node->ptr_to_free = ptr_to_store;
 	new_node->next = NULL;
+	new_node->prev = NULL;
 	return (new_node);
 }
 t_node	*ft_lstlast(t_node *lst)
@@ -29,9 +30,13 @@ t_node	*ft_lstlast(t_node *lst)
 
 void	ft_lstadd_back(t_node *lst, t_node *new_node)
 {
+	t_node *last;
+
 	if (!lst)
 		return ;
-	ft_lstlast(lst)->next = new_node;
+	last = ft_lstlast(lst);
+	last->next = new_node;
+	new_node->prev = last;
 }
 
 void ft_lstclear(t_node **lst)

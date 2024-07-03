@@ -20,19 +20,24 @@ void set_joinables(char *str, bool *before_joinable, bool *after_joinable)
 }
 
 
-t_env	*ft_lstnew_env(char *env)
+t_env	*ft_lstnew_env(char *env, int mode)
 {
 	t_env	*new_node;
 	bool before_joinable;
 
-	new_node = malloc(sizeof(t_env));
-	if(!new_node)
-		return (NULL);
-	new_node->value = ft_strdup(env, MANUAL);
-	if(!new_node->value)
+	if(mode == MANUAL)
 	{
-		free(new_node);
-		return (NULL);
+		new_node = malloc(sizeof(t_env));
+		if(!new_node)
+			return (NULL);
+		new_node->value = ft_strdup(env, MANUAL);
+		if(!new_node->value)
+			return (free(new_node), NULL);
+	}
+	else
+	{
+		new_node = smart_malloc(sizeof(t_env));
+		new_node->value = ft_strdup(env, GC);
 	}
 	set_joinables(env, &new_node->before_joinable, &new_node->after_joinable);
 	new_node->star_to_replace = REPLACE_ALL;
@@ -96,9 +101,9 @@ char *new_shlvl(char *new_lvl)
 
 	i = 0;
 	lvl = ft_itoa(ft_atoi(new_lvl + 6) + 1, MANUAL);
-	if(!lvl)
-		return (NULL);
+	null_protector(lvl);
 	new_shlvl = ft_strjoin("SHLVL=", lvl, MANUAL);
+	null_protector(new_shlvl);
 	free(lvl);
 	return (new_shlvl);
 }
@@ -121,19 +126,16 @@ t_env *array_to_env(char **env)
 	after_joinable = false;
     while (env[i])
     {
-        current = ft_lstnew_env(env[i]);
-        if (!current)
-        {
-            ft_lstclear_env(head);
-            return (NULL);
-        }
+        current = ft_lstnew_env(env[i], MANUAL);
+		store_malloced(current->value);
+		store_malloced(current);
         if (!ft_strncmp(current->value, "SHLVL", 5) && current->value[5] == '=')
         {
 			set_shlvl = true;
             new = new_shlvl(current->value);
-            free(current->value);
-            if (!new)
-                return (free(current), ft_lstclear_env(head), NULL);
+			store_malloced(new);
+            free(current->value); // REMOVE FROM STORED
+			remove_ptr(current->value);
             current->value = new;
         }
         ft_lstadd_back_env(&head, current);
@@ -168,12 +170,7 @@ char **env_to_array(t_env *env)
 	{
 		if((env->value[0] != '?' || env->value[1] != '='))
 		{
-			arr[i] = ft_strdup(env->value, MANUAL);
-			if(!arr[i])
-			{
-				free_until_k(arr, i);
-				return (NULL);
-			}
+			arr[i] = ft_strdup(env->value, GC);
 			i++;
 		}
 		env = env->next;
@@ -190,9 +187,7 @@ t_env *copy_env(t_env *env)
 	head = NULL;
 	while(env)
 	{
-		current = ft_lstnew_env(env->value);
-		if(!current)
-			return (ft_lstclear_env(head), NULL);
+		current = ft_lstnew_env(env->value, GC);
 		ft_lstadd_back_env(&head, current);
 		env = env->next;
 	}
