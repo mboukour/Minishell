@@ -14,6 +14,21 @@ bool no_equal(char *str)
 	}
 	return(true);
 }
+bool underscore_before_equal(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i] && str[i] != '=')
+	{
+		if(str[i] != '_')
+			break;
+		i++;
+	}
+	if(str[i] && str[i] == '=')
+		return (true);
+	return(false);
+}
 
 int get_export_type(char *str)
 {
@@ -22,8 +37,10 @@ int get_export_type(char *str)
 	i = 0;
 	if(str[0] == '?' && str[1] == '=')
 		return(1);
-	if(str[0] == '_' && str[1] == '=')
+	if(underscore_before_equal(str))
 		return(1);
+	if(str[0] == '-' && str[1] == '-')
+		return(0);
 	if(is_c_num(str[0]))
 		return(0);
 	if(no_equal(str))
