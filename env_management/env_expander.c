@@ -293,17 +293,22 @@ char *lex_to_str(t_lex *lex)
 
 void expand_only_env(t_arg **arg_head, t_env *env)
 {
+	char *look_for;
+	char *append_after;
 	t_arg *arg;
 	t_lex *broken;
 	t_lex *hold;
 	t_lex *next;
 	t_env *env_node;
+	int after_star;
 	bool changed;
 
 	changed = false;
+	append_after = NULL;
 	arg = *arg_head;
 	if(arg->to_replace == ONLY_ENV)
 	{
+
 		broken = tokenizer(arg->content);
 		hold = broken;
 		while(broken)
@@ -311,10 +316,17 @@ void expand_only_env(t_arg **arg_head, t_env *env)
 			next = broken->next;
 			if(broken->token == ENV)
 			{
+				look_for = broken->content;
+				after_star = after_env_star(broken->content);
+				if(after_star != NONE)
+				{
+					look_for = ft_substr(broken->content, 0, after_star, GC);
+					append_after = ft_substr(broken->content, after_star, ft_strlen(broken->content), GC);
+				}
 				changed = true;
-				env_node = get_env(env, broken->content + 1);
+				env_node = get_env(env, look_for + 1);
 				if(env_node && env_node->envyable)
-					broken->content = ft_strdup(get_real_env(env_node->value), GC);
+					broken->content = ft_strjoin(get_real_env(env_node->value), append_after, GC);
 				else
 					remove_lex_node(&hold, broken);
 			}
