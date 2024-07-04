@@ -87,19 +87,19 @@ int execute_builtin(t_treenode *root, t_env **envp, t_data *data)
 	char *command;
 
 	command = root->content;
-	if (!ft_strcmp(command, "env"))
+	if (!ft_strcasecmp(command, "env"))
 		data->status = env(*envp);
-	else if (!ft_strcmp(command, "echo"))
+	else if (!ft_strcasecmp(command, "echo"))
 		data->status = echo(root);
-	else if (!ft_strcmp(command, "pwd"))
+	else if (!ft_strcasecmp(command, "pwd"))
 		data->status = pwd(data);
-	else if (!ft_strcmp(command, "export"))
+	else if (!ft_strcasecmp(command, "export"))
 		data->status = export(envp, root);
-	else if (!ft_strcmp(command, "unset"))
+	else if (!ft_strcasecmp(command, "unset"))
 		data->status = unset(envp, root);
-	else if (!ft_strcmp(command, "cd"))
+	else if (!ft_strcasecmp(command, "cd"))
 		data->status = cd(root, envp, data);
-	else if (!ft_strcmp(command, "exit"))
+	else if (!ft_strcasecmp(command, "exit"))
 		data->status = exit_cmd(root);
 	else
 		return (NONE);
@@ -251,8 +251,6 @@ char *expanded_line(t_redir *redir, char *line, t_env *env)
 		return (line);
 	mini_lexed = heredoc_tokenizer(line);
 	expand_mini_lexed(&mini_lexed, env);
-	if(!mini_lexed)
-		fprintf(stderr, "No mini lexed\n");
 	while(mini_lexed)
 	{
 		result = ft_strjoin(result, mini_lexed->content, GC);

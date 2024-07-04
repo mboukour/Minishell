@@ -97,7 +97,7 @@ char *new_shlvl(char *new_lvl)
 	char *new_shlvl;
 	char *lvl;
 
-	lvl = ft_itoa(ft_atoi(new_lvl + 6) + 1, MANUAL);
+	lvl = ft_itoa(ft_atoi(new_lvl + 6, NULL) + 1, MANUAL);
 	null_protector(lvl);
 	new_shlvl = ft_strjoin("SHLVL=", lvl, MANUAL);
 	null_protector(new_shlvl);

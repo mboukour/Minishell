@@ -25,7 +25,7 @@ int get_export_type(char *str)
 	if(str[0] == '_' && str[1] == '=')
 		return(1);
 	if(is_c_num(str[0]))
-		return(1);
+		return(0);
 	if(no_equal(str))
 		return(3);
 	while(str[i] && str[i] != '=')

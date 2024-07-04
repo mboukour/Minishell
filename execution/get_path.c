@@ -14,18 +14,17 @@
 
 void	find_path(t_treenode *root, char **allpath, t_data *data)
 {
-	char	*joined;
 	int		i;
+	char *real_path;
 
-	joined = NULL;
+
 	i = 0;
 	while (allpath[i])
 	{
-		allpath[i] = ft_strjoin(allpath[i], "/", GC);
-		joined = ft_strjoin(allpath[i], root->content, GC);
-		if (joined && access(joined, F_OK) == 0)
+		real_path = access_real_path(allpath[i], root->content);
+		if (real_path)
 		{
-			data->path = ft_strdup(joined, 1);
+			data->path = real_path;
 			return;
 		}
 		i++;
@@ -44,7 +43,7 @@ void	get_path(t_treenode *root, t_env *env, t_data *data) // Copy
 		data->path = ft_strdup(root->content, GC);
 		return;
 	}
-	path = ft_split(path_node->value, ':', GC);
+	path = ft_split(get_real_env(path_node->value), ':', GC);
 	if (root->content[0] == '/' || root->content[0] == '.')
 		data->path = ft_strdup(root->content, GC);
 	else

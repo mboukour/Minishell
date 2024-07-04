@@ -1,7 +1,7 @@
 CC = cc
 NAME = minishell
 LEXER = lexer/lex_input_checker.c lexer/linked_list_lexer.c lexer/quote_checker.c lexer/tokenizer.c lexer/on_error_here_doc.c
-UTILS = utils/ft_atoi.c utils/ft_itoa.c utils/ft_split.c utils/ft_strchr.c utils/ft_strcmp.c utils/ft_strcpy.c utils/ft_strdup.c utils/ft_strjoin.c utils/ft_strlcpy.c utils/ft_strlen.c utils/ft_strncmp.c utils/ft_strncpy.c utils/ft_substr.c utils/print_helper.c utils/ft_isalpha.c utils/is_c_num.c
+UTILS = utils/ft_atoi.c utils/ft_itoa.c utils/ft_split.c utils/ft_strchr.c utils/ft_strcmp.c utils/ft_strcpy.c utils/ft_strdup.c utils/ft_strjoin.c utils/ft_strlcpy.c utils/ft_strlen.c utils/ft_strncmp.c utils/ft_strncpy.c utils/ft_substr.c utils/print_helper.c utils/ft_isalpha.c utils/is_c_num.c utils/better_access.c utils/ft_strcasecmp.c
 AST = ast/changers.c ast/linked_list_ast.c ast/ruined_tree.c
 PRE_TREE = pre_tree/expander.c pre_tree/linked_list_cmd_arg.c pre_tree/linked_list_middle.c pre_tree/make_middle.c pre_tree/valid_here_doc.c
 GC = memory_management/cgc.c memory_management/linked_list_utils.c memory_management/keep_track.c

@@ -25,7 +25,7 @@
 # define QUOTE_ERROR "Parse error: open quotes\n"
 # define PARA_ERROR "Parse error: open parantheses\n"
 # define SYNTAX_ERROR_STATUS 258
-
+# define NUMERIC_ARG_STATUS 255
 enum e_token
 {
 	WORD = 0,
@@ -205,6 +205,7 @@ typedef struct s_treenode
 {
 	int		token;
 	char	*content;
+	char	*minimzed;
 	t_arg	*args;
 	t_arg	*command;
 	t_cmd_arg *cmd_arg;
@@ -275,7 +276,7 @@ int	ft_strcmp(const char *s1, const char *s2);
 char	**ft_split(char const *s, char c, int mode);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 char	*ft_strchr(const char *s, int c);
-int	ft_atoi(const char *str);
+int	ft_atoi(const char *str, bool *exit_status);
 char	*ft_itoa(int n, int mode);
 size_t	ft_strcpy(char *dst, const char *src);
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -283,6 +284,8 @@ int	numlen(int n);
 size_t ft_strncpy(char *dst, const char *src, size_t dstsize);
 int	ft_isalpha(int c);
 bool is_c_num(char c);
+int ft_strcasecmp(const char *s1, const char *s2) ;
+char *access_real_path(const char *path, const char *loop_for);
 
 // EXPANDER
 void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env);
@@ -328,10 +331,5 @@ char *no_stars(char *path);
 bool is_a_directory(char *path);
 bool is_path(char *str);
 void expand_arg_as_star(t_arg **head);
-
-
-
-
-
 
 #endif

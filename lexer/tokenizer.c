@@ -46,8 +46,10 @@ void handle_env(char *input, int *i, t_lex **head, int *join_count)
     c = input[*i];
 	hold = *i;
     (*i)++;
-    while (input[*i] && (input[*i] == '*' || !is_special(input[*i])) && input[*i] != ' ')
+	while (input[*i] && (input[*i] == '*' || !is_special(input[*i])) && input[*i] != ' ')
         (*i)++;
+	if((*i) == hold + 1)
+		c = WORD;
     content = ft_substr(input, hold, *i - hold, GC);
     current_node = ft_lstnew_lex(content, c, *i - hold, *join_count);
     ft_lstadd_back_lex(head, current_node);

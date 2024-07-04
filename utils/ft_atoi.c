@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-static int	str_to_int(const char *str, int i, int sign)
+static int	str_to_int(const char *str, int i, int sign, bool *error_status)
 {
 	unsigned long long	nb;
 	int					count;
@@ -12,6 +12,8 @@ static int	str_to_int(const char *str, int i, int sign)
 		count++;
 		if (count == 20)
 		{
+			if(error_status)
+				*error_status = true;
 			if (sign == -1)
 				return (0);
 			return (-1);
@@ -21,6 +23,8 @@ static int	str_to_int(const char *str, int i, int sign)
 	}
 	if (nb > LONG_MAX)
 	{
+			if(error_status)
+			*error_status = true;
 		if (sign == -1)
 			return (0);
 		return (-1);
@@ -28,7 +32,7 @@ static int	str_to_int(const char *str, int i, int sign)
 	return ((int)nb * sign);
 }
 
-int	ft_atoi(const char *str)
+int	ft_atoi(const char *str, bool *error_status)
 {
 	int		sign;
 	size_t	i;
@@ -45,5 +49,5 @@ int	ft_atoi(const char *str)
 	}
 	while (str[i] == '0')
 		i++;
-	return (str_to_int(str, i, sign));
+	return (str_to_int(str, i, sign, error_status));
 }

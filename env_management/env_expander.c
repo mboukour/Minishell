@@ -84,13 +84,13 @@ int after_env_star(char *str)
 
 	
 	i = 1;
-	while(str[i] && str[i] != '.' && str[i] != '*')
+	while(str[i] && str[i] != '.' && str[i] != '*' && str[i] != '/')
 		i++;
+	if(!str[i])
+		return (NONE);
 	make_sure = ft_substr(str, 0, i, GC);
 	if(!is_env(make_sure))
 		return(NONE);
-	if(!str[i])
-		return (NONE);
 	return(i);
 }
 
@@ -244,7 +244,7 @@ bool is_env(char *str)
 {
 	int i;
 
-	if(str[0] != '$')
+	if(str[0] != '$' || !str[1])
 		return(false);
 	i = 1;
 	while(str[i])
@@ -321,7 +321,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 					env_node->value = ft_strjoin(env_node->value, append_after, GC);
 					env_node->star_to_replace = arg->to_replace;
 				}
-				else if(!env_node && append_after)
+				if(!env_node && append_after)
 				{
 					arg->content = append_after;
 					break;

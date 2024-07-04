@@ -128,7 +128,8 @@ int cd_core(char *path, t_env **env, t_data *data)
     data->old_pwd = ft_strdup(data->pwd, MANUAL);
 	store_malloced(data->old_pwd);
     safe_free(&data->pwd);
-    data->pwd = wd;
+    data->pwd = ft_strdup(wd, MANUAL);
+	free(wd);
 	store_malloced(data->pwd);
     if (ft_strcmp("..", data->pwd))
     {
