@@ -147,14 +147,23 @@ t_cmd_arg *env_to_cmd_arg(t_env *env_node)
 	i = 0;
 	real_env = get_real_env(env_node->value);
 	sp_res = ft_split(real_env, ' ', GC);
-	while (sp_res[i])
+	if(sp_res)
+	{
+		while (sp_res[i])
+		{
+			one = ft_lstnew_arg(NULL);
+			one->content = ft_strdup(sp_res[i], GC);
+			one->to_replace = env_node->star_to_replace;
+			current = ft_lstnew_cmd_arg(one);
+			ft_lstaddback_cmd_arg(&head, current);
+			i++;
+		}
+	}
+	else
 	{
 		one = ft_lstnew_arg(NULL);
-		one->content = ft_strdup(sp_res[i], GC);
-		one->to_replace = env_node->star_to_replace;
-		current = ft_lstnew_cmd_arg(one);
-		ft_lstaddback_cmd_arg(&head, current);
-		i++;
+		one->content = ft_strdup(env_node->value, GC);
+		head = ft_lstnew_cmd_arg(one);
 	}
 	return (head);
 }
@@ -232,7 +241,6 @@ void insert_after_node(t_cmd_arg *node, t_cmd_arg *new_node)
 {
     if (!node) 
         return;
-	// printf("Inserting %s after %s\n", new_node->arg->content, node->arg->content);
     new_node->prev = node;
     new_node->next = node->next;
     if (node->next)
@@ -270,6 +278,56 @@ bool is_nextable(t_arg *arg, t_env *env)
 }
 
 
+char *lex_to_str(t_lex *lex)
+{
+	char *result;
+
+	result = NULL;
+	while(lex)
+	{
+		result = ft_strjoin(result, lex->content, GC);
+		lex = lex->next;
+	}
+	return (result);
+}
+
+void expand_only_env(t_arg **arg_head, t_env *env)
+{
+	t_arg *arg;
+	t_lex *broken;
+	t_lex *hold;
+	t_lex *next;
+	t_env *env_node;
+	bool changed;
+
+	changed = false;
+	arg = *arg_head;
+	if(arg->to_replace == ONLY_ENV)
+	{
+		broken = tokenizer(arg->content);
+		hold = broken;
+		while(broken)
+		{
+			next = broken->next;
+			if(broken->token == ENV)
+			{
+				changed = true;
+				env_node = get_env(env, broken->content + 1);
+				if(env_node && env_node->envyable)
+					broken->content = ft_strdup(get_real_env(env_node->value), GC);
+				else
+					remove_lex_node(&hold, broken);
+			}
+			broken = next;
+		}
+		if(!changed)
+			return;
+		arg->content = lex_to_str(hold);
+		if(!arg->content)
+			remove_arg_node(arg_head, arg);
+	}
+}
+
 
 void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 {
@@ -299,7 +357,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 			go = true;
 			move = arg->next;
 			after_star = after_env_star(arg->content);
-			if(arg->to_replace != NO_REPLACE && (arg->token == ENV || is_env(arg->content) || after_star != NONE))
+			if(arg->to_replace == REPLACE_ALL && (arg->token == ENV || is_env(arg->content) || after_star != NONE))
 			{
 				if(arg->content[1] && is_c_num(arg->content[1]))
 				{
@@ -332,8 +390,6 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 					arg = move;
 					continue;
 				}
-				else if(arg->to_replace == ONLY_ENV)
-					arg->content = ft_strdup(get_real_env(env_node->value), GC);
 				else
 				{
 					prev = arg->prev;
@@ -366,7 +422,8 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							prev->next = NULL;
 							prev = ft_lstfirst_arg(prev);
 							prev->next = expanded_env->arg;
-							expanded_env->arg = prev; 
+							expanded_env->arg->prev = prev;
+							expanded_env->arg = prev;
 						}
 						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
 						if(next)
@@ -380,10 +437,10 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							}
 							else
 							{
-								last_expanded->arg->next = next;
+								ft_lstlast_arg(last_expanded->arg)->next = next;
 								if(is_env(next->content))
 								{
-									next->prev = last_expanded->arg;
+									next->prev = ft_lstlast_arg(last_expanded->arg);
 									move = next;
 									go = false;
 									looping_cmd = last_expanded;
@@ -416,7 +473,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							}
 							else
 							{
-								last_expanded->arg->next = next;
+								ft_lstlast_arg(last_expanded->arg)->next = next;
 								if(is_env(next->content))
 								{
 									next->prev = last_expanded->arg;
@@ -452,6 +509,8 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 					}
 				}
 			}
+			else if(arg->to_replace == ONLY_ENV)
+				expand_only_env(&looping_cmd->arg, env);
 			arg = move;
 		}
 		looping_cmd = next_lp_cmd;
@@ -465,10 +524,7 @@ bool is_arg_star(t_arg *arg)
 
 	i = 0;
 	if (arg->to_replace != REPLACE_ALL)
-	{
-		printf("i am: %i for %s\n", arg->to_replace, arg->content);
 		return (false);
-	}
 	str = arg->content;
 	while (str[i])
 	{
@@ -611,8 +667,6 @@ void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 		if(redir->token != HERE_DOC)
 		{
 			for_redir = ft_lstnew_cmd_arg(redir->redir_input);
-			if(!for_redir)
-				printf("NO FOR REDIR!!!\n");
 			arg = expand_args(for_redir, *env);
 			expand_arg_as_star(&arg);
 			if(arg->next)

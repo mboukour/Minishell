@@ -234,6 +234,7 @@ char **args_to_arr(t_arg *arg);
 bool is_special(char c);
 void fake_open(t_lex *lex, t_lex *final);
 t_lex* skip_sp(t_lex *lex, int mode);
+void remove_lex_node(t_lex **head, t_lex *node);
 
 // MIDDLE MAN
 t_middle	*ft_lstnew_middle(t_arg *command, t_cmd_arg *cmd_arg, int token);

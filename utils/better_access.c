@@ -10,10 +10,7 @@ char *access_real_path(const char *path, const char *loop_for)
 	// fprintf(stderr, "%s\n", path);
 	dir = opendir(path);
     if (dir == NULL)
-    {
-        perror("Unable to open directory");
-		error_procedure();
-    }
+		return (NULL);
     while ((entry = readdir(dir)))
     {
         if (!ft_strcasecmp(entry->d_name, loop_for))
