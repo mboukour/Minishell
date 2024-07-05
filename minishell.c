@@ -41,6 +41,8 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
     if(error_checker != NONE)
         return (display_error(error_checker, NULL, data, env), NULL);
     quotes_handler(lexed);
+	// ft_lstiter_lex(lexed);
+	// printf("---------------------\n");
     we_check_lex = lex_input_checker(lexed);
     if(we_check_lex)
 	{
@@ -50,6 +52,8 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
     else
     {
         middled = make_middle(lexed);
+		// ft_lstiter_middle(middled);
+		// printf("---------------------\n");
 		valid_here_doc(middled);
         return (ruined_tree(middled));
     }

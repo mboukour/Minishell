@@ -27,14 +27,17 @@ bool is_valid_next_token(t_lex *token)
 
 t_lex *check_logical_operators(t_lex *tokens)
 {
-    if (!is_valid_prev_token(tokens->prev) || !is_valid_next_token(tokens->next))
+    if (!is_valid_prev_token(tokens->prev))
         return tokens;
     return NULL;
 }
 
 t_lex *check_redirections(t_lex *tokens)
 {
-    if (!is_valid_next_token(tokens->next))
+    if (!is_valid_next_token(tokens->next) || is_redir(tokens->next))
+        return tokens;
+	    tokens = skip_sp(tokens, 1);
+    if(is_redir(tokens))
         return tokens;
     return NULL;
 }
