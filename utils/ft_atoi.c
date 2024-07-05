@@ -39,7 +39,7 @@ int	ft_atoi(const char *str, bool *error_status)
 
 	sign = 1;
 	i = 0;
-	while (str[i] && (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13)))
+	while (str[i] && is_ws(str[i] || (str[i] >= 9 && str[i] <= 13)))
 		i++;
 	if (str[i] == '-' || str[i] == '+')
 	{

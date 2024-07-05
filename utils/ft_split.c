@@ -95,3 +95,4 @@ char	**ft_split(char const *s, char c, int mode)
 	word_count = ft_word_count(s, c);
 	return (split_into_words(s, c, word_count, mode));
 }
+

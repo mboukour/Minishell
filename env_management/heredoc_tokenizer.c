@@ -12,7 +12,7 @@ void heredoc_handle_env(char *input, int *i, t_lex **head, int *join_count)
     c = input[*i];
 	hold = *i;
     (*i)++;
-    while (input[*i] && input[*i] != '$' && input[*i] != ' ' && input[*i] != '.' && !is_special(input[*i]))
+    while (input[*i] && input[*i] != '$' && !is_ws(input[*i])  && input[*i] != '.' && !is_special(input[*i]))
         (*i)++;
     content = ft_substr(input, hold, *i - hold, GC);
     current_node = ft_lstnew_lex(content, c, *i - hold, *join_count);

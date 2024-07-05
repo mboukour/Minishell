@@ -10,12 +10,12 @@ void set_joinables(char *str, bool *before_joinable, bool *after_joinable)
 	while(str[i] && str[i] != '=')
 		i++;
 	i++;
-	if(str[i] == ' ')
+	if(is_ws(str[i]))
 		*before_joinable = false;
 	while(str[i])
 		i++;
 	i--;
-	if(str[i] == ' ')
+	if(is_ws(str[i]))
 		*after_joinable = false;
 }
 

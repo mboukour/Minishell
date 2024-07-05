@@ -60,7 +60,7 @@ t_arg *env_to_arg(t_env *env_node)
 
 	head = NULL;
 	i = 0;
-	sp_res = ft_split(get_real_env(env_node->value), ' ', GC);
+	sp_res = ft_split_ws(get_real_env(env_node->value), GC);
 	while (sp_res[i])
 	{
 		current = ft_lstnew_arg(NULL);
@@ -146,7 +146,7 @@ t_cmd_arg *env_to_cmd_arg(t_env *env_node)
 	head = NULL;
 	i = 0;
 	real_env = get_real_env(env_node->value);
-	sp_res = ft_split(real_env, ' ', GC);
+	sp_res = ft_split_ws(real_env, GC);
 	if(sp_res)
 	{
 		while (sp_res[i])

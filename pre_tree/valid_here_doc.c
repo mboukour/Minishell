@@ -26,7 +26,6 @@ char *get_here_doc_input(t_middle *middle)
 		result = ft_strjoin(result, line, GC);
 	}
 	return (result);
-	
 }
 
 

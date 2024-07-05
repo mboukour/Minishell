@@ -290,6 +290,8 @@ int	ft_isalpha(int c);
 bool is_c_num(char c);
 int ft_strcasecmp(const char *s1, const char *s2) ;
 char *access_real_path(const char *path, const char *loop_for);
+bool is_ws(char c);
+char	**ft_split_ws(char const *s, int mode);
 
 // EXPANDER
 void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env);

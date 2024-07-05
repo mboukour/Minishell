@@ -3,7 +3,7 @@
 
 bool is_special(char c)
 {
-    return (c == '\'' || c == '"' || c == '|' || c == '$' || c == '&' ||  c == '*' || c == '>' || c == '<' || c == ' ' || c == '*' || c == '(' || c == ')');
+    return (c == '\'' || c == '"' || c == '|' || c == '$' || c == '&' ||  c == '*' || c == '>' || c == '<' || is_ws(c) || c == '*' || c == '(' || c == ')');
 }
 
 void handle_double_special(char *input, int *i, t_lex **head, int type, int *join_count)
@@ -29,7 +29,7 @@ void handle_star(char *input, int *i, t_lex **head, int *join_count)
     c = input[*i];
 	hold = *i;
     (*i)++;
-    while (input[*i] && (input[*i] == '*' || input[*i] == '$' || !is_special(input[*i])) && input[*i] != ' ')
+    while (input[*i] && (input[*i] == '*' || input[*i] == '$' || !is_special(input[*i])) && !is_ws(input[*i]))
         (*i)++;
     content = ft_substr(input, hold, *i - hold, GC);
     current_node = ft_lstnew_lex(content, c, *i - hold, *join_count);
@@ -46,7 +46,7 @@ void handle_env(char *input, int *i, t_lex **head, int *join_count)
     c = input[*i];
 	hold = *i;
     (*i)++;
-	while (input[*i] && (input[*i] == '*' || !is_special(input[*i])) && input[*i] != ' ')
+	while (input[*i] && (input[*i] == '*' || !is_special(input[*i])) && !is_ws(input[*i]))
         (*i)++;
 	if((*i) == hold + 1)
 		c = WORD;
@@ -79,7 +79,7 @@ void handle_word(char *input, int *i, t_lex **head, int *join_count)
 
 	hold = *i;
 	type = COMMAND;
-    while (input[*i] && (input[*i] == '*' || !is_special(input[*i])) && input[*i] != ' ')
+    while (input[*i] && (input[*i] == '*' || !is_special(input[*i])) && !is_ws(input[*i]))
 	{
 		if(input[*i] == '*')
 			type = STAR;
@@ -98,7 +98,7 @@ void handle_space(char *input, int *i, t_lex **head, int *join_count)
     
 	hold = *i;
     (*join_count)++;
-    while (input[*i] == ' ')
+    while (is_ws(input[*i]))
         (*i)++;
     content = ft_substr(input, hold, *i - hold, GC);
     current_node = ft_lstnew_lex(content, WHITE_SPACE, *i - hold, *join_count);
@@ -108,7 +108,7 @@ void handle_space(char *input, int *i, t_lex **head, int *join_count)
 
 void handle_special(char *input, int *i, t_lex **head, int *join_count)
 {
-    if (input[*i] == ' ')
+    if (is_ws(input[*i]))
         handle_space(input, i, head, join_count);
     else if (input[*i] == '>' && input[*i + 1] == '>')
         handle_double_special(input, i, head, DREDIR_OUT, join_count);
