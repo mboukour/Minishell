@@ -22,7 +22,13 @@ void sigint_handler_cmd(int sig)
     rl_replace_line("", 0);
 }
 
-
+void sigquit_handler_cmd(int sig)
+{
+	(void)sig;
+	printf("Quit\n");
+    rl_on_new_line();
+    rl_replace_line("", 0);
+}
 
 
 int	traverse_tree(t_treenode *root, t_data *data, t_env **env)
@@ -34,6 +40,8 @@ int	traverse_tree(t_treenode *root, t_data *data, t_env **env)
 	save_in = dup(0);
 	save_out = dup(1);
 	signal(SIGINT, sigint_handler_cmd);
+	signal(SIGQUIT, sigquit_handler_cmd);
+
 	if (!root)
 		return (0);
 	if(root->token != AND  && root->token != OR && root->token != PIPE_LINE)

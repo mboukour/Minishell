@@ -33,8 +33,10 @@ bool underscore_before_equal(char *str)
 bool initial_check(char *str)
 {
 	int i;
+	bool repeated_equal;
 
 	i = 0;
+	repeated_equal = false;
 	while(str[i] && str[i] != '+' && str[i] != '=')
 	{
 	if(!ft_isalpha(str[i]) && !is_c_num(str[i]))
@@ -47,6 +49,15 @@ bool initial_check(char *str)
 			return (false);
 		if(str[i + 1] != '=')
 			return (false);
+		i++;
+	}
+	while(str[i])
+	{
+		if(repeated_equal)
+			return (false);
+		if(str[i] == '=')
+			repeated_equal = true;
+		i++;
 	}
 	return (true);
 }

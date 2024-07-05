@@ -100,9 +100,9 @@ void get_input(t_env **env, t_data *data)
     char *input;
     t_treenode *root;
 
-    signal(SIGQUIT, SIG_IGN);
     while (true)
 	{
+    	signal(SIGQUIT, SIG_IGN);
         signal(SIGINT, sigint_handler);
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
 		store_mallocs(input);
