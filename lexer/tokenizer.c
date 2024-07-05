@@ -60,9 +60,9 @@ void handle_general_special(char *input, int *i, t_lex **head, int type, int *jo
 	t_lex *current_node;
     char *content;
 
-	if(*input == '&')
+	if(input[*i] == '&')
 		type = WORD;
-	else if (*input == '|')
+	else if (input[*i] == '|')
 		(*join_count)++;
 	content = ft_substr(input, *i, 1, GC);
 	current_node = ft_lstnew_lex(content, type, 1, *join_count);

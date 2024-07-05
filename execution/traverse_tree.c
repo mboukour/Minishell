@@ -57,7 +57,7 @@ int	traverse_tree(t_treenode *root, t_data *data, t_env **env)
 			traverse_tree(root->right, data, env);
 	}
 	else if (!root->before_redir && !root->after_redir)
-		fprintf(stderr, "Error\n");
+		fprintf(stderr, "Error in TRAVERSE TREE: %i\n", root->token);
 	dup2(save_in, 0);
 	dup2(save_out, 1);
 	close(save_in);

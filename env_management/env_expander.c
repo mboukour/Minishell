@@ -681,7 +681,7 @@ void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 			for_redir = ft_lstnew_cmd_arg(redir->redir_input);
 			arg = expand_args(for_redir, *env);
 			expand_arg_as_star(&arg);
-			if(arg->next)
+			if(!arg || arg->next)
 			{
 				ft_putstr_fd(2, args_to_str(redir->redir_input));
 				ft_putstr_fd(2, ": ambiguous redirect\n");
@@ -712,7 +712,10 @@ void expand_node(t_treenode *root, t_env **env)
 	for_command = ft_lstnew_cmd_arg(root->command);
 	root->command = expand_args(for_command, *env);
 	if(!root->command)
+	{
 		root->command = ft_lstnew_arg(NULL);
+		export_core(env, "?=0");
+	}
 	else
 	{
 		expand_arg_as_star(&root->command);

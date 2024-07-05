@@ -27,6 +27,7 @@
 # define SYNTAX_ERROR_STATUS 258
 # define NUMERIC_ARG_STATUS 255
 # define FORK_ERROR_STATUS 254
+# define PERMISSION_STATUS 126
 
 enum e_token
 {
