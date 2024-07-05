@@ -33,10 +33,10 @@ bool underscore_before_equal(char *str)
 bool initial_check(char *str)
 {
 	int i;
-	bool repeated_equal;
+	int count;
 
 	i = 0;
-	repeated_equal = false;
+	count = 0;
 	while(str[i] && str[i] != '+' && str[i] != '=')
 	{
 	if(!ft_isalpha(str[i]) && !is_c_num(str[i]))
@@ -53,12 +53,12 @@ bool initial_check(char *str)
 	}
 	while(str[i])
 	{
-		if(repeated_equal)
-			return (false);
 		if(str[i] == '=')
-			repeated_equal = true;
+			count++;
 		i++;
 	}
+	if(count > 1)
+		return (false);
 	return (true);
 }
 
@@ -88,7 +88,10 @@ int get_export_type(char *str)
 	if(underscore_before_equal(str))
 		return(1);
 	if(is_c_num(str[0]) || !initial_check(str))
+	{
+		fprintf(stderr, "ME\n");
 		return (0);
+	}
 	if(no_equal(str))
 		return(3);
 	while(str[i] && str[i] != '=')
