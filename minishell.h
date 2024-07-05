@@ -16,7 +16,7 @@
 #include <dirent.h>
 #include <limits.h>
 #include <termios.h>
-#include "memory_management/cgc.h"
+#include "leaks_management/cgc.h"
 #include "execution/execution.h"
 
 # define NONE -1
@@ -26,6 +26,8 @@
 # define PARA_ERROR "Parse error: open parantheses\n"
 # define SYNTAX_ERROR_STATUS 258
 # define NUMERIC_ARG_STATUS 255
+# define FORK_ERROR_STATUS 254
+
 enum e_token
 {
 	WORD = 0,

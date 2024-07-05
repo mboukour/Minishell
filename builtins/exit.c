@@ -4,6 +4,7 @@
 int exit_core(int status)
 {
 	rl_clear_history();
+	smart_close();
 	free_program();
 	smart_free();
 	exit(status);

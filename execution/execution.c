@@ -28,6 +28,12 @@ int change_status(t_env **env, int new_status)
 	return (0);
 }
 
+void pipeline_error(char *first, int status)
+{
+	perror(first);
+	exit_core(status);
+}
+
 void	pipeline(t_treenode *root, t_data *data, t_env **env)
 {
 	pid_t	pid1;
@@ -35,22 +41,21 @@ void	pipeline(t_treenode *root, t_data *data, t_env **env)
 
 	if (pipe(data->end) == -1)
 	{
-		perror("PIPE ERROR");
-		exit(EXIT_FAILURE);
+		perror("pipe: ");
+		init_tree(root);
+		change_status(env, EXIT_FAILURE);
+		return;
 	}
 	pid1 = fork();
 	if (pid1 == -1)
-	{
-		perror("FORK FAILED");
-		exit(EXIT_FAILURE);
-	}
+		pipeline_error("fork: ", FORK_ERROR_STATUS);
 	else if (pid1 == 0)
 	{
 		close(data->end[0]);
 		if (dup2(data->end[1], 1) == -1)
 		{
-			perror("DUP ERROR IN CHILD");
-			exit(EXIT_FAILURE);
+			close(data->end[1]);
+			pipeline_error("dup2: ", EXIT_FAILURE);
 		}
 		close(data->end[1]);
 		traverse_tree(root->left, data, env);
@@ -58,17 +63,14 @@ void	pipeline(t_treenode *root, t_data *data, t_env **env)
 	}
 	pid2 = fork();
 	if (pid2 == -1)
-	{
-		perror("FORK FAILED");
-		exit(EXIT_FAILURE);
-	}
+		pipeline_error("fork: ", FORK_ERROR_STATUS);
 	else if (pid2 == 0)
 	{
 		close(data->end[1]);
 		if (dup2(data->end[0], 0) == -1)
 		{
-			perror("DUP ERROR IN PARENT");
-			exit(EXIT_FAILURE);
+			close(data->end[0]);
+			pipeline_error("dup2: ", EXIT_FAILURE);
 		}
 		close(data->end[0]);
 		traverse_tree(root->right, data, env);
@@ -87,19 +89,19 @@ int execute_builtin(t_treenode *root, t_env **envp, t_data *data)
 	char *command;
 
 	command = root->content;
-	if (!ft_strcasecmp(command, "env"))
+	if (!ft_strcmp(command, "env"))
 		data->status = env(*envp);
-	else if (!ft_strcasecmp(command, "echo"))
+	else if (!ft_strcmp(command, "echo"))
 		data->status = echo(root);
-	else if (!ft_strcasecmp(command, "pwd"))
+	else if (!ft_strcmp(command, "pwd"))
 		data->status = pwd(data);
-	else if (!ft_strcasecmp(command, "export"))
+	else if (!ft_strcmp(command, "export"))
 		data->status = export(envp, root);
-	else if (!ft_strcasecmp(command, "unset"))
+	else if (!ft_strcmp(command, "unset"))
 		data->status = unset(envp, root);
-	else if (!ft_strcasecmp(command, "cd"))
+	else if (!ft_strcmp(command, "cd"))
 		data->status = cd(root, envp, data);
-	else if (!ft_strcasecmp(command, "exit"))
+	else if (!ft_strcmp(command, "exit"))
 		data->status = exit_cmd(root);
 	else
 		return (NONE);
@@ -151,7 +153,7 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	pid = fork();
 	if (pid == -1)
 	{
-		perror("FORK FAILED");
+		pipeline_error("fork: ", FORK_ERROR_STATUS);
 		return ;
 	}
 	else if (pid == 0)
@@ -165,11 +167,10 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 		get_path(root, *env, data);
 		if (execve(data->path, data->cmd, data->env) == -1)
 		{
-
 			write(2, root->content, ft_strlen(root->content));
 			write(2, ": command not found\n", 20);
-			// ft_lstclear_env(*env);
-			// smart_free();
+			smart_free();
+			free_program();
 			exit(CMD_NOT_FOUND);
 		}
 	}
@@ -314,36 +315,36 @@ char	*get_here_doc_path()
 void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 {
 	int		fd;
-	int		info;
 	char	*line;
 	char *buffer;
 	char *here_doc_path;
-	info = 0;
+
 	flag_last_here_doc(redir);
 	while (redir)
 	{
 		if (redir->token == REDIR_IN)
 		{
-			if (info == 1)
-				fd = dup(0);
-			else
-				fd = open(redir->redir_string, O_RDONLY, 0777);
-			if (fd == -1) // UPDATE STATUS ON FAILURE?
+			fd = open(redir->redir_string, O_RDONLY, 0777);
+			if (fd == -1)
 			{
 				ft_putstr_fd(2, redir->redir_string);
-				ft_putstr_fd(2, " :No such file or directory\n");
+				perror(": ");
 				change_status(env, 1);
 				init_tree(root);
 				return ;
 			}
+			store_fds(fd);
 			if (dup2(fd, 0) == -1)
 			{
-				perror("handle redin dup failed");
-				close(fd);
-				exit(EXIT_FAILURE);
+				ft_putstr_fd(2, redir->redir_string);
+				perror(": ");
+				change_status(env, 1);
+				init_tree(root);
+				return;
 			}
 			change_status(env, 0);
 			close(fd);
+			remove_fd_node(fd);
 		}
 		else if (redir->token == REDIR_OUT || redir->token == DREDIR_OUT)
 		{
@@ -353,17 +354,24 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 				fd = open(redir->redir_string, O_RDWR | O_CREAT | O_TRUNC, 0777);
 			if (fd == -1)
 			{
-				perror("File Descriptor");
-				exit(EXIT_FAILURE);
+				ft_putstr_fd(2, redir->redir_string);
+				perror(": ");
+				change_status(env, 1);
+				init_tree(root);
+				return;
 			}
+			store_fds(fd);
 			if (dup2(fd, 1) == -1)
 			{
-				perror("handle red dup failed");
-				close(fd);
-				exit(EXIT_FAILURE);
+				ft_putstr_fd(2, redir->redir_string);
+				perror(": ");
+				change_status(env, 1);
+				init_tree(root);
+				return;
 			}
 			change_status(env, 0);
 			close(fd);
+			remove_fd_node(fd);
 		}
 		else if(redir->token == HERE_DOC)
 		{
@@ -371,10 +379,14 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 			fd = open(here_doc_path, O_CREAT | O_RDWR | O_TRUNC, 0777);
 			if(fd == -1)
 			{
-				ft_putstr_fd(2, "Error: can't open heredoc fd:");
+				ft_putstr_fd(2, redir->redir_string);
+				ft_putstr_fd(2, ": ");
 				perror("");
-				exit(EXIT_FAILURE); // IMPLEMNT BETTER ERROR MANAGEMENT
+				change_status(env, 1);
+				init_tree(root);
+				return;
 			}
+			store_fds(fd);
 			if(redir->here_doc_buffer)
 			{
 				buffer = redir->here_doc_buffer;
@@ -390,22 +402,30 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 				}
 			}
 			close(fd);
+			remove_fd_node(fd);
 			fd = open(here_doc_path, O_RDONLY);
 			if(fd == -1)
 			{
-				ft_putstr_fd(2, "Error: can't open heredoc fd:");
+				ft_putstr_fd(2, "Heredoc: ");
 				perror("");
-				exit(EXIT_FAILURE); // IMPLEMNT BETTER ERROR MANAGEMENT
+				change_status(env, 1);
+				init_tree(root);
+				return;
 			}
+			store_fds(fd);
 			if(redir->actual_here_doc)
 			{
 				if (dup2(fd, 0) == -1)
 				{
-					perror("handle heredoc dup failed");
-					close(fd);
-					exit(EXIT_FAILURE);
+					ft_putstr_fd(2, "dup2: ");
+					perror("");
+					change_status(env, 1);
+					init_tree(root);
+					return;
 				}
 			}
+			close(fd);
+			remove_fd_node(fd);
 			unlink(here_doc_path);
 		}
 		redir = redir->next;

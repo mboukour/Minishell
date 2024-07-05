@@ -119,6 +119,7 @@ void get_input(t_env **env, t_data *data)
             }
         }
         add_history(input);
+		smart_close();
         smart_free();
     }
 }

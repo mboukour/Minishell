@@ -7,7 +7,6 @@ char *access_real_path(const char *path, const char *loop_for)
     DIR *dir;
 	char *result;
 
-	// fprintf(stderr, "%s\n", path);
 	dir = opendir(path);
     if (dir == NULL)
 		return (NULL);
