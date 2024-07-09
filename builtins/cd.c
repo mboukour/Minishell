@@ -30,7 +30,7 @@ char *remove_last_slash(char *str)
 		return (free(str), null_protector(result), NULL);
     ft_strncpy(result, str, last_slash_index + 1);
     result[last_slash_index] = '\0';
-    free(str);
+    // free(str);
     return result;
 }
 
@@ -41,51 +41,152 @@ void cd_error()
     perror("");
 }
 
+void remove_additional_slashes(char *path)
+{
+    int i;
+
+    i = 0;
+    while(path[i])
+        i++;
+    i--;
+    while(path[i] == '/')
+        path[i--] = '\0';
+}
+
+char *get_new_path(char *pwd, char *original)
+{
+    int i;
+    int j = 0;
+    char **sp_res;
+    char *path;
+
+    i = 0;
+
+    sp_res = ft_split(pwd, '/', GC);
+    while(sp_res[i] && ft_strcmp(sp_res[i], "..") && ft_strcmp(sp_res[i], "."))
+        i++;
+    path = "/";
+    while(j < i)
+    {
+        path = ft_strjoin(path, sp_res[j], GC);
+        path = ft_strjoin(path, "/", GC);
+        j++;
+    }
+    remove_additional_slashes(path);
+    while(sp_res[i])
+        i++;
+    i--;
+    while(sp_res[i] && (!ft_strcmp(sp_res[i], "..") || !ft_strcmp(sp_res[i], ".")))
+    {
+        if(ft_strlen(sp_res[i]) == 2)
+        {
+            path = remove_last_slash(path);
+        }
+        i--;
+    }
+    i = 0;
+    sp_res = ft_split(original, '/', GC);
+    if(!sp_res)
+        return (NULL);
+    while(sp_res[i])
+    {
+        if(!ft_strcmp(sp_res[i], ".."))
+            path = remove_last_slash(path);
+        else
+        {
+            path = ft_strjoin(path, "/", GC);
+            path = ft_strjoin(path, sp_res[i], GC);
+        }
+        i++;
+    }
+    return (path);
+}
+
+#include <stdbool.h>
+
+bool is_all_points(char *path)
+{
+    int i = 0;
+    int dot_count = 0;
+
+    while (path[i])
+    {
+        if (path[i] != '/')
+        {
+            if (path[i] == '.')
+                dot_count++;
+            else
+                dot_count = 0;
+            if (dot_count > 2)
+                return false;
+        }
+        else
+        {
+            if (dot_count > 2)
+                return false;
+            dot_count = 0;
+        }
+        i++;
+    }
+    if (dot_count > 2)
+        return false;
+
+    return true;
+}
+
+
+char *add_slash_if_needed(char *path)
+{
+    int i;
+
+    i = 0;
+    while(path[i])
+        i++;
+    if(path[i] != '/')
+    {
+        remove_ptr(path);
+        path = ft_strjoin(path, "/", MANUAL);
+    }
+    else
+        path = ft_strdup(path, MANUAL);
+    return (path);
+}
+
 int check_removed(char *path, t_data *data, t_env **env)
 {
     char *dir;
     char *new;
     char *result;
     int r;
-	char *temp;
 
     dir = getcwd(NULL, 0);
     r = 0;
     if (!dir)
     {
-        new = ft_strjoin(data->pwd, "/", MANUAL);
-		null_protector(new);
-		temp = new;
-		new = ft_strjoin(new, path, MANUAL);
-		free(temp);
-		null_protector(new);
-        safe_free(&data->old_pwd);
-        data->old_pwd = data->pwd;
-        data->pwd = new;
-        r = 1;
-        if (!ft_strcmp("..", path))
+        new = get_new_path(data->pwd, path);
+        if(!chdir(new))
         {
-            *(data->foolproof_wd) = remove_last_slash(*(data->foolproof_wd));
-            if (!chdir(*(data->foolproof_wd)))
-            {
-                data->pwd = remove_last_slash(data->pwd);
-                safe_free(&data->old_pwd);
-                data->old_pwd = data->pwd;
-                data->pwd = ft_strdup(*(data->foolproof_wd), MANUAL);
-				store_malloced(data->pwd);
-                safe_free(data->foolproof_wd);
-            }
-            else
-                cd_error();
-            r = 2;
-        }
-        else if (!ft_strcmp(".", path))
-        {
-            cd_error();
+            data->old_pwd = ft_strdup(data->pwd, MANUAL);
+            null_protector(data->old_pwd);
+            data->pwd = add_slash_if_needed(data->pwd);
+            data->pwd = ft_strdup(new, MANUAL);
             r = 2;
         }
         else
-            cd_error();
+        {
+            if(is_all_points(path))
+            {
+                data->old_pwd = ft_strdup(data->pwd, MANUAL);
+                null_protector(data->old_pwd);
+                new = add_slash_if_needed(data->pwd);
+                data->pwd = ft_strjoin(new, path, MANUAL);
+                null_protector(data->pwd);
+                cd_error();
+            }
+            else
+                ft_putstr_fd(2, "cd: No such file or directory\n");
+            r = 1;
+        }
         result = ft_strjoin("PWD=", data->pwd, MANUAL);
 		null_protector(result);
 		export_core(env, result);
@@ -111,6 +212,7 @@ int cd_core(char *path, t_env **env, t_data *data)
     else if (check == 2)
         return 0;
 
+
     if (chdir(path))
     {
         ft_putstr_fd(2, "cd: ");
@@ -131,12 +233,6 @@ int cd_core(char *path, t_env **env, t_data *data)
     data->pwd = ft_strdup(wd, MANUAL);
 	free(wd);
 	store_malloced(data->pwd);
-    if (ft_strcmp("..", data->pwd))
-    {
-        safe_free(data->foolproof_wd);
-        *(data->foolproof_wd) = ft_strdup(data->pwd, MANUAL);
-		store_malloced(*(data->foolproof_wd));
-    }
     result = ft_strjoin("OLDPWD=", data->old_pwd, MANUAL);
 	null_protector(result);
 	export_core(env, result);
@@ -164,10 +260,8 @@ int cd_home(t_env **env, t_data *data)
 int cd(t_treenode *cd_root, t_env **env, t_data *data)
 {
     t_arg *args;
-    static char *foolproof_wd;
 
     args = cd_root->args;
-    data->foolproof_wd = &foolproof_wd;
     if (!args)
         return cd_home(env, data);
     else if (!args->next)

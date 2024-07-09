@@ -75,7 +75,6 @@ void init_t_data(t_data *data)
         perror("");
     }
     data->old_pwd = NULL;
-    data->foolproof_wd = NULL;
 }
 
 bool is_all_space(char *str)
