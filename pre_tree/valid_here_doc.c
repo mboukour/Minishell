@@ -10,7 +10,6 @@ void sigint_handler_c(int sig)
 		close(STDIN_FILENO);
 		return ;
 	}
-	infooo = 15;
     printf("\n");
     rl_on_new_line();
     rl_replace_line("", 0);

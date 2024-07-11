@@ -11,10 +11,9 @@ void sigint_handler(int sig)
     rl_redisplay();
 }
 
-void display_error(int error_checker, t_lex *lex, t_data *data, t_env **env)
+void display_error(int error_checker, t_lex *lex, t_env **env)
 {
-	data->status = SYNTAX_ERROR_STATUS;
-    change_status(env, data->status);
+    change_status(env, SYNTAX_ERROR_STATUS);
     if(error_checker != NONE)
     {
         if(error_checker == QUOTE)
@@ -29,7 +28,7 @@ void display_error(int error_checker, t_lex *lex, t_data *data, t_env **env)
 }
 
 
-t_treenode *parsing(char *input, t_data *data, t_env **env)
+t_treenode *parsing(char *input,  t_env **env)
 {
     t_lex *lexed;
     t_lex *we_check_lex;
@@ -40,7 +39,7 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
     lexed = tokenizer(input);
     error_checker = open_checker(lexed);
     if(error_checker != NONE)
-        return (display_error(error_checker, NULL, data, env), NULL);
+        return (display_error(error_checker, NULL, env), NULL);
     quotes_handler(lexed);
     we_check_lex = lex_input_checker(lexed);
     if(we_check_lex)
@@ -48,18 +47,21 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
         in1 = dup(STDIN_FILENO);
 		fake_open(lexed, we_check_lex);
         if (dup2(in1, STDIN_FILENO) == -1)
-            return (NULL);
-        display_error(NONE, we_check_lex, data, env);
+            export_core(env, "?=1");
+        infooo = 1337;
+        display_error(NONE, we_check_lex, env);
 	}
     else
     {
         middled = make_middle(lexed);
-		// ft_lstiter_middle(middled);
-		// printf("---------------------\n");
         in1 = dup(STDIN_FILENO);
 		valid_here_doc(middled);
         if (dup2(in1, STDIN_FILENO) == -1)
+        {
+            export_core(env, "?=1");
             return (NULL);
+        }
+        infooo = 1337;
         return (ruined_tree(middled));
     }
     return (NULL);
@@ -108,9 +110,6 @@ void get_input(t_env **env, t_data *data)
 	{
     	signal(SIGQUIT, SIG_IGN);
         signal(SIGINT, sigint_handler);
-        if(infooo == -1)
-            export_core(env, "?=1");
-        infooo = 1337;
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
 		store_mallocs(input);
         if (!input)
@@ -122,12 +121,11 @@ void get_input(t_env **env, t_data *data)
             continue;
         else if(ft_strcmp(input, ""))
         {
-            root = parsing(input, data, env);
+            root = parsing(input, env);
             if(root)
-            {
-                // print_ascii_tree(root, 0);
                 traverse_tree(root, data, env);
-            }
+            infooo = 1337;
+
         }
         add_history(input);
 		smart_close();
