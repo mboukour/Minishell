@@ -4,7 +4,7 @@
 
 void sigint_handler(int sig)
 {
-	(void)sig;
+    (void)sig;
     printf("\n");
     rl_on_new_line();
     rl_replace_line("", 0);
@@ -52,7 +52,10 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
         middled = make_middle(lexed);
 		// ft_lstiter_middle(middled);
 		// printf("---------------------\n");
+        int in1 = dup(STDIN_FILENO);
 		valid_here_doc(middled);
+        if (dup2(in1, STDIN_FILENO) == -1)
+            return (NULL);
         return (ruined_tree(middled));
     }
     return (NULL);
