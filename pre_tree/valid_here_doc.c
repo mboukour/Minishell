@@ -4,9 +4,8 @@ int	heredoc_sigint_g;
 
 void sigint_handler_c(int sig)
 {
-    (void)sig;
 	close(STDIN_FILENO);
-	heredoc_sigint_g = true;
+	heredoc_sigint_g = sig;
 }
 
 
@@ -19,7 +18,7 @@ char *get_here_doc_input(t_middle *middle)
 
 	result = NULL;
 	delimiter = args_to_str(middle->redirections);
-	heredoc_sigint_g = false;
+	heredoc_sigint_g = 0;
 	signal(SIGINT, sigint_handler_c);
 	while (true)
 	{

@@ -48,7 +48,7 @@ t_treenode *parsing(char *input,  t_env **env)
 		fake_open(lexed, we_check_lex);
         if (dup2(in1, STDIN_FILENO) == -1 || heredoc_sigint_g)
             export_core(env, "?=1");
-        heredoc_sigint_g = false;
+        heredoc_sigint_g = 0;
         display_error(NONE, we_check_lex, env);
 	}
     else
@@ -61,7 +61,7 @@ t_treenode *parsing(char *input,  t_env **env)
             export_core(env, "?=1");
             return (NULL);
         }
-        heredoc_sigint_g = false;
+        heredoc_sigint_g = 0;
         return (ruined_tree(middled));
     }
     return (NULL);
@@ -124,7 +124,7 @@ void get_input(t_env **env, t_data *data)
             root = parsing(input, env);
             if(root)
                 traverse_tree(root, data, env);
-            heredoc_sigint_g = false;
+            heredoc_sigint_g = 0;
         }
         add_history(input);
 		smart_close();
