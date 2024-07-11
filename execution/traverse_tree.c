@@ -31,17 +31,27 @@ void sigquit_handler_cmd(int sig)
 }
 
 
+void dups_error(char *str)
+{
+	perror(str);
+	change_status(env, 1);
+}
+
 int	traverse_tree(t_treenode *root, t_data *data, t_env **env)
 {
 	int		save_in;
 	int		save_out;
-
+	int		res;
+	int		res2;
 
 	save_in = dup(0);
+	if(save_in == -1)
+		return (dups_error("dup:"), 1);
 	save_out = dup(1);
+	if(save_in == -1)
+		return (close(save_in), dups_error("dup:"), 1);
 	signal(SIGINT, sigint_handler_cmd);
 	signal(SIGQUIT, sigquit_handler_cmd);
-
 	if (!root)
 		return (0);
 	if(root->token != AND  && root->token != OR && root->token != PIPE_LINE)
@@ -65,7 +75,7 @@ int	traverse_tree(t_treenode *root, t_data *data, t_env **env)
 			traverse_tree(root->right, data, env);
 	}
 	else if (!root->before_redir && !root->after_redir)
-		fprintf(stderr, "Error in TRAVERSE TREE: %i\n", root->token);
+		fprintf(stderr, "Error in TRAVERSE TREE: %i\n", root->token); // TO REMOVED
 	dup2(save_in, 0);
 	dup2(save_out, 1);
 	close(save_in);

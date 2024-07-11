@@ -45,6 +45,12 @@ t_treenode *parsing(char *input,  t_env **env)
     if(we_check_lex)
 	{
         in1 = dup(STDIN_FILENO);
+		if(in1 == -1)
+		{
+			perror("dup:");
+			export_core(env, "?=1");
+			return (NULL);
+		}
 		fake_open(lexed, we_check_lex);
         if (dup2(in1, STDIN_FILENO) == -1 || heredoc_sigint_g)
             export_core(env, "?=1");
@@ -55,6 +61,12 @@ t_treenode *parsing(char *input,  t_env **env)
     {
         middled = make_middle(lexed);
         in1 = dup(STDIN_FILENO);
+		if(in1 == -1)
+		{
+			perror("dup:");
+			export_core(env, "?=1");
+			return (NULL);
+		}
 		valid_here_doc(middled);
         if (dup2(in1, STDIN_FILENO) == -1 || heredoc_sigint_g)
         {

@@ -13,7 +13,7 @@
 #include "execution.h"
 
 
-int change_status(t_env **env, int new_status)
+void change_status(t_env **env, int new_status)
 {
 	char *current_status;
 	char *final;
@@ -25,7 +25,6 @@ int change_status(t_env **env, int new_status)
 	free(current_status);
 	export_core(env, final);
 	free(final);
-	return (0);
 }
 
 void pipeline_error(char *first, int status)

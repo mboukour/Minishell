@@ -120,14 +120,14 @@ t_env *array_to_env(char **env)
     while (env[i])
     {
         current = ft_lstnew_env(env[i], MANUAL);
-		store_malloced(current->value);
 		store_malloced(current);
+		store_malloced(current->value);
         if (!ft_strncmp(current->value, "SHLVL", 5) && current->value[5] == '=')
         {
 			set_shlvl = true;
             new = new_shlvl(current->value);
 			store_malloced(new);
-            free(current->value); // REMOVE FROM STORED
+            free(current->value);
 			remove_ptr(current->value);
             current->value = new;
         }

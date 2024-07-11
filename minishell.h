@@ -15,8 +15,7 @@
 #include <signal.h>
 #include <dirent.h>
 #include <limits.h>
-#include <termios.h>
-#include "memory_management/cgc.h"
+#include "anti_leaks/cgc.h"
 #include "execution/execution.h"
 
 # define NONE -1
@@ -330,7 +329,7 @@ void	ft_lstadd_back_env(t_env **lst, t_env *new);
 t_env *get_env(t_env *env, char *str);
 int ft_lstsize_env(t_env *env);
 char **env_to_array(t_env *env);
-int change_status(t_env **env, int new_status); // CAN FAIL
+void change_status(t_env **env, int new_status); // CAN FAIL
 void sort_env_list(t_env *head);
 void set_joinables(char *str, bool *before_joinable, bool *after_joinable);
 t_env	*ft_lstlast_env(t_env *lst);

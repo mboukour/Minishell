@@ -212,8 +212,8 @@ int export_core(t_env **env, char *exp_arg)
 	else
 	{
 		find = ft_lstnew_env(exp_arg, MANUAL);
-		store_malloced(find->value);
 		store_malloced(find);
+		store_malloced(find->value);
 		ft_lstadd_back_env(env, find);
 		if(exp_type == 3)
 			find->envyable = false;

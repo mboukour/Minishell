@@ -26,11 +26,8 @@ char *remove_last_slash(char *str)
     if (last_slash_index == -1)
         return str;
     result = smart_malloc(last_slash_index + 1);
-    if(!result)
-		return (free(str), null_protector(result), NULL);
     ft_strncpy(result, str, last_slash_index + 1);
     result[last_slash_index] = '\0';
-    // free(str);
     return result;
 }
 
@@ -102,38 +99,32 @@ char *get_new_path(char *pwd, char *original)
     return (path);
 }
 
-#include <stdbool.h>
 
 bool is_all_points(char *path)
 {
-    int i = 0;
-    int dot_count = 0;
+    int i;
+    int dot_count;
 
+	i = 0;
+	dot_count = 0;
     while (path[i])
     {
-        if (path[i] != '/')
+        if (path[i] != '.' && path[i] != '/')
+            return (false);
+        if (path[i] == '.')
         {
-            if (path[i] == '.')
-                dot_count++;
-            else
-                dot_count = 0;
+            dot_count++;
             if (dot_count > 2)
-                return false;
+                return (false);
         }
-        else
-        {
-            if (dot_count > 2)
-                return false;
+        else if (path[i] == '/')
             dot_count = 0;
-        }
         i++;
     }
     if (dot_count > 2)
-        return false;
-
-    return true;
+        return (false);
+    return (true);
 }
-
 
 char *add_slash_if_needed(char *path)
 {
@@ -167,10 +158,12 @@ int check_removed(char *path, t_data *data, t_env **env)
         if(!chdir(new))
         {
             safe_free(&data->old_pwd);
+			remove_ptr(data->old_pwd);
             data->old_pwd = ft_strdup(data->pwd, MANUAL);
-            null_protector(data->old_pwd);
+            store_malloced(data->old_pwd);
             safe_free(&data->pwd);
             data->pwd = ft_strdup(new, MANUAL);
+			store_malloced(data->pwd);
             r = 2;
         }
         else
@@ -178,16 +171,16 @@ int check_removed(char *path, t_data *data, t_env **env)
             if(is_all_points(path))
             {
                 safe_free(&data->old_pwd);
+				remove_ptr(data->old_pwd);
                 data->old_pwd = ft_strdup(data->pwd, MANUAL);
-                null_protector(data->old_pwd);
+                store_malloced(data->old_pwd);
                 new = add_slash_if_needed(data->pwd);
-                safe_free(&data->pwd);
                 data->pwd = ft_strjoin(new, path, MANUAL);
-                null_protector(data->pwd);
+                store_malloced(&data->pwd);
                 cd_error();
             }
             else
-                ft_putstr_fd(2, "cd: No such file or directory\n");
+                ft_putstr_fd(2, "cd: no such file or directory\n");
             r = 1;
         }
         result = ft_strjoin("PWD=", data->pwd, MANUAL);
@@ -229,9 +222,11 @@ int cd_core(char *path, t_env **env, t_data *data)
         return 1;
     }
     safe_free(&data->old_pwd);
+	remove_ptr(data->old_pwd);
     data->old_pwd = ft_strdup(data->pwd, MANUAL);
 	store_malloced(data->old_pwd);
     safe_free(&data->pwd);
+	remove_ptr(data->pwd);
     data->pwd = ft_strdup(wd, MANUAL);
 	free(wd);
 	store_malloced(data->pwd);
