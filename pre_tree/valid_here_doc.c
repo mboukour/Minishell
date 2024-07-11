@@ -1,19 +1,12 @@
 #include "../minishell.h"
 
-int	infooo = 1337;
+int	heredoc_sigint_g;
 
 void sigint_handler_c(int sig)
 {
     (void)sig;
-	if (infooo == -1)
-	{
-		close(STDIN_FILENO);
-		return ;
-	}
-    printf("\n");
-    rl_on_new_line();
-    rl_replace_line("", 0);
-    rl_redisplay();
+	close(STDIN_FILENO);
+	heredoc_sigint_g = true;
 }
 
 
@@ -26,7 +19,7 @@ char *get_here_doc_input(t_middle *middle)
 
 	result = NULL;
 	delimiter = args_to_str(middle->redirections);
-	infooo = -1;
+	heredoc_sigint_g = false;
 	signal(SIGINT, sigint_handler_c);
 	while (true)
 	{

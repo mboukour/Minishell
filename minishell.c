@@ -46,9 +46,9 @@ t_treenode *parsing(char *input,  t_env **env)
 	{
         in1 = dup(STDIN_FILENO);
 		fake_open(lexed, we_check_lex);
-        if (dup2(in1, STDIN_FILENO) == -1)
+        if (dup2(in1, STDIN_FILENO) == -1 || heredoc_sigint_g)
             export_core(env, "?=1");
-        infooo = 1337;
+        heredoc_sigint_g = false;
         display_error(NONE, we_check_lex, env);
 	}
     else
@@ -56,12 +56,12 @@ t_treenode *parsing(char *input,  t_env **env)
         middled = make_middle(lexed);
         in1 = dup(STDIN_FILENO);
 		valid_here_doc(middled);
-        if (dup2(in1, STDIN_FILENO) == -1)
+        if (dup2(in1, STDIN_FILENO) == -1 || heredoc_sigint_g)
         {
             export_core(env, "?=1");
             return (NULL);
         }
-        infooo = 1337;
+        heredoc_sigint_g = false;
         return (ruined_tree(middled));
     }
     return (NULL);
@@ -124,8 +124,7 @@ void get_input(t_env **env, t_data *data)
             root = parsing(input, env);
             if(root)
                 traverse_tree(root, data, env);
-            infooo = 1337;
-
+            heredoc_sigint_g = false;
         }
         add_history(input);
 		smart_close();

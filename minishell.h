@@ -51,7 +51,7 @@ enum e_token
 	DREDIR_OUT,
 };
 
-extern int infooo;
+extern int heredoc_sigint_g;
 
 enum e_state
 {

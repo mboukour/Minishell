@@ -8,7 +8,7 @@ bool handle_on_error_heredoc(t_lex *token, t_lex *final)
 	char *line;
 	int to_replace;
 
-	infooo = -1;
+	heredoc_sigint_g = false;
 	signal(SIGINT, sigint_handler_c);
 	delimiter = NULL;
 	to_replace = REPLACE_ALL;
