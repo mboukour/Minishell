@@ -16,7 +16,7 @@
 #include <dirent.h>
 #include <limits.h>
 #include <termios.h>
-#include "leaks_management/cgc.h"
+#include "memory_management/cgc.h"
 #include "execution/execution.h"
 
 # define NONE -1
@@ -51,7 +51,7 @@ enum e_token
 	DREDIR_OUT,
 };
 
-
+extern int infooo;
 
 enum e_state
 {
@@ -222,6 +222,10 @@ typedef struct s_treenode
 } t_treenode;
 
 typedef struct s_data t_data;
+
+// SINGALS
+void sigint_handler_c(int sig);
+
 // LEXER
 t_lex *tokenizer(char *input);
 void quotes_handler(t_lex *lexed);

@@ -35,6 +35,7 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
     t_lex *we_check_lex;
     t_middle *middled;
     int error_checker;
+    int in1;
 
     lexed = tokenizer(input);
     error_checker = open_checker(lexed);
@@ -44,7 +45,10 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
     we_check_lex = lex_input_checker(lexed);
     if(we_check_lex)
 	{
+        in1 = dup(STDIN_FILENO);
 		fake_open(lexed, we_check_lex);
+        if (dup2(in1, STDIN_FILENO) == -1)
+            return (NULL);
         display_error(NONE, we_check_lex, data, env);
 	}
     else
@@ -52,7 +56,7 @@ t_treenode *parsing(char *input, t_data *data, t_env **env)
         middled = make_middle(lexed);
 		// ft_lstiter_middle(middled);
 		// printf("---------------------\n");
-        int in1 = dup(STDIN_FILENO);
+        in1 = dup(STDIN_FILENO);
 		valid_here_doc(middled);
         if (dup2(in1, STDIN_FILENO) == -1)
             return (NULL);
@@ -104,6 +108,9 @@ void get_input(t_env **env, t_data *data)
 	{
     	signal(SIGQUIT, SIG_IGN);
         signal(SIGINT, sigint_handler);
+        if(infooo == -1)
+            export_core(env, "?=1");
+        infooo = 1337;
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
 		store_mallocs(input);
         if (!input)

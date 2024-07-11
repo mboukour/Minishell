@@ -10,6 +10,7 @@ void sigint_handler_c(int sig)
 		close(STDIN_FILENO);
 		return ;
 	}
+	infooo = 15;
     printf("\n");
     rl_on_new_line();
     rl_replace_line("", 0);
@@ -43,7 +44,6 @@ char *get_here_doc_input(t_middle *middle)
 		free(tmp);
 		result = ft_strjoin(result, line, GC);
 	}
-	infooo = 1337;
 	return (result);
 }
 
