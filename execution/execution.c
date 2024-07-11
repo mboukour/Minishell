@@ -132,7 +132,7 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 	t_arg *args;
 	char *under;
 
-	if(!root->content)
+	if(!root->content || infooo == -1)
 		return;
 	under = get_underscore(root);
 	if(!under)
