@@ -70,11 +70,12 @@ int is_append(char *str)
 	while(str[i] && str[i] != '=')
 		i++;
 	if(!str[i])
-		return (0);
+		return (false);
 	if(str[i - 1] == '+')
 		return (true);
 	return (false);
 }
+
 
 int get_export_type(char *str)
 {
@@ -94,6 +95,8 @@ int get_export_type(char *str)
 	}
 	if(no_equal(str))
 		return(3);
+	if(is_append(str))
+		return(4);
 	while(str[i] && str[i] != '=')
 	{
 		if(ft_isalpha(str[i]))
@@ -159,10 +162,14 @@ int export_core(t_env **env, char *exp_arg)
 {
 	t_env *find;
 	char *final;
+	char *tmp;
+	char *first_part;
 	bool before_joinable;
 	bool after_joinable;
 	int exp_type;
+	int i;
 
+	i = 0;
 	exp_type = get_export_type(exp_arg);
 	if(!exp_type)
 	{
@@ -178,7 +185,22 @@ int export_core(t_env **env, char *exp_arg)
 		if(exp_type == 3)
 			return (0);
 		set_joinables(exp_arg, &before_joinable, &after_joinable);
-		final = ft_strdup(exp_arg, MANUAL);
+		if(exp_type == 4)
+		{
+			tmp = find->value;
+			while(*tmp && *tmp != '=')
+				tmp++;
+			tmp++;
+			while(exp_arg[i] && exp_arg[i] != '=')
+				i++;
+			i++;
+			first_part = ft_substr(exp_arg, 0, i, GC);
+			first_part = ft_strjoin(first_part, tmp, GC);
+			exp_arg += i;
+			final = ft_strjoin(first_part, exp_arg, MANUAL);
+		}
+		else
+			final = ft_strdup(exp_arg, MANUAL);
 		store_malloced(final);
 		free(find->value);
 		remove_ptr(find->value);
