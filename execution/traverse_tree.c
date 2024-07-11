@@ -31,7 +31,7 @@ void sigquit_handler_cmd(int sig)
 }
 
 
-void dups_error(char *str)
+void dups_error(char *str, t_env **env)
 {
 	perror(str);
 	change_status(env, 1);
@@ -41,15 +41,14 @@ int	traverse_tree(t_treenode *root, t_data *data, t_env **env)
 {
 	int		save_in;
 	int		save_out;
-	int		res;
-	int		res2;
+
 
 	save_in = dup(0);
 	if(save_in == -1)
-		return (dups_error("dup:"), 1);
+		return (dups_error("dup:", env), 1);
 	save_out = dup(1);
 	if(save_in == -1)
-		return (close(save_in), dups_error("dup:"), 1);
+		return (close(save_in), dups_error("dup:", env), 1);
 	signal(SIGINT, sigint_handler_cmd);
 	signal(SIGQUIT, sigquit_handler_cmd);
 	if (!root)
