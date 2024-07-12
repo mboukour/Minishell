@@ -6,13 +6,13 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:55:13 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 17:55:59 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 00:15:32 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	remove_node(t_env **env, t_env *node_to_remove)
+void	remove_env_node(t_env **env, t_env *node_to_remove)
 {
 	if (node_to_remove == *env)
 		*env = node_to_remove->next;
@@ -40,7 +40,7 @@ int	unset_core(t_env **env, char *to_unset)
 	unset_env = get_env(*env, to_unset);
 	if (!unset_env)
 		return (0);
-	remove_node(env, unset_env);
+	remove_env_node(env, unset_env);
 	return (0);
 }
 

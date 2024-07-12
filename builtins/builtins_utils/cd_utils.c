@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:47:27 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 21:24:55 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 00:14:22 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,6 @@ void	safe_free(char **ptr)
 	}
 }
 
-void	cd_error(char *path)
-{
-	if (!path)
-	{
-		ft_putstr_fd(2, "cd: error retrieving current directory: ");
-		ft_putstr_fd(2, "getcwd: cannot access parent directories: ");
-		perror("");
-		return ;
-	}
-	ft_putstr_fd(2, "cd: ");
-	ft_putstr_fd(2, path);
-	ft_putstr_fd(2, " no such file or directory\n");
-}
 
 void	remove_additional_slashes(char *path)
 {

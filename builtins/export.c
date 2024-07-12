@@ -1,286 +1,114 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/13 00:11:17 by mboukour          #+#    #+#             */
+/*   Updated: 2024/07/13 00:16:36 by mboukour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 
-bool no_equal(char *str)
+#include "builtins.h"
+
+
+void handle_find_case(t_env **env, char *exp_arg, t_env *find, int exp_type)
 {
-	int i;
+    char *final;
 
-	i = 0;
-	while(str[i])
-	{
-		if(str[i] == '=')
-			return(false);
-		i++;
-	}
-	return(true);
-}
-bool underscore_before_equal(char *str)
-{
-	int i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-	{
-		if(str[i] != '_')
-			break;
-		i++;
-	}
-	if(str[i] && str[i] == '=')
-		return (true);
-	return(false);
-}
-
-bool initial_check(char *str)
-{
-	int i;
-	int count;
-
-	i = 0;
-	count = 0;
-	while(str[i] && str[i] != '+' && str[i] != '=')
-	{
-		if(!ft_isalpha(str[i]) && !is_c_num(str[i]))
-			return (false);
-		i++;
-	}
-	if(str[i] == '+')
-	{
-		if(!str[i + 1])
-			return (false);
-		if(str[i + 1] != '=')
-			return (false);
-		i++;
-	}
-	while(str[i])
-	{
-		if(str[i] == '=')
-			count++;
-		i++;
-	}
-	if(count > 1)
-		return (false);
-	return (true);
-}
-
-int is_append(char *str)
-{
-	int i;
-
-	i = 0;
-	while(str[i] && str[i] != '=')
-		i++;
-	if(!str[i])
-		return (false);
-	if(str[i - 1] == '+')
-		return (true);
-	return (false);
-}
-
-
-int get_export_type(char *str)
-{
-    int i;
-
-	i = 0;
-	if((str[0] == '?' && str[1] == '='))
-		return(1);
-	if(str[0] == '=')
-		return(0);
-	if(underscore_before_equal(str))
-		return(1);
-	if(is_c_num(str[0]) || !initial_check(str))
-		return (0);
-	if(no_equal(str))
-		return(3);
-	if(is_append(str))
-		return(4);
-	while(str[i] && str[i] != '=')
-	{
-		if(ft_isalpha(str[i]))
-			break;
-		i++;
-	}
-	if(str[i] && str[i] == '=')
-		return (0);
-	if(!str[i] || (str[i] == '=' && !str[i + 1]))
-		return (2);
-	return (1);
-}
-
-
-void export_error(char *str)
-{
-	ft_putstr_fd(2, "export: `");
-	ft_putstr_fd(2, str);
-	ft_putstr_fd(2, "' : not a valid identifier\n");
-}
-
-t_env *get_env(t_env *env, char *str)
-{
-	int i;
-
-	i = 0;
-	while(str[i] && str[i] != '=')
-		i++;
-	while(env)
-	{
-		if(!ft_strncmp(str, env->value, i) && (env->value[i] == '=' || (!env->envyable && !env->value[i])))
-				return (env);
-		env = env->next;
-	}
-	return (NULL);
-}
-
-char *get_look_for(char *str)
-{
-    int i;
-	int j;
-    char *new_str;
-
-    i = 0;
-    j = 0;
-    if (!is_append(str))
-        return (str);
-    new_str = ft_strdup(str, GC);
-    while (str[i])
+    if (find)
     {
-        if (str[i] != '+')
-        {
-            new_str[j] = str[i];
-            j++;
-        }
-        i++;
+        if (exp_type == 3)
+            return ;
+        if (exp_type == 4)
+            final = get_append_result(exp_arg, find->value);
+        else
+            final = ft_strdup(exp_arg, MANUAL);
+        update_existing_env(find, final, exp_arg);
     }
-    new_str[j] = '\0';
-    return (new_str);
+    else
+        add_new_env(env, exp_arg, exp_type);
 }
-char *get_append_result(char *exp_arg, char *tmp)
-{
-	char *first_part;
-	int i;
 
-	i = 0;
-	while(*tmp && *tmp != '=')
-		tmp++;
-	tmp++;
-	while(exp_arg[i] && exp_arg[i] != '=')
-		i++;
-	i++;
-	first_part = ft_substr(exp_arg, 0, i, GC);
-	first_part = ft_strjoin(first_part, tmp, GC);
-	exp_arg += i;
-	return (ft_strjoin(first_part, exp_arg, MANUAL));
-}
 
 int export_core(t_env **env, char *exp_arg)
 {
-	t_env *find;
-	char *final;
-	int exp_type;
-	int i;
+    t_env *find;
+    char *final;
+    int exp_type;
+
+    exp_type = get_export_type(exp_arg, 0);
+    if (!exp_type)
+        return (export_error(exp_arg), 1);
+    else if (exp_type == 2)
+        return (0);
+
+    exp_arg = get_look_for(exp_arg);
+    find = get_env(*env, exp_arg);
+    return (handle_find_case(env, exp_arg, find, exp_type), 0);
+}
+
+void print_env_variable(char *value)
+{
+    int i;
 
 	i = 0;
-	exp_type = get_export_type(exp_arg);
-	if(!exp_type)
-		return (export_error(exp_arg), 1);
-	else if(exp_type == 2)
-		return (0);
-	exp_arg = get_look_for(exp_arg);
-	find = get_env(*env, exp_arg);
-	if(find)
-	{
-		if(exp_type == 3)
-			return (0);
-		if(exp_type == 4)
-			final = get_append_result(exp_arg, find->value);
-		else
-			final = ft_strdup(exp_arg, MANUAL);
-		store_malloced(final);
-		free(find->value);
-		remove_ptr(find->value);
-		find->value = final;
-		set_joinables(exp_arg, &find->before_joinable, &find->after_joinable);
-		find->envyable = true;
-	}
-	else
-	{
-		find = ft_lstnew_env(exp_arg, MANUAL);
-		store_malloced(find);
-		store_malloced(find->value);
-		ft_lstadd_back_env(env, find);
-		if(exp_type == 3)
-			find->envyable = false;
-		else
-			find->envyable = true;
-	}
-	return (0);
+    printf("declare -x ");
+    while (value[i] && value[i] != '=')
+    {
+        printf("%c", value[i]);
+        i++;
+    }
+    if (value[i] && value[i] == '=')
+    {
+        printf("=\"");
+        i++;
+        while (value[i])
+        {
+            printf("%c", value[i]);
+            i++;
+        }
+        printf("\"\n");
+    }
+    else
+        printf("\n");
 }
 
 void export_no_arg(t_env *env)
 {
-	int i;
+    env = copy_env(env);
+    sort_env_list(env);
 
-	env = copy_env(env);
-	sort_env_list(env);
-	while (env)
-	{
-		if(ft_strncmp(env->value, "?=", 2) && ft_strncmp(env->value, "_=", 2))
-		{
-			printf("declare -x ");
-			i = 0;
-			while (env->value[i] && env->value[i] != '=')
-			{
-				printf("%c", env->value[i]);
-				i++;
-			}
-			if(env->value[i] && env->value[i] == '=')
-			{
-				printf("=\"");
-				i++;
-				while(env->value[i])
-				{
-					printf("%c", env->value[i]);
-					i++;
-				}
-				printf("\"\n");
-			}
-			else
-				printf("\n");
-		}
-		env = env->next;
-	}
+    while (env)
+    {
+        if (ft_strncmp(env->value, "?=", 2) && ft_strncmp(env->value, "_=", 2))
+            print_env_variable(env->value);
+        env = env->next;
+    }
 }
+
 
 int export(t_env **env, t_treenode *export_root)
 {
 	t_arg *args;
 	int ret;
-	bool error;
 
 	ret = 0;
-	error = false;
 	args = export_root->args;
 	if(!args)
-	{
-		export_no_arg(*env);
-		return (0);
-	}
+		return (export_no_arg(*env), 0);
 	while(args)
 	{
 		if(args->content[0] == '?' && args->content[1] == '=')
 		{
 			export_error(args->content);
-			error = true;
+			ret = 1;
 		}
 		else
-		{
 			ret = export_core(env, args->content);
-			if(ret)
-				error = true;
-		}
 		args = args->next;
 	}
-	if(error)
-		return (1);
-	return (0);
+	return (ret);
 }
