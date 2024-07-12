@@ -162,6 +162,7 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
 		args->content = ft_strdup(root->content, GC);
 		args->next = root->args;
 		data->cmd = args_to_arr(args);
+		signal(SIGQUIT, SIG_DFL);
 		execve(root->content, data->cmd, data->env);
 		get_path(root, *env, data);
 		if (!access(data->path, F_OK) && access(data->path, X_OK) == -1)
@@ -173,6 +174,7 @@ void execute_command(t_treenode *root, t_env **env, t_data *data)
         }
 		if (execve(data->path, data->cmd, data->env) == -1)
 		{
+
 			write(2, root->content, ft_strlen(root->content));
 			write(2, ": command not found\n", 20);
 			smart_free();

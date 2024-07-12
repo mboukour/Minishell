@@ -6,9 +6,10 @@ int main(char ac, char **av, char **envp)
 {
    int i = 0;
 
+	signal(SIGINT, SIG_IGN);
 	while(1)
 	{
-		printf("y\n");
+		// printf("y\n");
 	}
 //    while(av[i])
 //    {
