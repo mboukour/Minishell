@@ -1,27 +1,39 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/12 17:53:40 by mboukour          #+#    #+#             */
+/*   Updated: 2024/07/12 17:54:52 by mboukour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-char *get_pwd(void)
+char	*get_pwd(void)
 {
-	char *pwd;
+	char	*pwd;
+
 	pwd = getcwd(NULL, 0);
-	if(!pwd) // IMPLEMENT BETTER ERROR MANAGEMENT
+	if (!pwd)
 		return (NULL);
 	return (pwd);
 }
 
-int pwd(t_data *data)
+int	pwd(t_data *data)
 {
-	char *pwd;
+	char	*pwd;
 
 	if (data->pwd)
 		printf("%s\n", data->pwd);
 	else
 	{
 		pwd = get_pwd();
-		if(!pwd)
+		if (!pwd)
 		{
-			ft_putstr_fd(2, "pwd: error retrieving current directory: getcwd: ");
-			perror("");
+			perror("pwd: error retrieving current directory: getcwd: ");
 			return (1);
 		}
 		printf("%s\n", pwd);

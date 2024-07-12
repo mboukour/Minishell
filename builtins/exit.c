@@ -1,7 +1,18 @@
-#include "../minishell.h"
-// FIX EXIT
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/12 17:53:09 by mboukour          #+#    #+#             */
+/*   Updated: 2024/07/12 17:53:30 by mboukour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int exit_core(int status)
+#include "../minishell.h"
+
+int	exit_core(int status)
 {
 	rl_clear_history();
 	smart_close();
@@ -11,45 +22,45 @@ int exit_core(int status)
 	return (0);
 }
 
-bool is_num(char *str)
+bool	is_num(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	if(str[0] == '-' || str[0] == '+')
+	if (str[0] == '-' || str[0] == '+')
 		i++;
-	while(str[i])
+	while (str[i])
 	{
-		if(str[i] > '9' || str[i] < '0')
+		if (str[i] > '9' || str[i] < '0')
 			return (false);
 		i++;
 	}
 	return (true);
 }
 
-int exit_cmd(t_treenode *root)
+int	exit_cmd(t_treenode *root)
 {
-	t_arg *args;
-	bool status;
-	int exit_status;
+	t_arg	*args;
+	bool	status;
+	int		exit_status;
 
 	args = root->args;
 	status = false;
 	ft_putstr_fd(1, "exit\n");
-	if(!args)
+	if (!args)
 		exit_core(0);
 	exit_status = ft_atoi(args->content, &status);
-	if(!is_num(args->content) || status)
+	if (!is_num(args->content) || status)
 	{
-		ft_putstr_fd(2,"exit: ");
-		ft_putstr_fd(2,args->content);
+		ft_putstr_fd(2, "exit: ");
+		ft_putstr_fd(2, args->content);
 		ft_putstr_fd(2, ": numeric argument required\n");
 		exit_core(NUMERIC_ARG_STATUS);
 		return (1);
 	}
-	else if(args->next)
+	else if (args->next)
 	{
-		ft_putstr_fd(2,"exit: too many arguments\n");
+		ft_putstr_fd(2, "exit: too many arguments\n");
 		return (1);
 	}
 	exit_core(exit_status);

@@ -268,6 +268,7 @@ t_treenode *ruined_tree(t_middle *middled);
 t_treenode *parse_cmdline(t_middle **middled);
 t_treenode *parse_pipeline(t_middle **middled);
 t_redir *ft_lstnew_redir(t_middle *middled);
+bool	is_redir_mid(t_middle *middled);
 void ft_lstaddback_redir(t_redir **head, t_redir *new);
 void ft_lstiter_redir(t_redir *first);
 t_redir *ft_lstlast_redir(t_redir *first);
