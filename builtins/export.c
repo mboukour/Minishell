@@ -39,9 +39,9 @@ bool initial_check(char *str)
 	count = 0;
 	while(str[i] && str[i] != '+' && str[i] != '=')
 	{
-	if(!ft_isalpha(str[i]) && !is_c_num(str[i]))
-		return (false);
-	i++;
+		if(!ft_isalpha(str[i]) && !is_c_num(str[i]))
+			return (false);
+		i++;
 	}
 	if(str[i] == '+')
 	{
@@ -89,10 +89,7 @@ int get_export_type(char *str)
 	if(underscore_before_equal(str))
 		return(1);
 	if(is_c_num(str[0]) || !initial_check(str))
-	{
-		fprintf(stderr, "ME\n");
 		return (0);
-	}
 	if(no_equal(str))
 		return(3);
 	if(is_append(str))
@@ -157,26 +154,36 @@ char *get_look_for(char *str)
     new_str[j] = '\0';
     return (new_str);
 }
+char *get_append_result(char *exp_arg, char *tmp)
+{
+	char *first_part;
+	int i;
+
+	i = 0;
+	while(*tmp && *tmp != '=')
+		tmp++;
+	tmp++;
+	while(exp_arg[i] && exp_arg[i] != '=')
+		i++;
+	i++;
+	first_part = ft_substr(exp_arg, 0, i, GC);
+	first_part = ft_strjoin(first_part, tmp, GC);
+	exp_arg += i;
+	return (ft_strjoin(first_part, exp_arg, MANUAL));
+}
 
 int export_core(t_env **env, char *exp_arg)
 {
 	t_env *find;
 	char *final;
-	char *tmp;
-	char *first_part;
-	bool before_joinable;
-	bool after_joinable;
 	int exp_type;
 	int i;
 
 	i = 0;
 	exp_type = get_export_type(exp_arg);
 	if(!exp_type)
-	{
-		export_error(exp_arg);
-		return (1);
-	}
-	if(exp_type == 2)
+		return (export_error(exp_arg), 1);
+	else if(exp_type == 2)
 		return (0);
 	exp_arg = get_look_for(exp_arg);
 	find = get_env(*env, exp_arg);
@@ -184,29 +191,15 @@ int export_core(t_env **env, char *exp_arg)
 	{
 		if(exp_type == 3)
 			return (0);
-		set_joinables(exp_arg, &before_joinable, &after_joinable);
 		if(exp_type == 4)
-		{
-			tmp = find->value;
-			while(*tmp && *tmp != '=')
-				tmp++;
-			tmp++;
-			while(exp_arg[i] && exp_arg[i] != '=')
-				i++;
-			i++;
-			first_part = ft_substr(exp_arg, 0, i, GC);
-			first_part = ft_strjoin(first_part, tmp, GC);
-			exp_arg += i;
-			final = ft_strjoin(first_part, exp_arg, MANUAL);
-		}
+			final = get_append_result(exp_arg, find->value);
 		else
 			final = ft_strdup(exp_arg, MANUAL);
 		store_malloced(final);
 		free(find->value);
 		remove_ptr(find->value);
 		find->value = final;
-		find->before_joinable = before_joinable;
-		find->after_joinable = after_joinable;
+		set_joinables(exp_arg, &find->before_joinable, &find->after_joinable);
 		find->envyable = true;
 	}
 	else

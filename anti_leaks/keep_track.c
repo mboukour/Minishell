@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:03:06 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 17:20:52 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/12 20:30:05 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,13 @@ void	free_program(void)
 	globalizer_manual(SET, NULL);
 }
 
-void	remove_ptr(void *ptr_to_rm)
+int	remove_ptr(void *ptr_to_rm)
 {
 	t_node	*head;
 
 	head = globalizer_manual(GET, NULL);
 	if (!head)
-		return ;
+		return (0);
 	while (head)
 	{
 		if (head->ptr_to_free == ptr_to_rm)
@@ -77,8 +77,10 @@ void	remove_ptr(void *ptr_to_rm)
 			if (head->next)
 				head->next->prev = head->prev;
 			free(head);
-			break ;
+			return (1);
 		}
 		head = head->next;
 	}
+	// fprintf(stderr, "REMOVING NON EXISTING STUFF\n");
+	return (0);
 }

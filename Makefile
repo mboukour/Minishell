@@ -6,7 +6,7 @@ AST = ast/ast_utils.c ast/ast_utils_2.c ast/ruined_tree.c
 PRE_TREE = pre_tree/expander.c pre_tree/linked_list_cmd_arg.c pre_tree/linked_list_middle.c pre_tree/make_middle.c pre_tree/valid_here_doc.c
 GC = anti_leaks/cgc.c anti_leaks/linked_list_utils.c anti_leaks/keep_track.c anti_leaks/fdc.c anti_leaks/linked_list_utils_2.c
 ENV = env_management/env_expander.c env_management/linked_list_env.c env_management/sort_env_list.c env_management/star_matching.c env_management/star_utils.c env_management/heredoc_tokenizer.c
-BUILTINS = builtins/cd.c builtins/echo.c builtins/env.c builtins/exit.c builtins/export.c builtins/pwd.c builtins/unset.c
+BUILTINS = builtins/cd.c builtins/echo.c builtins/env.c builtins/exit.c builtins/export.c builtins/pwd.c builtins/unset.c builtins/builtins_utils/cd_utils.c builtins/builtins_utils/cd_utils2.c
 EXCUTION = execution/execution.c execution/get_path.c execution/traverse_tree.c
 SRC = minishell.c $(LEXER) $(UTILS) $(AST) $(PRE_TREE) $(GC) $(ENV) $(BUILTINS) $(EXCUTION) $(MISCELLANEOUS)
 OBJ = $(SRC:.c=.o)
@@ -15,18 +15,18 @@ FLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
 
-LINKREADLINELIB = $(shell brew --prefix readline)/lib
-LINKREADLINEINCLUDE = $(shell brew --prefix readline)/include
-$(NAME): 
-	$(CC) -I$(LINKREADLINEINCLUDE) -L$(LINKREADLINELIB) -lreadline $(SRC) -o $(NAME)
+# LINKREADLINELIB = $(shell brew --prefix readline)/lib
+# LINKREADLINEINCLUDE = $(shell brew --prefix readline)/include
+# $(NAME): 
+# 	$(CC) -I$(LINKREADLINEINCLUDE) -L$(LINKREADLINELIB) -lreadline $(SRC) -o $(NAME)
 
-# %.o: %.c $(INCLUDE)
-# 	@echo "Compiling $<"
-# 	@$(CC) $(FLAGS) -c $< -o $@
+%.o: %.c $(INCLUDE)
+	@echo "Compiling $<"
+	@$(CC) $(FLAGS) -c $< -o $@
 
-# $(NAME): $(OBJ)
-# 	@echo "Linking $@"
-# 	@$(CC) $^ -o $@ -lreadline
+$(NAME): $(OBJ)
+	@echo "Linking $@"
+	@$(CC) $^ -o $@ -lreadline
 
 clean:
 	@echo "Cleaning objects"

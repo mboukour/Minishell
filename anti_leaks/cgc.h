@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:02:55 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 17:13:57 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/12 20:28:29 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int		store_mallocs(void *ptr_to_add);
 void	store_malloced(void *ptr_to_add);
 void	free_program(void);
 void	null_protector(void *to_check);
-void	remove_ptr(void *ptr_to_rm);
+int		remove_ptr(void *ptr_to_rm);
 void	error_procedure(void);
 void	smart_close(void);
 int		store_fds(int fd);

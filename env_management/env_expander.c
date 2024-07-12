@@ -222,7 +222,7 @@ t_arg *final_args(t_cmd_arg *cmd_arg)
 
 
 
-void insert_before_node(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_node)
+void insert_before_cmd_arg(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_node)
 {
     if (!node) 
         return;
@@ -237,7 +237,7 @@ void insert_before_node(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_node)
 }
 
 
-void insert_after_node(t_cmd_arg *node, t_cmd_arg *new_node)
+void insert_after_cmd_arg(t_cmd_arg *node, t_cmd_arg *new_node)
 {
     if (!node) 
         return;
@@ -415,14 +415,14 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							prev->next = NULL;
 							prev = ft_lstfirst_arg(prev);
 							set_cmd = ft_lstnew_cmd_arg(prev);
-							insert_before_node(cmd_arg, looping_cmd, set_cmd);
+							insert_before_cmd_arg(cmd_arg, looping_cmd, set_cmd);
 						}
 						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
 						if(next)
 						{
 							next->prev = NULL;
 							set_cmd = ft_lstnew_cmd_arg(next);
-							insert_after_node(last_expanded, set_cmd);
+							insert_after_cmd_arg(last_expanded, set_cmd);
 							next_lp_cmd = set_cmd;
 						}
 					break;
@@ -444,7 +444,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							{
 								next->prev = NULL;
 								set_cmd = ft_lstnew_cmd_arg(next);
-								insert_after_node(last_expanded, set_cmd);
+								insert_after_cmd_arg(last_expanded, set_cmd);
 								next_lp_cmd = set_cmd;
 							}
 							else
@@ -471,7 +471,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							prev->next = NULL;
 							prev = ft_lstfirst_arg(prev);
 							set_cmd = ft_lstnew_cmd_arg(prev);
-							insert_before_node(cmd_arg, looping_cmd, set_cmd);
+							insert_before_cmd_arg(cmd_arg, looping_cmd, set_cmd);
 						}
 						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
 						if(next)
@@ -480,7 +480,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							{
 								next->prev = NULL;
 								set_cmd = ft_lstnew_cmd_arg(next);
-								insert_after_node(last_expanded, set_cmd);
+								insert_after_cmd_arg(last_expanded, set_cmd);
 								next_lp_cmd = set_cmd;
 							}
 							else
@@ -513,7 +513,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 						{
 							next->prev = NULL;
 							set_cmd = ft_lstnew_cmd_arg(next);
-							insert_after_node(last_expanded, set_cmd);
+							insert_after_cmd_arg(last_expanded, set_cmd);
 							next_lp_cmd = set_cmd;
 						}
 						replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_env);
@@ -576,14 +576,14 @@ void star_expander(t_cmd_arg **cmd_arg)
 						prev->next = NULL;
 						prev = ft_lstfirst_arg(prev);
 						set_cmd = ft_lstnew_cmd_arg(prev);
-						insert_before_node(cmd_arg, looping_cmd, set_cmd);
+						insert_before_cmd_arg(cmd_arg, looping_cmd, set_cmd);
 					}
 					replace_cmd_arg_node(cmd_arg, looping_cmd, expanded_star);
 					if(next)
 					{
 						next->prev = NULL;
 						set_cmd = ft_lstnew_cmd_arg(next);
-						insert_after_node(expanded_star, set_cmd);
+						insert_after_cmd_arg(expanded_star, set_cmd);
 						next_lp_cmd = set_cmd;
 						break;
 					}
