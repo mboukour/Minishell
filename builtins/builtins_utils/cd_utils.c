@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:47:27 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 00:14:22 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 01:11:49 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	safe_free(char **ptr)
 		*ptr = NULL;
 	}
 }
-
 
 void	remove_additional_slashes(char *path)
 {

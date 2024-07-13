@@ -6,14 +6,13 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 00:14:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 00:14:24 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 01:21:32 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../builtins.h"
 
-
-void export_error(char *str)
+void	export_error(char *str)
 {
 	ft_putstr_fd(2, "export: `");
 	ft_putstr_fd(2, str);
