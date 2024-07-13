@@ -10,17 +10,18 @@ int main(int ac, char **av, char **envp)
 	{
 		printf("y\n");
 	}
-//    while(av[i])
-//    {
+//	while(av[i])
+//	{
 // 		printf("{%s} ", av[i]);
 // 		i++;
-//    }
-//    printf("\n");
-//    i = 0;
-//    while (envp[i])
-//    {
+//	}
+//	printf("\n");
+//	i = 0;
+//	while (envp[i])
+//	{
 // 		printf("%s\n", envp[i]);
 // 		i++;
-//    }
+//	}
 	// getcwd(NULL, 0);
 }
+

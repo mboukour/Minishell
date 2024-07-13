@@ -18,27 +18,23 @@
 
 # define CMD_NOT_FOUND 127
 # define DIRECORY_STATUS 126
-typedef struct s_treenode t_treenode;
-typedef struct s_env t_env;
-typedef struct s_redir t_redir;
 
-typedef struct s_data
-{
-	int		infile;
-	int		outfile;
-	int		end[2];
-	char	**cmd;
-	char	*path;
-	char	**env;
-	int		status;
-	char	*pwd;
-	char	*old_pwd;
-}				t_data;
 
 void	pipeline(t_treenode *root, t_data *data, t_env **env);
 void	get_path(t_treenode *root, t_env *env, t_data *data);
 int		traverse_tree(t_treenode *root, t_data *data, t_env **env);
 void	execute_command(t_treenode *root, t_env **env, t_data *data);
 void	handle_red(t_redir *redir, t_treenode *root, t_env **env);
-void	init_tree(t_treenode *root);
+
+int	cd(t_treenode *cd_root, t_env **env, t_data *data);
+int pwd(t_data *data);
+int env(t_env *env);
+char *get_pwd(void); // GC does not free this!
+int export(t_env **env, t_treenode *export_root);
+int unset(t_env **env, t_treenode *unset_root);
+int echo(t_treenode *echo_root);
+int exit_cmd(t_treenode *root);
+
+
+
 #endif

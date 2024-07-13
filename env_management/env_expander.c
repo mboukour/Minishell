@@ -40,6 +40,22 @@ void replace_node_with_list(t_arg **head_ref, t_arg *node_to_replace, t_arg *new
 		new_list_tail->next = NULL;
 }
 
+bool is_env(char *str)
+{
+	int i;
+
+	if(str[0] != '$' || !str[1])
+		return(false);
+	i = 1;
+	while(str[i])
+	{
+		if(is_special(str[i]))
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
 char *get_real_env(char *value)
 {
 	int i;
@@ -248,21 +264,6 @@ void insert_after_cmd_arg(t_cmd_arg *node, t_cmd_arg *new_node)
     node->next = new_node;
 }
 
-bool is_env(char *str)
-{
-	int i;
-
-	if(str[0] != '$' || !str[1])
-		return(false);
-	i = 1;
-	while(str[i])
-	{
-		if(is_special(str[i]))
-			return (false);
-		i++;
-	}
-	return (true);
-}
 
 
 bool is_nextable(t_arg *arg, t_env *env)
