@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_path.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amabrouk <amabrouk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 00:04:39 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/05/31 10:47:50 by amabrouk         ###   ########.fr       */
+/*   Updated: 2024/07/13 18:23:46 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 void	find_path(t_treenode *root, char **allpath, t_data *data)
 {
 	int		i;
-	char *real_path;
-
+	char	*real_path;
 
 	i = 0;
 	while (allpath[i])
@@ -25,7 +24,7 @@ void	find_path(t_treenode *root, char **allpath, t_data *data)
 		if (real_path)
 		{
 			data->path = real_path;
-			return;
+			return ;
 		}
 		i++;
 	}
@@ -38,10 +37,10 @@ void	get_path(t_treenode *root, t_env *env, t_data *data) // Copy
 	t_env	*path_node;
 
 	path_node = get_env(env, "PATH");
-	if(!path_node)
+	if (!path_node)
 	{
 		data->path = ft_strdup(root->content, GC);
-		return;
+		return ;
 	}
 	path = ft_split(get_real_env(path_node->value), ':', GC);
 	if (root->content[0] == '/' || root->content[0] == '.')

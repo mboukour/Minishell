@@ -1,160 +1,10 @@
-#include "../minishell.h"
+#include "env_management.h"
 
-
-void remove_arg_node(t_arg **head_ref, t_arg *node_to_remove)
-{
-    if (*head_ref == NULL || node_to_remove == NULL)
-        return;
-    if (*head_ref == node_to_remove)
-        *head_ref = node_to_remove->next;
-    if (node_to_remove->next != NULL)
-        node_to_remove->next->prev = node_to_remove->prev;
-    if (node_to_remove->prev != NULL)
-        node_to_remove->prev->next = node_to_remove->next;
-    node_to_remove->next = NULL;
-    node_to_remove->prev = NULL;
-}
-
-void replace_node_with_list(t_arg **head_ref, t_arg *node_to_replace, t_arg *new_list_head)
-{
-	t_arg *new_list_tail;
-
-	if (*head_ref == NULL || node_to_replace == NULL || new_list_head == NULL)
-		return;
-	if (*head_ref == node_to_replace)
-		*head_ref = new_list_head;
-	if (node_to_replace->prev != NULL)
-	{
-		node_to_replace->prev->next = new_list_head;
-		new_list_head->prev = node_to_replace->prev;
-	}
-	else
-		new_list_head->prev = NULL;
-	new_list_tail = ft_lstlast_arg(new_list_head);
-	if (node_to_replace->next != NULL)
-	{
-		node_to_replace->next->prev = new_list_tail;
-		new_list_tail->next = node_to_replace->next;
-	}
-	else
-		new_list_tail->next = NULL;
-}
-
-bool is_env(char *str)
-{
-	int i;
-
-	if(str[0] != '$' || !str[1])
-		return(false);
-	i = 1;
-	while(str[i])
-	{
-		if(is_special(str[i]))
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
-char *get_real_env(char *value)
-{
-	int i;
-
-	i = 0;
-	while(value[i] && value[i] != '=')
-		i++;
-	i++;
-	return(&value[i]);
-}
-
-t_arg *env_to_arg(t_env *env_node)
-{
-	t_arg *head;
-	t_arg *current;
-	char **sp_res;
-	int i;
-
-	head = NULL;
-	i = 0;
-	sp_res = ft_split_ws(get_real_env(env_node->value), GC);
-	while (sp_res[i])
-	{
-		current = ft_lstnew_arg(NULL);
-		current->content = ft_strdup(sp_res[i], GC);
-		current->after_joinable = env_node->after_joinable;
-		current->before_joinable = env_node->before_joinable;
-		current->to_replace = env_node->star_to_replace;
-		ft_lstaddback_arg(&head, current);
-		i++;
-	}
-	return (head);
-}
-
-
-
-
-int after_env_star(char *str)
-{
-	int i;
-	char *make_sure;
-
-	
-	i = 1;
-	while(str[i] && str[i] != '.' && str[i] != '*' && str[i] != '/')
-		i++;
-	if(!str[i])
-		return (NONE);
-	make_sure = ft_substr(str, 0, i, GC);
-	if(!is_env(make_sure))
-		return(NONE);
-	return(i);
-}
-
-
-
-void replace_cmd_arg_node(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_head) 
-{
-	t_cmd_arg *new_tail;
-    if (node == NULL || new_head == NULL || head == NULL || *head == NULL)
-	{
-			return;
-	}
-    if (node->prev != NULL) {
-        node->prev->next = new_head;
-        new_head->prev = node->prev;
-    } else {
-        *head = new_head;
-        new_head->prev = NULL;
-    }
-	new_tail = ft_lstlast_cmd_arg(new_head);
-    if (node->next != NULL) 
-	{
-        node->next->prev = new_tail;
-        new_tail->next = node->next;
-	}
-    else 
-        new_tail->next = NULL;
-}
-
-
-void remove_cmd_arg_node(t_cmd_arg **head, t_cmd_arg *node) 
-{
-    if (node == NULL || head == NULL || *head == NULL)
-        return;
-    if (node->prev != NULL)
-        node->prev->next = node->next;
-    else
-        *head = node->next;
-    if (node->next != NULL)
-        node->next->prev = node->prev;
-}
 
 
 t_cmd_arg *env_to_cmd_arg(t_env *env_node)
 {
 	t_cmd_arg *head;
-	t_cmd_arg *current;
-	t_arg *one;
 	char **sp_res;
 	char *real_env;
 	int i;
@@ -167,38 +17,19 @@ t_cmd_arg *env_to_cmd_arg(t_env *env_node)
 	{
 		while (sp_res[i])
 		{
-			one = ft_lstnew_arg(NULL);
-			one->content = ft_strdup(sp_res[i], GC);
-			one->to_replace = env_node->star_to_replace;
-			current = ft_lstnew_cmd_arg(one);
-			ft_lstaddback_cmd_arg(&head, current);
+			handle_splitted_env(&head, sp_res[i], env_node);
 			i++;
 		}
 	}
 	else
 	{
-		one = ft_lstnew_arg(NULL);
-		one->content = ft_strdup(env_node->value, GC);
-		head = ft_lstnew_cmd_arg(one);
+		head = ft_lstnew_cmd_arg(ft_lstnew_arg(NULL));
+		head->arg->content = ft_strdup(env_node->value, GC);
 	}
 	return (head);
 }
 
 
-
-bool am_i_a_star(char *str)
-{
-	int i;
-
-	i = 0;
-	while(str[i])
-	{
-		if(str[i] == '*')
-			return (true);
-		i++;
-	}
-	return (false);
-}
 
 t_arg *final_args(t_cmd_arg *cmd_arg)
 {
@@ -235,62 +66,6 @@ t_arg *final_args(t_cmd_arg *cmd_arg)
 }
 
 
-
-
-
-void insert_before_cmd_arg(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_node)
-{
-    if (!node) 
-        return;
-
-    new_node->next = node;
-    new_node->prev = node->prev;
-    if (node->prev)
-        node->prev->next = new_node;
-    else 
-        *head = new_node;
-    node->prev = new_node;
-}
-
-
-void insert_after_cmd_arg(t_cmd_arg *node, t_cmd_arg *new_node)
-{
-    if (!node) 
-        return;
-    new_node->prev = node;
-    new_node->next = node->next;
-    if (node->next)
-        node->next->prev = new_node;
-    node->next = new_node;
-}
-
-
-
-bool is_nextable(t_arg *arg, t_env *env)
-{
-	t_env *env_node;
-
-	env_node = get_env(env, arg->content  + 1);
-	if(!env_node)
-		return (true);
-	else if(env_node->before_joinable)
-		return (true);
-	return (false);
-}
-
-
-char *lex_to_str(t_lex *lex)
-{
-	char *result;
-
-	result = NULL;
-	while(lex)
-	{
-		result = ft_strjoin(result, lex->content, GC);
-		lex = lex->next;
-	}
-	return (result);
-}
 
 void expand_only_env(t_arg **arg_head, t_env *env)
 {
@@ -530,23 +305,7 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 	}
 }
 
-bool is_arg_star(t_arg *arg)
-{
-	int i;
-	char *str;
 
-	i = 0;
-	if (arg->to_replace != REPLACE_ALL)
-		return (false);
-	str = arg->content;
-	while (str[i])
-	{
-		if(str[i] == '*')
-			return (true);
-		i++;
-	}
-	return (false);
-}
 
 void star_expander(t_cmd_arg **cmd_arg)
 {
@@ -600,75 +359,16 @@ void star_expander(t_cmd_arg **cmd_arg)
 
 t_arg *expand_args(t_cmd_arg *cmd_arg, t_env *env)
 {
-    t_arg *args;
+	t_arg *args;
 
 	prep_cmd_arg(&cmd_arg, env);
 	args = final_args(cmd_arg);
-    return (args);
+	return (args);
 }
 
 
 
-void expand_arg_as_star(t_arg **head)
-{
-	t_arg *arg;
-	t_arg *tmp_arg;
-	t_arg *next;
 
-	arg = *head;
-	while(arg && (arg->to_replace == REPLACE_ALL))
-	{
-		next = arg->next;
-		tmp_arg = arg_star_matching(arg->content);
-		if(tmp_arg)
-		{
-			replace_node_with_list(head, arg, tmp_arg);
-			next = tmp_arg->next;
-		}
-		arg = next;
-	}
-}
-
-int get_to_replace(t_arg *arg)
-{
-	int to_replace;
-
-	to_replace = REPLACE_ALL;
-	while(arg)
-	{
-		if(is_arg_star(arg) && arg->to_replace < to_replace)
-			to_replace = arg->to_replace;
-		arg = arg->next;
-	}
-	return (to_replace);
-}
-
-char *args_to_str(t_arg *args)
-{
-	char *result;
-
-	result = NULL;
-	while (args)
-	{
-		result = ft_strjoin(result, args->content, GC);
-		args = args->next;
-	}
-	return (result);
-}
-
-int get_least_replace(t_arg *args)
-{
-	int to_replace;
-
-	to_replace = REPLACE_ALL;
-	while (args)
-	{
-		if(args->to_replace < to_replace)
-			to_replace = args->to_replace;
-		args = args->next;
-	}
-	return (to_replace);
-}
 
 void expand_redirs(t_redir *redir, t_env **env, t_treenode *root)
 {

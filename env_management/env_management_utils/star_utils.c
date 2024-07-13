@@ -6,11 +6,11 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 18:03:00 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 18:03:21 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 18:17:14 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../env_management.h"
 
 bool	is_a_directory(char *path)
 {

@@ -32,6 +32,7 @@ t_env *get_star(int mode) // HANDLE STAR MATCHING
 	return (head);
 }
 
+
 char *normalize_pattern(char *pattern)
 {
     char *normalized;
@@ -96,7 +97,6 @@ bool match_pattern(char *str, char *pattern)
         else
             return false;
     }
-
     while (pattern[pattern_index] == '*')
         pattern_index++;
     return !pattern[pattern_index];
@@ -130,25 +130,18 @@ t_env *star_matching(char *to_match)
 	else
 		current_star = get_star(SEEN);
     if (!current_star)
-    {
-        // ft_putstr_fd(2, "opendir: can't opendir()");
-        return (NULL);
-    }
+		return (NULL);
     normal = normalize_pattern(to_match);
     while (current_star)
     {
-        if (current_star->value)
+        if (current_star->value && match_pattern(current_star->value, normal))
         {
-            if (match_pattern(current_star->value, normal))
-            {
-                current = ft_lstnew_env(current_star->value, GC);
-                ft_lstadd_back_env(&head, current);
-            }
+			current = ft_lstnew_env(current_star->value, GC);
+			ft_lstadd_back_env(&head, current);
         }
         current_star = current_star->next;
-    }
-    sort_env_list(head);
-    return (head);
+	}
+	return (sort_env_list(head), head);
 }
 
 t_arg *arg_star_matching(char *to_match)

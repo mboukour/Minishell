@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 16:15:17 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 16:16:00 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 18:44:17 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,9 +335,9 @@ void		set_joinables(char *str,
 t_env		*ft_lstlast_env(t_env *lst);
 t_env		*copy_env(t_env *env);
 
-char		*no_stars(char *path);
-bool		is_a_directory(char *path);
-bool		is_path(char *str);
-void		expand_arg_as_star(t_arg **head);
+// char		*no_stars(char *path);
+// bool		is_a_directory(char *path);
+// bool		is_path(char *str);
+// void		expand_arg_as_star(t_arg **head);
 
 #endif

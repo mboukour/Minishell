@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 01:47:49 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 01:58:05 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 18:53:45 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ bool	is_valid_next_token(t_lex *token)
 t_lex	*check_logical_operators(t_lex *tokens)
 {
 	if (!is_valid_prev_token(tokens->prev))
+		return (tokens);
+	else if (!is_valid_next_token(tokens->next))
 		return (tokens);
 	return (NULL);
 }

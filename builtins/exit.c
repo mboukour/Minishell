@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 17:53:30 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 19:08:02 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,16 @@ bool	is_num(char *str)
 	return (true);
 }
 
+int	count_sp(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && is_ws(str[i]))
+		i++;
+	return (i);
+}
+
 int	exit_cmd(t_treenode *root)
 {
 	t_arg	*args;
@@ -49,8 +59,8 @@ int	exit_cmd(t_treenode *root)
 	ft_putstr_fd(1, "exit\n");
 	if (!args)
 		exit_core(0);
-	exit_status = ft_atoi(args->content, &status);
-	if (!is_num(args->content) || status)
+	exit_status = ft_atoi(args->content + count_sp(args->content), &status);
+	if (!is_num(args->content + count_sp(args->content)) || status)
 	{
 		ft_putstr_fd(2, "exit: ");
 		ft_putstr_fd(2, args->content);
