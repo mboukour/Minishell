@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 00:09:24 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 01:13:04 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 21:17:11 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,6 @@ bool	initial_check(char *str, int i, int count)
 			return (false);
 		i++;
 	}
-	while (str[i])
-	{
-		if (str[i] == '=')
-			count++;
-		i++;
-	}
-	if (count > 1)
-		return (false);
 	return (true);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:34:53 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 18:35:20 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 21:17:39 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void insert_before_cmd_arg(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_nod
 
 void insert_after_cmd_arg(t_cmd_arg *node, t_cmd_arg *new_node)
 {
-	if (!node) 
+	if (!node)
 		return;
 	new_node->prev = node;
 	new_node->next = node->next;

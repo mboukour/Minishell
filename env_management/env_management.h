@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 17:37:19 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 18:45:03 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 21:17:44 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,24 @@
 # define ENV_MANAGEMENT_H
 
 # include "../minishell.h"
+
+
+typedef struct s_exp_vars
+{
+	t_env		*env_node;
+	t_cmd_arg	**cmd_arg;
+	t_arg		*prev;
+	t_arg		*next;
+	t_cmd_arg	*expanded_env;
+	t_cmd_arg	*last_expanded;
+	t_cmd_arg	*looping_cmd;
+	t_cmd_arg	*next_lp_cmd;
+} t_exp_vars;
+
+
+
+void	handle_both_not_joinable(t_exp_vars *vars);
+
 
 bool is_env(char *str);
 char *get_real_env(char *value);
@@ -37,4 +55,6 @@ void insert_after_cmd_arg(t_cmd_arg *node, t_cmd_arg *new_node);
 bool	is_a_directory(char *path);
 bool	is_path(char *str);
 char	*no_stars(char *path);
+
+
 #endif
