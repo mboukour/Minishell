@@ -1,4 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/13 04:08:10 by mboukour          #+#    #+#             */
+/*   Updated: 2024/07/13 04:09:07 by mboukour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
+
+char	**malloced_for_split(int size, int mode);
 
 size_t	ft_word_count(char const *s, char c)
 {
@@ -41,7 +55,7 @@ static char	*allocate_word(char const *s, size_t start, size_t end, int mode)
 {
 	char	*word;
 
-	if(mode == MANUAL)
+	if (mode == MANUAL)
 	{
 		word = (char *)malloc(sizeof(char) * (end - start + 1));
 		if (!word)
@@ -53,21 +67,17 @@ static char	*allocate_word(char const *s, size_t start, size_t end, int mode)
 	return (word);
 }
 
-static char	**split_into_words(char const *s, char c, size_t word_count, int mode)
+static char	**split_into_words(char const *s, char c,
+	size_t word_count, int mode)
 {
 	size_t	i;
 	size_t	j;
 	size_t	start;
 	char	**all_words;
 
-	if (mode == MANUAL)
-	{
-		all_words = malloc(sizeof(char *) * (word_count + 1));
-		if (!all_words)
-			return (NULL);
-	}
-	else
-		all_words = (char **)smart_malloc(sizeof(char *) * (word_count + 1));
+	all_words = malloced_for_split(word_count + 1, mode);
+	if (mode == MANUAL && !all_words)
+		return (NULL);
 	i = 0;
 	j = 0;
 	while (j < word_count)
@@ -95,4 +105,3 @@ char	**ft_split(char const *s, char c, int mode)
 	word_count = ft_word_count(s, c);
 	return (split_into_words(s, c, word_count, mode));
 }
-

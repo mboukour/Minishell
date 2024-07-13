@@ -1,4 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/13 04:04:59 by mboukour          #+#    #+#             */
+/*   Updated: 2024/07/13 04:05:07 by mboukour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
+
+static void	set_error(bool *error_status)
+{
+	if (error_status)
+		*error_status = true;
+}
 
 static int	str_to_int(const char *str, int i, int sign, bool *error_status)
 {
@@ -12,8 +30,7 @@ static int	str_to_int(const char *str, int i, int sign, bool *error_status)
 		count++;
 		if (count == 20)
 		{
-			if(error_status)
-				*error_status = true;
+			set_error(error_status);
 			if (sign == -1)
 				return (0);
 			return (-1);
@@ -23,11 +40,9 @@ static int	str_to_int(const char *str, int i, int sign, bool *error_status)
 	}
 	if (nb > LONG_MAX)
 	{
-			if(error_status)
-			*error_status = true;
 		if (sign == -1)
-			return (0);
-		return (-1);
+			return (set_error(error_status), 0);
+		return (set_error(error_status), -1);
 	}
 	return ((int)nb * sign);
 }

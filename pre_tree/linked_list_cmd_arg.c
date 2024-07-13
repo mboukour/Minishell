@@ -1,14 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   linked_list_cmd_arg.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/13 04:12:49 by mboukour          #+#    #+#             */
+/*   Updated: 2024/07/13 04:12:51 by mboukour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-
-t_cmd_arg *ft_lstnew_cmd_arg(t_arg *arg)
+t_cmd_arg	*ft_lstnew_cmd_arg(t_arg *arg)
 {
-	t_cmd_arg *new_node;
+	t_cmd_arg	*new_node;
 
 	new_node = smart_malloc(sizeof(t_cmd_arg));
 	new_node->arg = arg;
-	// if(!arg)
-	// 	fprintf(stderr, "Received NULL\n");
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
@@ -28,7 +37,7 @@ t_cmd_arg	*ft_lstlast_cmd_arg(t_cmd_arg *lst)
 	return (lst);
 }
 
-void ft_lstaddback_cmd_arg(t_cmd_arg **lst, t_cmd_arg *new)
+void	ft_lstaddback_cmd_arg(t_cmd_arg **lst, t_cmd_arg *new)
 {
 	t_cmd_arg	*last_cmd_arg;
 
@@ -44,22 +53,21 @@ void ft_lstaddback_cmd_arg(t_cmd_arg **lst, t_cmd_arg *new)
 	new->prev = last_cmd_arg;
 }
 
+// void ft_lstiter_cmd_arg(t_cmd_arg *cmd_arg)
+// {
+// 	t_arg *arg;
 
-void ft_lstiter_cmd_arg(t_cmd_arg *cmd_arg)
-{
-	t_arg *arg;
-
-	printf("---------------------\n");
-	while(cmd_arg)
-	{
-		arg = cmd_arg->arg;
-		while(arg)
-		{
-			printf("%s //", arg->content);
-			arg = arg->next;
-		}
-		cmd_arg = cmd_arg->next;
-		printf("\n");
-	}
-	printf("---------------------\n");
-}
+// 	printf("---------------------\n");
+// 	while(cmd_arg)
+// 	{
+// 		arg = cmd_arg->arg;
+// 		while(arg)
+// 		{
+// 			printf("%s //", arg->content);
+// 			arg = arg->next;
+// 		}
+// 		cmd_arg = cmd_arg->next;
+// 		printf("\n");
+// 	}
+// 	printf("---------------------\n");
+// }

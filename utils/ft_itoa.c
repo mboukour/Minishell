@@ -1,5 +1,16 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/13 04:05:35 by mboukour          #+#    #+#             */
+/*   Updated: 2024/07/13 04:05:37 by mboukour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "../minishell.h"
 
 int	numlen(int n)
 {
@@ -43,11 +54,11 @@ char	*ft_itoa(int n, int mode)
 
 	nbr = n;
 	len = numlen(nbr);
-	if(mode == GC)
-		str = (char *)smart_malloc(sizeof(char) * (len + 1));
+	if (mode == GC)
+		str = smart_malloc(sizeof(char) * (len + 1));
 	else
 	{
-		str = (char *)malloc(sizeof(char) * (len + 1));
+		str = malloc(sizeof(char) * (len + 1));
 		if (!str)
 			return (NULL);
 	}

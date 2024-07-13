@@ -2,7 +2,7 @@
 
 
 
-int main(char ac, char **av, char **envp)
+int main(int ac, char **av, char **envp)
 {
    int i = 0;
  	signal(SIGINT, SIG_IGN);

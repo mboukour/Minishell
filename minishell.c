@@ -1,6 +1,8 @@
 #include "minishell.h"
 
-
+void display_error(int error_checker, t_lex *lex, t_env **env);
+void init_t_data(t_data *data);
+bool is_all_space(char *str);
 
 void sigint_handler(int sig)
 {
@@ -9,22 +11,6 @@ void sigint_handler(int sig)
     rl_on_new_line();
     rl_replace_line("", 0);
     rl_redisplay();
-}
-
-void display_error(int error_checker, t_lex *lex, t_env **env)
-{
-    change_status(env, SYNTAX_ERROR_STATUS);
-    if(error_checker != NONE)
-    {
-        if(error_checker == QUOTE)
-            ft_putstr_fd(2, QUOTE_ERROR);
-        else
-            ft_putstr_fd(2, PARA_ERROR);
-        return;
-    }
-    ft_putstr_fd(2, PARSE_ERROR);
-    ft_putstr_fd(2, lex->content);
-    ft_putstr_fd(2, "\n");
 }
 
 
@@ -52,9 +38,9 @@ t_treenode *parsing(char *input,  t_env **env)
 			return (NULL);
 		}
 		fake_open(lexed, we_check_lex);
-        if (dup2(in1, STDIN_FILENO) == -1 || heredoc_sigint_g)
+        if (dup2(in1, STDIN_FILENO) == -1 || g_heredoc_sigint)
             export_core(env, "?=1");
-        heredoc_sigint_g = 0;
+        g_heredoc_sigint = 0;
         display_error(NONE, we_check_lex, env);
 	}
     else
@@ -68,48 +54,15 @@ t_treenode *parsing(char *input,  t_env **env)
 			return (NULL);
 		}
 		valid_here_doc(middled);
-        if (dup2(in1, STDIN_FILENO) == -1 || heredoc_sigint_g)
+        if (dup2(in1, STDIN_FILENO) == -1 || g_heredoc_sigint)
         {
             export_core(env, "?=1");
             return (NULL);
         }
-        heredoc_sigint_g = 0;
+        g_heredoc_sigint = 0;
         return (ruined_tree(middled));
     }
     return (NULL);
-}
-
-void init_t_data(t_data *data)
-{
-    data->infile = -1;
-    data->outfile = -1;
-    data->end[0] = -1;
-    data->end[1] = -1;
-    data->status = 0;
-    data->cmd = NULL;
-    data->path = NULL;
-    data->env = NULL;
-    data->pwd = getcwd(NULL, 0);
-    if(!data->pwd)
-    {
-        ft_putstr_fd(2, "error retrieving current directory: getcwd: cannot access parent directories: ");
-        perror("");
-    }
-    data->old_pwd = NULL;
-}
-
-bool is_all_space(char *str)
-{
-    int i;
-
-    i = 0;
-    while(str[i])
-    {
-        if(!is_ws(str[i]))
-            return (false);
-        i++;
-    }
-    return (true);
 }
 
 
@@ -125,10 +78,10 @@ void get_input(t_env **env, t_data *data)
         input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
 		store_mallocs(input);
         if (!input)
-        {
-        	ft_putstr_fd(1, "exit\n");
-            exit_core(0);
-        }
+		{
+			ft_putstr_fd(1, "exit\n");
+			exit_core(0);
+		}
         else if (is_all_space(input))
             continue;
         else if(ft_strcmp(input, ""))
@@ -136,7 +89,7 @@ void get_input(t_env **env, t_data *data)
             root = parsing(input, env);
             if(root)
                 traverse_tree(root, data, env);
-            heredoc_sigint_g = 0;
+            g_heredoc_sigint = 0;
         }
         add_history(input);
 		smart_close();

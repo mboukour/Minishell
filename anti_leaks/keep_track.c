@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:03:06 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 20:30:05 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 04:11:22 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,5 @@ int	remove_ptr(void *ptr_to_rm)
 		}
 		head = head->next;
 	}
-	// fprintf(stderr, "REMOVING NON EXISTING STUFF\n");
 	return (0);
 }

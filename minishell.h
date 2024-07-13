@@ -50,7 +50,7 @@ enum e_token
 	DREDIR_OUT,
 };
 
-extern int heredoc_sigint_g;
+extern int g_heredoc_sigint;
 
 enum e_state
 {
@@ -229,18 +229,16 @@ void sigint_handler_c(int sig);
 t_lex *tokenizer(char *input);
 void quotes_handler(t_lex *lexed);
 t_lex	*ft_lstnew_lex(char *content, int token, int len, int join_count);
-t_lex	*ft_lstlast_lex(t_lex *lst);
-t_lex	*ft_lstfirst_lex(t_lex *lst);
 void	ft_lstadd_back_lex(t_lex **lst, t_lex *new);
-void ft_lstiter_lex(t_lex *lex);
 t_lex *lex_input_checker(t_lex *tokens);
-const char* tokenToString(int t);
 int open_checker(t_lex *token);
 char **args_to_arr(t_arg *arg);
 bool is_special(char c);
 void fake_open(t_lex *lex, t_lex *final);
 t_lex* skip_sp(t_lex *lex, int mode);
 void remove_lex_node(t_lex **head, t_lex *node);
+bool	is_redir(t_lex *lex);
+
 
 // MIDDLE MAN
 t_middle	*ft_lstnew_middle(t_arg *command, t_cmd_arg *cmd_arg, int token);

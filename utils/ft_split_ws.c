@@ -1,4 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split_ws.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/13 04:09:36 by mboukour          #+#    #+#             */
+/*   Updated: 2024/07/13 04:10:38 by mboukour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
+
+char	**malloced_for_split(int size, int mode);
 
 size_t	ft_word_count_ws(char const *s)
 {
@@ -41,7 +55,7 @@ static char	*allocate_word_ws(char const *s, size_t start, size_t end, int mode)
 {
 	char	*word;
 
-	if(mode == MANUAL)
+	if (mode == MANUAL)
 	{
 		word = (char *)malloc(sizeof(char) * (end - start + 1));
 		if (!word)
@@ -60,14 +74,9 @@ static char	**split_into_words_ws(char const *s, size_t word_count, int mode)
 	size_t	start;
 	char	**all_words;
 
-	if (mode == MANUAL)
-	{
-		all_words = malloc(sizeof(char *) * (word_count + 1));
-		if (!all_words)
-			return (NULL);
-	}
-	else
-		all_words = (char **)smart_malloc(sizeof(char *) * (word_count + 1));
+	all_words = malloced_for_split(word_count + 1, mode);
+	if (mode == MANUAL && !all_words)
+		return (NULL);
 	i = 0;
 	j = 0;
 	while (j < word_count)
@@ -93,6 +102,5 @@ char	**ft_split_ws(char const *s, int mode)
 	if (!s || !*s)
 		return (NULL);
 	word_count = ft_word_count_ws(s);
-	return (split_into_words_ws(s,  word_count, mode));
+	return (split_into_words_ws(s, word_count, mode));
 }
-
