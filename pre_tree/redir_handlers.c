@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 04:47:41 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 04:57:40 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 16:30:51 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static void	after_command(t_lex **lex, t_middle **head, t_middle *current)
 	t_middle	*new_cmd;
 	t_arg		*arg;
 
+	arg = NULL;
 	after_head = get_redir_cmd_arg(lex);
 	if (after_head)
 	{

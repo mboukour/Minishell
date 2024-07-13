@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:50:40 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 21:24:59 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 16:32:32 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,6 @@ int	handle_directory_change(char *path, t_data *data)
 int	check_removed(char *path, t_data *data, t_env **env)
 {
 	char	*dir;
-	char	*new;
-	char	*result;
 	int		r;
 
 	dir = getcwd(NULL, 0);

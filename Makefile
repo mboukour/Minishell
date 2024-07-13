@@ -8,25 +8,24 @@ GC = anti_leaks/cgc.c anti_leaks/linked_list_utils.c anti_leaks/keep_track.c ant
 ENV = env_management/env_expander.c env_management/linked_list_env.c env_management/sort_env_list.c env_management/star_matching.c env_management/star_utils.c env_management/heredoc_tokenizer.c
 BUILTINS = builtins/cd.c builtins/echo.c builtins/env.c builtins/exit.c builtins/export.c builtins/pwd.c builtins/unset.c builtins/builtins_utils/cd_utils.c builtins/builtins_utils/cd_utils2.c builtins/builtins_utils/export_utils.c builtins/builtins_utils/export_utils2.c builtins/builtins_utils/error_utils.c
 EXCUTION = execution/execution.c execution/get_path.c execution/traverse_tree.c
-SRC = minishell.c $(LEXER) $(UTILS) $(AST) $(PRE_TREE) $(GC) $(ENV) $(BUILTINS) $(EXCUTION) $(MISCELLANEOUS)
+SRC = minishell.c $(LEXER) $(UTILS) $(AST) $(PRE_TREE) $(GC) $(ENV) $(BUILTINS) $(EXCUTION)
 OBJ = $(SRC:.c=.o)
 INCLUDE = minishell.h
-FLAGS = -Wall -Wextra -Werror
-
-all: fclean $(NAME)
-
 LINKREADLINELIB = $(shell brew --prefix readline)/lib
 LINKREADLINEINCLUDE = $(shell brew --prefix readline)/include
-$(NAME): 
-	$(CC) -I$(LINKREADLINEINCLUDE) -L$(LINKREADLINELIB) -lreadline $(SRC) -o $(NAME)
+RL_FLAGS = -I$(LINKREADLINEINCLUDE) -L$(LINKREADLINELIB)
+CFLAGS = -Wall -Wextra -Werror -I$(LINKREADLINEINCLUDE)
+LDFLAGS = -L$(LINKREADLINELIB) -lreadline
 
-# %.o: %.c $(INCLUDE)
-# 	@echo "Compiling $<"
-# 	@$(CC) $(FLAGS) -c $< -o $@
+all: $(NAME)
 
-# $(NAME): $(OBJ)
-# 	@echo "Linking $@"
-# 	@$(CC) $^ -o $@ -lreadline
+%.o: %.c $(INCLUDE)
+	@echo "Compiling $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(NAME): $(OBJ)
+	@echo "Linking $@"
+	@$(CC) $(OBJ) $(LDFLAGS) -o $@
 
 clean:
 	@echo "Cleaning objects"
@@ -37,8 +36,3 @@ fclean: clean
 	@rm -f $(NAME)
 
 re: fclean all
-
-
-
-# FOR MAC OS
-

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 01:20:44 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 01:21:26 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 16:33:19 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	handle_find_case(t_env **env, char *exp_arg, t_env *find, int exp_type)
 			final = get_append_result(exp_arg, find->value);
 		else
 			final = ft_strdup(exp_arg, MANUAL);
-		update_existing_env(find, final, exp_arg);
+		update_existing_env(find, final);
 	}
 	else
 		add_new_env(env, exp_arg, exp_type);
@@ -33,7 +33,6 @@ void	handle_find_case(t_env **env, char *exp_arg, t_env *find, int exp_type)
 int	export_core(t_env **env, char *exp_arg)
 {
 	t_env	*find;
-	char	*final;
 	int		exp_type;
 
 	exp_type = get_export_type(exp_arg, 0);

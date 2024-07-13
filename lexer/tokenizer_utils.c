@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 03:27:27 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 03:44:33 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 16:29:02 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	handle_double_special(char *input, int *i, t_lex **head,
 	int		type;
 
 	content = ft_substr(input, *i, 2, GC);
+	type = NONE;
 	if (input[*i] == '>')
 		type = DREDIR_OUT;
 	else if (input[*i] == '<')

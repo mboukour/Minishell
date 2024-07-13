@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 02:00:02 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 04:17:54 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 16:29:13 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ bool	handle_on_error_heredoc(t_lex *token, t_lex *final)
 	char	*line;
 	int		to_replace;
 
+	line = NULL;
 	g_heredoc_sigint = 0;
 	signal(SIGINT, sigint_handler_c);
 	delimiter = NULL;

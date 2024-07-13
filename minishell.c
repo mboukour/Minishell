@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 16:06:13 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 16:18:48 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	display_error(int error_checker, t_lex *lex, t_env **env);
 void	init_t_data(t_data *data);
 bool	is_all_space(char *str);
 void	sigint_handler(int sig);
-void	save_termios(struct termios *saved_attributes);
+void	save_terminal(struct termios *saved_attributes);
 void	restore_terminal(const struct termios *saved_attributes);
 int		traverse_tree(t_treenode *root, t_data *data, t_env **env);
 
@@ -76,7 +76,7 @@ int	launch_minishell(t_env **env, t_data *data)
 
 	while (true)
 	{
-		save_termios(&saved_attributes);
+		save_terminal(&saved_attributes);
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sigint_handler);
 		input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");

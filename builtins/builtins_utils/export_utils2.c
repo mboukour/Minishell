@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 00:13:50 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 01:14:00 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 16:32:43 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	add_new_env(t_env **env, char *exp_arg, int exp_type)
 		new_env->envyable = true;
 }
 
-void	update_existing_env(t_env *find, char *final, char *exp_arg)
+void	update_existing_env(t_env *find, char *final)
 {
 	store_malloced(final);
 	free(find->value);

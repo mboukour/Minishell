@@ -188,11 +188,8 @@ t_env *copy_env(t_env *env)
 
 void ft_lstiter_env(t_env *env)
 {
-    int i;
-
     while (env)
     {
-        i++;
         if (ft_strncmp(env->value, "?=", 2) && env->envyable)
 			printf("%s\n", env->value);
         env = env->next;

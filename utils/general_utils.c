@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 05:20:14 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 15:58:03 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 16:18:48 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	sigint_handler(int sig)
 	rl_redisplay();
 }
 
-void	save_termios(struct termios *saved_attributes)
+void	save_terminal(struct termios *saved_attributes)
 {
 	if (tcgetattr(STDIN_FILENO, saved_attributes) != 0)
 		perror("Failed to get terminal attributes");

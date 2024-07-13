@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:47:50 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 01:30:43 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 16:33:00 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int		get_export_type(char *str, int i);
 char	*get_look_for(char *str);
 char	*get_append_result(char *exp_arg, char *tmp);
 void	add_new_env(t_env **env, char *exp_arg, int exp_type);
-void	update_existing_env(t_env *find, char *final, char *exp_arg);
+void	update_existing_env(t_env *find, char *final);
 void	export_error(char *str);
 
 #endif
