@@ -449,10 +449,10 @@ void prep_cmd_arg(t_cmd_arg **cmd_arg, t_env *env)
 							}
 							else
 							{
-								ft_lstlast_arg(last_expanded->arg)->next = next;
+								last_expanded->arg->next = next;
 								if(is_env(next->content))
 								{
-									next->prev = ft_lstlast_arg(last_expanded->arg);
+									next->prev = last_expanded->arg;
 									move = next;
 									go = false;
 									looping_cmd = last_expanded;

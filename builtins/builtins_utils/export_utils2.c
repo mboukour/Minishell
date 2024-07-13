@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 00:13:50 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 00:13:53 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 01:07:54 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,6 @@ void update_existing_env(t_env *find, char *final, char *exp_arg)
 	free(find->value);
 	remove_ptr(find->value);
 	find->value = final;
-	set_joinables(exp_arg, &find->before_joinable, &find->after_joinable);
+	set_joinables(find->value, &find->before_joinable, &find->after_joinable);
 	find->envyable = true;
 }
