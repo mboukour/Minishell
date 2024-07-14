@@ -45,11 +45,7 @@ bool	underscore_before_equal(char *str)
 bool	initial_check(char *str, int i, int count)
 {
 	while (str[i] && str[i] != '+' && str[i] != '=')
-	{
-		if (!ft_isalpha(str[i]) && !is_c_num(str[i]))
-			return (false);
 		i++;
-	}
 	if (str[i] == '+')
 	{
 		if (!str[i + 1])
