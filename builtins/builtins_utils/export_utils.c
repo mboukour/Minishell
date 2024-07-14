@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 00:09:24 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 21:17:11 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 05:54:24 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,10 @@ int	get_export_type(char *str, int i)
 {
 	if ((str[0] == '?' && str[1] == '='))
 		return (1);
-	if (str[0] == '=')
-		return (0);
 	if (underscore_before_equal(str))
 		return (1);
+	if (!ft_isalpha(str[0]))
+		return (0);
 	if (is_c_num(str[0]) || !initial_check(str, 0, 0))
 		return (0);
 	if (no_equal(str))

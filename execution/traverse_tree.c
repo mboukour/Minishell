@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 07:51:20 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/07/13 18:26:23 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 05:29:16 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int	traverse_tree(t_treenode *root, t_data *data, t_env **env)
 	if (save_in == -1)
 		return (close(save_in), dups_error("dup:", env), 1);
 	signal(SIGINT, sigint_handler_cmd);
+	signal(SIGQUIT, sigquit_handler_cmd);
 	if (!root)
 		return (0);
 	if (root->token != AND && root->token != OR && root->token != PIPE_LINE)

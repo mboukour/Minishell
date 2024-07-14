@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 05:20:14 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 05:02:03 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 05:28:47 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,3 +69,4 @@ void	restore_terminal(const struct termios *saved_attributes)
 	smart_close();
 	smart_free();
 }
+

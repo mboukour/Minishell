@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 13:17:34 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/07/13 21:18:10 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 05:27:42 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 
 # define CMD_NOT_FOUND 127
 # define DIRECORY_STATUS 126
+
+void	sigquit_handler_cmd(int sig);
+
 
 void	pipeline(t_treenode *root, t_data *data, t_env **env);
 void	get_path(t_treenode *root, t_env *env, t_data *data);
@@ -47,5 +50,4 @@ void	init_tree(t_treenode *root);
 
 void	pipeline_error(char *first, int status);
 char	*expanded_line(t_redir *redir, char *line, t_env *env);
-
 #endif
