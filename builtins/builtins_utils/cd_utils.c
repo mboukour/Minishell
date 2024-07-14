@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:47:27 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 01:11:49 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 22:16:09 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,21 @@ int	get_i_till(int mode, char **sp_res)
 	return (i);
 }
 
-void	export_wds(char *pwd, char *old_pwd, t_env **env)
+void	export_wds(char *pwd, t_env **env)
 {
 	char	*result;
+	t_env	*env_old;
 
+	env_old = get_env(*env, "PWD");
+	if (env_old)
+	{
+		result = get_real_env(env_old->value);
+		result = ft_strjoin("OLDPWD=", result, MANUAL);
+		null_protector(result);
+		export_core(env, result);
+		free(result);
+	}
 	result = ft_strjoin("PWD=", pwd, MANUAL);
-	null_protector(result);
-	export_core(env, result);
-	free(result);
-	result = ft_strjoin("OLDPWD=", old_pwd, MANUAL);
 	null_protector(result);
 	export_core(env, result);
 	free(result);

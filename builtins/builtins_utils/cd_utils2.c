@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:50:40 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 16:32:32 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 02:12:05 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,10 @@ int	handle_directory_change(char *path, t_data *data)
 	char	*new;
 
 	new = get_new_path(data->pwd, path);
-	if (remove_ptr(data->old_pwd))
-		safe_free(&data->old_pwd);
-	data->old_pwd = ft_strdup(data->pwd, MANUAL);
-	store_malloced(data->old_pwd);
 	if (!chdir(new))
 	{
-		safe_free(&data->pwd);
+		if (remove_ptr(data->pwd))
+			safe_free(&data->pwd);
 		data->pwd = ft_strdup(new, MANUAL);
 		store_malloced(data->pwd);
 		return (2);
@@ -92,7 +89,7 @@ int	check_removed(char *path, t_data *data, t_env **env)
 	if (!dir)
 	{
 		r = handle_directory_change(path, data);
-		export_wds(data->pwd, data->old_pwd, env);
+		export_wds(data->pwd, env);
 	}
 	safe_free(&dir);
 	return (r);

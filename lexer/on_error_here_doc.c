@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 02:00:02 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 16:29:13 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 02:11:05 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ bool	handle_on_error_heredoc(t_lex *token, t_lex *final)
 	int		to_replace;
 
 	line = NULL;
-	g_heredoc_sigint = 0;
+	g_sigint = 0;
 	signal(SIGINT, sigint_handler_c);
 	delimiter = NULL;
 	to_replace = REPLACE_ALL;
@@ -52,8 +52,7 @@ bool	handle_on_error_heredoc(t_lex *token, t_lex *final)
 		delimiter = ft_strjoin(delimiter, token->content, GC);
 		token = token->next;
 	}
-	fake_readline(line, delimiter);
-	return (false);
+	return (fake_readline(line, delimiter), false);
 }
 
 void	fake_open(t_lex *lex, t_lex *final)

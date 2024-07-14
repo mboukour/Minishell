@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 05:20:14 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 16:18:48 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 01:14:26 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	init_t_data(t_data *data)
 		ft_putstr_fd(2, "getcwd: cannot access parent directories: ");
 		perror("");
 	}
-	data->old_pwd = NULL;
 }
 
 bool	is_all_space(char *str)
@@ -48,7 +47,7 @@ bool	is_all_space(char *str)
 
 void	sigint_handler(int sig)
 {
-	(void)sig;
+	g_sigint = sig;
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);

@@ -6,18 +6,18 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 03:49:11 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 04:18:24 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 01:05:41 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	g_heredoc_sigint;
+int	g_sigint;
 
 void	sigint_handler_c(int sig)
 {
 	close(STDIN_FILENO);
-	g_heredoc_sigint = sig;
+	g_sigint = sig;
 }
 
 char	*get_here_doc_input(t_middle *middle)
@@ -29,7 +29,7 @@ char	*get_here_doc_input(t_middle *middle)
 
 	result = NULL;
 	delimiter = args_to_str(middle->redirections);
-	g_heredoc_sigint = 0;
+	g_sigint = 0;
 	signal(SIGINT, sigint_handler_c);
 	while (true)
 	{

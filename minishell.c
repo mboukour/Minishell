@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 18:54:21 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 02:12:26 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ bool	handle_lex_error(t_lex *lexed, t_env **env)
 		if (in1 == -1)
 			return (perror("dup:"), export_core(env, "?=1"), NULL);
 		fake_open(lexed, we_check_lex);
-		if (dup2(in1, STDIN_FILENO) == -1 || g_heredoc_sigint)
+		if (dup2(in1, STDIN_FILENO) == -1 || g_sigint)
 			export_core(env, "?=1");
-		g_heredoc_sigint = 0;
+		g_sigint = 0;
 		display_error(NONE, we_check_lex, env);
 		return (false);
 	}
@@ -60,9 +60,9 @@ t_treenode	*parsing(char *input, t_env **env)
 		if (in1 == -1)
 			return (perror("dup:"), export_core(env, "?=1"), NULL);
 		valid_here_doc(middled);
-		if (dup2(in1, STDIN_FILENO) == -1 || g_heredoc_sigint)
+		if (dup2(in1, STDIN_FILENO) == -1 || g_sigint)
 			return (export_core(env, "?=1"), NULL);
-		g_heredoc_sigint = 0;
+		g_sigint = 0;
 		return (ruined_tree(middled));
 	}
 	return (NULL);
@@ -88,7 +88,7 @@ int	launch_minishell(t_env **env, t_data *data)
 			root = parsing(input, env);
 			if (root)
 				traverse_tree(root, data, env);
-			g_heredoc_sigint = 0;
+			g_sigint = 0;
 		}
 		add_history(input);
 		restore_terminal(&saved_attributes);

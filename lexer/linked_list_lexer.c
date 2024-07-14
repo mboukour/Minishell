@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 01:58:32 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 18:49:53 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 02:11:39 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,3 @@ void	ft_lstadd_back_lex(t_lex **lst, t_lex *new)
 	last_lex->next = new;
 	new->prev = last_lex;
 }
-
-// EVERYTHING BELOW HERE IS FOR DEBUGGING PURPOSES AND SHOULD BE REMOVED LATER
-

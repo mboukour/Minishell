@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 21:16:55 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 22:36:07 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/13 22:00:38 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,14 +81,9 @@ int	cd_core(char *path, t_env **env, t_data *data)
 	wd = getcwd(NULL, 0);
 	if (!wd)
 		return (perror("cd: "), 1);
-	if (remove_ptr(data->old_pwd))
-		safe_free(&data->old_pwd);
-	data->old_pwd = ft_strdup(data->pwd, MANUAL);
-	if (remove_ptr(data->pwd))
-		safe_free(&data->pwd);
 	data->pwd = ft_strdup(wd, MANUAL);
 	free(wd);
-	export_wds(data->pwd, data->old_pwd, env);
+	export_wds(data->pwd, env);
 	return (0);
 }
 

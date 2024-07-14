@@ -6,43 +6,41 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:39:16 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 18:47:41 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 01:44:48 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../env_management.h"
 
-
-
-bool is_nextable(t_arg *arg, t_env *env)
+bool	is_nextable(t_arg *arg, t_env *env)
 {
-	t_env *env_node;
+	t_env	*env_node;
 
-	env_node = get_env(env, arg->content  + 1);
-	if(!env_node)
+	env_node = get_env(env, arg->content + 1);
+	if (!env_node)
 		return (true);
-	else if(env_node->before_joinable)
+	else if (env_node->before_joinable)
 		return (true);
 	return (false);
 }
 
-
-char *lex_to_str(t_lex *lex)
+char	*lex_to_str(t_lex *lex)
 {
-	char *result;
+	char	*result;
 
 	result = NULL;
-	while(lex)
+	while (lex)
 	{
 		result = ft_strjoin(result, lex->content, GC);
 		lex = lex->next;
 	}
 	return (result);
 }
-void handle_splitted_env(t_cmd_arg **head, char *value, t_env *env_node)
+
+void	handle_splitted_env(t_cmd_arg **head, char *value, t_env *env_node)
 {
-	t_cmd_arg *current;
-	t_arg *one;
+	t_cmd_arg	*current;
+	t_arg		*one;
 
 	one = ft_lstnew_arg(NULL);
 	one->content = ft_strdup(value, GC);

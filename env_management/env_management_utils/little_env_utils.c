@@ -6,45 +6,45 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:36:34 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 18:37:41 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 01:46:36 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../env_management.h"
 
-
-bool is_env(char *str)
+bool	is_env(char *str)
 {
-	int i;
+	int	i;
 
-	if(str[0] != '$' || !str[1])
-		return(false);
+	if (str[0] != '$' || !str[1])
+		return (false);
 	i = 1;
-	while(str[i])
+	while (str[i])
 	{
-		if(is_special(str[i]))
+		if (is_special(str[i]))
 			return (false);
 		i++;
 	}
 	return (true);
 }
 
-char *get_real_env(char *value)
+char	*get_real_env(char *value)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(value[i] && value[i] != '=')
+	while (value[i] && value[i] != '=')
 		i++;
 	i++;
-	return(&value[i]);
+	return (&value[i]);
 }
-t_arg *env_to_arg(t_env *env_node)
+
+t_arg	*env_to_arg(t_env *env_node)
 {
-	t_arg *head;
-	t_arg *current;
-	char **sp_res;
-	int i;
+	t_arg	*head;
+	t_arg	*current;
+	char	**sp_res;
+	int		i;
 
 	head = NULL;
 	i = 0;
@@ -62,36 +62,32 @@ t_arg *env_to_arg(t_env *env_node)
 	return (head);
 }
 
-int after_env_star(char *str)
+int	after_env_star(char *str)
 {
-	int i;
-	char *make_sure;
+	int		i;
+	char	*make_sure;
 
-	
 	i = 1;
-	while(str[i] && str[i] != '.' && str[i] != '*' && str[i] != '/')
+	while (str[i] && str[i] != '.' && str[i] != '*' && str[i] != '/')
 		i++;
-	if(!str[i])
+	if (!str[i])
 		return (NONE);
 	make_sure = ft_substr(str, 0, i, GC);
-	if(!is_env(make_sure))
-		return(NONE);
-	return(i);
+	if (!is_env(make_sure))
+		return (NONE);
+	return (i);
 }
 
-
-bool am_i_a_star(char *str)
+bool	am_i_a_star(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(str[i])
+	while (str[i])
 	{
-		if(str[i] == '*')
+		if (str[i] == '*')
 			return (true);
 		i++;
 	}
 	return (false);
 }
-
-

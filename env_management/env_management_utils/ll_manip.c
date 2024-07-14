@@ -6,17 +6,16 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:33:08 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 18:42:58 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 01:43:57 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../env_management.h"
 
-
-void remove_arg_node(t_arg **head_ref, t_arg *node_to_remove)
+void	remove_arg_node(t_arg **head_ref, t_arg *node_to_remove)
 {
 	if (*head_ref == NULL || node_to_remove == NULL)
-		return;
+		return ;
 	if (*head_ref == node_to_remove)
 		*head_ref = node_to_remove->next;
 	if (node_to_remove->next != NULL)
@@ -26,12 +25,14 @@ void remove_arg_node(t_arg **head_ref, t_arg *node_to_remove)
 	node_to_remove->next = NULL;
 	node_to_remove->prev = NULL;
 }
-void replace_arg_with_list(t_arg **head_ref, t_arg *node_to_replace, t_arg *new_list_head)
+
+void	replace_arg_with_list(t_arg **head_ref, t_arg *node_to_replace,
+		t_arg *new_list_head)
 {
-	t_arg *new_list_tail;
+	t_arg	*new_list_tail;
 
 	if (*head_ref == NULL || node_to_replace == NULL || new_list_head == NULL)
-		return;
+		return ;
 	if (*head_ref == node_to_replace)
 		*head_ref = new_list_head;
 	if (node_to_replace->prev != NULL)
@@ -51,35 +52,37 @@ void replace_arg_with_list(t_arg **head_ref, t_arg *node_to_replace, t_arg *new_
 		new_list_tail->next = NULL;
 }
 
-void replace_cmd_arg_node(t_cmd_arg **head, t_cmd_arg *node, t_cmd_arg *new_head)
+void	replace_cmd_arg_node(t_cmd_arg **head, t_cmd_arg *node,
+		t_cmd_arg *new_head)
 {
-	t_cmd_arg *new_tail;
+	t_cmd_arg	*new_tail;
+
 	if (node == NULL || new_head == NULL || head == NULL || *head == NULL)
+		return ;
+	if (node->prev != NULL)
 	{
-			return;
-	}
-	if (node->prev != NULL) {
 		node->prev->next = new_head;
 		new_head->prev = node->prev;
-	} else {
+	}
+	else
+	{
 		*head = new_head;
 		new_head->prev = NULL;
 	}
 	new_tail = ft_lstlast_cmd_arg(new_head);
-	if (node->next != NULL) 
+	if (node->next != NULL)
 	{
 		node->next->prev = new_tail;
 		new_tail->next = node->next;
 	}
-	else 
+	else
 		new_tail->next = NULL;
 }
 
-
-void remove_cmd_arg_node(t_cmd_arg **head, t_cmd_arg *node)
+void	remove_cmd_arg_node(t_cmd_arg **head, t_cmd_arg *node)
 {
 	if (node == NULL || head == NULL || *head == NULL)
-		return;
+		return ;
 	if (node->prev != NULL)
 		node->prev->next = node->next;
 	else
