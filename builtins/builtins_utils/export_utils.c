@@ -28,7 +28,7 @@ bool	no_equal(char *str)
 
 bool	underscore_before_equal(char *str)
 {
-	int	i;
+	int		i;
 
 	i = 0;
 	while (str[i] && str[i] != '=')
@@ -79,10 +79,10 @@ int	get_export_type(char *str, int i)
 {
 	if ((str[0] == '?' && str[1] == '='))
 		return (1);
+	if (!ft_isalpha(str[0]) && str[0] != '_')
+		return (0);
 	if (underscore_before_equal(str))
 		return (1);
-	if (!ft_isalpha(str[0]))
-		return (0);
 	if (is_c_num(str[0]) || !initial_check(str, 0, 0))
 		return (0);
 	if (no_equal(str))
