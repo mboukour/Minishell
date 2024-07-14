@@ -21,7 +21,7 @@ all: $(NAME)
 
 %.o: %.c $(INCLUDE)
 	@echo "Compiling $<"
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -g -c $< -o $@
 
 $(NAME): $(OBJ)
 	@echo "Linking $@"
