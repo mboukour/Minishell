@@ -71,7 +71,7 @@ t_arg	*final_args(t_cmd_arg *cmd_arg)
 	return (head);
 }
 
-void	expand_only_env(t_arg **arg_head, t_env *env)
+void	expand_only_env(t_arg **arg_head, t_env *env, t_arg *arg)
 {
 	t_lex		*broken;
 	t_lex		*hold;
@@ -80,7 +80,7 @@ void	expand_only_env(t_arg **arg_head, t_env *env)
 
 	vars.go = false;
 	vars.env = env;
-	vars.arg = *arg_head;
+	vars.arg = arg;
 	if (vars.arg->to_replace == ONLY_ENV)
 	{
 		broken = tokenizer(vars.arg->content);
@@ -90,6 +90,8 @@ void	expand_only_env(t_arg **arg_head, t_env *env)
 			vars.broken_next = broken->next;
 			if (broken->token == ENV)
 				handle_broken_env(&vars, &hold, broken, after_star);
+			else
+				fprintf(stderr, "NOT ENV: %s\n", broken->content);
 			broken = vars.broken_next;
 		}
 		if (!vars.go)

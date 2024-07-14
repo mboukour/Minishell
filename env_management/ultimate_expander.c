@@ -50,7 +50,10 @@ void	process_arg(t_arg *arg, t_exp_vars *vars)
 				continue ;
 		}
 		else if ((arg)->to_replace == ONLY_ENV)
-			expand_only_env(&vars->looping_cmd->arg, vars->env);
+		{
+			fprintf(stderr, "ONLY ENV: {%s}\n", arg->content);
+			expand_only_env(&vars->looping_cmd->arg, vars->env, arg);
+		}
 		arg = vars->move;
 	}
 }

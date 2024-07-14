@@ -335,9 +335,11 @@ t_env		*ft_lstlast_env(t_env *lst);
 t_env		*copy_env(t_env *env);
 
 void *globalizer_env(int mode, void *env);
-// char		*no_stars(char *path);
-// bool		is_a_directory(char *path);
-// bool		is_path(char *str);
-// void		expand_arg_as_star(t_arg **head);
 
+
+void ft_lstiter_lex(t_lex *lex);
+void ft_lstiter_middle(t_middle *first);
+void ft_lstiter_arg(t_arg *arg);
+void ft_lstiter_cmd_arg(t_cmd_arg *cmd_arg);
+void print_ascii_tree(t_treenode *root, int level);
 #endif

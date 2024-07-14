@@ -51,7 +51,7 @@ void		only_joinable_after_next(t_exp_vars *vars);
 void		both_joinable_prev(t_exp_vars *vars);
 void		both_joinable_next(t_exp_vars *vars);
 
-void		expand_only_env(t_arg **arg_head, t_env *env);
+void		expand_only_env(t_arg **arg_head, t_env *env, t_arg *arg);
 t_arg		*final_args(t_cmd_arg *cmd_arg);
 int			handle_arg_star(t_exp_vars *vars, t_cmd_arg **cmd_arg, t_arg *arg);
 

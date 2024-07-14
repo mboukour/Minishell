@@ -62,7 +62,6 @@ t_treenode	*parse_pipeline(t_middle **middled)
 	return (l_node);
 }
 
-// <cmdline>  ::= <pipeline> {("&&" | "||") <pipeline>}
 t_treenode	*parse_cmdline(t_middle **middled)
 {
 	t_treenode	*l_node;
@@ -94,57 +93,3 @@ t_treenode	*ruined_tree(t_middle *middled)
 	root = parse_cmdline(&middled);
 	return (root);
 }
-
-// void print_ascii_tree(t_treenode *root, int level)
-// {
-// 	t_arg *args;
-// 	t_cmd_arg *cmd_arg;
-// 	t_arg *command;
-// 	if (root == NULL)
-// 	{
-// 		printf("\n");
-// 		return;
-// 	}
-// 	print_ascii_tree(root->right, level + 1);
-// 	for (int i = 0; i < level; i++)
-//         printf("    ");
-// 	if(root->before_redir)
-// 		ft_lstiter_redir(root->before_redir);
-// 	command = root->command;
-// 	if(!command)
-// 		printf("None");
-// 	else
-// 	{
-// 		while (command)
-// 		{
-// 			printf("%s:%i:%s", command->content, command->to_replace, 
-				// tokenToString(command->token));
-// 			command = command->next;
-// 		}
-// 	}
-// 	// printf("%s:%i", root->content, root->to_replace);
-
-// 	printf(" ");
-// 	if(root->cmd_arg)
-// 	{
-// 		cmd_arg = root->cmd_arg;
-// 		while (cmd_arg)
-// 		{
-// 			args = cmd_arg->arg;
-// 			while(args)
-// 			{
-// 				printf("%s:%i:%s-", args->content, args->to_replace,
-					//  tokenToString(args->token));
-// 				args = args->next;
-// 			}
-// 			printf(" // ");
-// 			cmd_arg = cmd_arg->next;
-// 		}
-// 	}
-// 	else
-// 		printf("No args");
-// 	printf(" ");
-// 	if(root->after_redir)
-// 		ft_lstiter_redir(root->after_redir);
-//     print_ascii_tree(root->left, level + 1);
-// }
