@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 02:25:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 02:27:06 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 04:50:41 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,76 +38,38 @@ t_env	*get_star(int mode)
 	return (closedir(current_wd), (head));
 }
 
-char	*normalize_pattern(char *pattern)
+void	skip_stars(char *pattern, int *pt_index)
 {
-	char *normalized;
-	char *start;
-	bool star_found = false;
-	int pattern_len = ft_strlen(pattern);
-	int i = 0;
-	int j = 0;
-
-	normalized = smart_malloc(pattern_len + 1);
-	start = normalized;
-	while (pattern[i])
-	{
-		if (pattern[i] == '*')
-		{
-			if (!star_found)
-			{
-				normalized[j] = pattern[i];
-				j++;
-				star_found = true;
-			}
-		}
-		else
-		{
-			normalized[j] = pattern[i];
-			j++;
-			star_found = false;
-		}
-		i++;
-	}
-	normalized[j] = '\0';
-	return (start);
+	while (pattern[*pt_index] == '*')
+		(*pt_index)++;
 }
 
-bool	match_pattern(char *str, char *pattern)
+bool	match_pattern(char *to_match, char *pattern, int tm_index, int pt_index)
 {
-	char	*star_ptr;
-	char	*star_str;
-	int		str_index;
-	int		pattern_index;
+	int	last_star_index;
 
-	star_ptr = NULL;
-	star_str = NULL;
-	str_index = 0;
-	pattern_index = 0;
-	while (str[str_index])
+	last_star_index = NONE;
+	while (to_match[tm_index])
 	{
-		if (pattern[pattern_index] == '*')
+		if (pattern[pt_index] == '*')
 		{
-			star_ptr = &pattern[pattern_index];
-			star_str = &str[str_index];
-			pattern_index++;
+			last_star_index = pt_index;
+			pt_index++;
 		}
-		else if (pattern[pattern_index] == str[str_index])
+		else if (to_match[tm_index] == pattern[pt_index])
 		{
-			pattern_index++;
-			str_index++;
+			tm_index++;
+			pt_index++;
 		}
-		else if (star_ptr)
+		else if (last_star_index != NONE)
 		{
-			pattern_index = star_ptr - pattern + 1;
-			str_index = star_str - str + 1;
-			star_str++;
+			pt_index = last_star_index + 1;
+			tm_index++;
 		}
 		else
 			return (false);
 	}
-	while (pattern[pattern_index] == '*')
-		pattern_index++;
-	return !pattern[pattern_index];
+	return (skip_stars(pattern, &pt_index), !pattern[pt_index]);
 }
 
 bool	is_star(char *to_match)
@@ -138,10 +100,10 @@ t_env	*star_matching(char *to_match)
 		current_star = get_star(SEEN);
 	if (!current_star)
 		return (NULL);
-	normal = normalize_pattern(to_match);
 	while (current_star)
 	{
-		if (current_star->value && match_pattern(current_star->value, normal))
+		if (current_star->value && match_pattern(current_star->value,
+				to_match, 0, 0))
 		{
 			current = ft_lstnew_env(current_star->value, GC);
 			ft_lstadd_back_env(&head, current);

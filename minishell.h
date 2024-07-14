@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 16:15:17 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 01:05:41 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 04:48:00 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,7 +312,6 @@ char		*args_to_str(t_arg *args);
 t_env		*star_matching(char *to_match);
 t_arg		*arg_star_matching(char *to_match);
 t_cmd_arg	*cmd_arg_star_matching(char *to_match);
-char		*normalize_pattern(char *pattern);
 char		*get_real_env(char *value);
 void		expand_node(t_treenode *root, t_env **env);
 t_lex		*heredoc_tokenizer(char *input);
