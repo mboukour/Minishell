@@ -334,6 +334,7 @@ void		set_joinables(char *str,
 t_env		*ft_lstlast_env(t_env *lst);
 t_env		*copy_env(t_env *env);
 
+void *globalizer_env(int mode, void *env);
 // char		*no_stars(char *path);
 // bool		is_a_directory(char *path);
 // bool		is_path(char *str);

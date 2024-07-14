@@ -20,6 +20,7 @@ void	save_terminal(struct termios *saved_attributes);
 void	restore_terminal(const struct termios *saved_attributes);
 int		traverse_tree(t_treenode *root, t_data *data, t_env **env);
 
+
 bool	handle_lex_error(t_lex *lexed, t_env **env)
 {
 	t_lex	*we_check_lex;
@@ -76,9 +77,10 @@ int	launch_minishell(t_env **env, t_data *data)
 
 	while (true)
 	{
-		save_terminal(&saved_attributes);
+		globalizer_env(SET, env);
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sigint_handler);
+		save_terminal(&saved_attributes);
 		input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
 		store_mallocs(input);
 		if (!input)

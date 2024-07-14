@@ -49,7 +49,11 @@ bool	is_all_space(char *str)
 
 void	sigint_handler(int sig)
 {
-	g_sigint = sig;
+	t_env **env;
+	(void)sig;
+
+	env = globalizer_env(GET, NULL);
+	export_core(env, "?=1");
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -69,4 +73,3 @@ void	restore_terminal(const struct termios *saved_attributes)
 	smart_close();
 	smart_free();
 }
-

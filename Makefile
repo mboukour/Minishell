@@ -1,7 +1,7 @@
 CC = cc
 NAME = minishell
 LEXER = lexer/lex_input_checker.c lexer/lexer_input_checker_utils.c lexer/linked_list_lexer.c lexer/open_checker.c lexer/tokenizer.c lexer/tokenizer_utils.c lexer/on_error_here_doc.c lexer/quotes_handler.c
-UTILS = utils/better_access.c utils/char_utils.c utils/error_utils.c utils/ft_atoi.c utils/ft_itoa.c utils/ft_split.c utils/ft_split_ws.c utils/ft_strjoin.c utils/str_utils.c utils/str_utils2.c utils/str_utils3.c utils/general_utils.c
+UTILS = utils/better_access.c utils/char_utils.c utils/error_utils.c utils/ft_atoi.c utils/ft_itoa.c utils/ft_split.c utils/ft_split_ws.c utils/ft_strjoin.c utils/str_utils.c utils/str_utils2.c utils/str_utils3.c utils/general_utils.c utils/g_env.c
 AST = ast/ast_utils.c ast/ast_utils_2.c ast/ruined_tree.c
 PRE_TREE = pre_tree/make_middle.c pre_tree/linked_list_cmd_arg.c pre_tree/redir_handlers.c pre_tree/linked_list_middle.c pre_tree/valid_here_doc.c pre_tree/pre_tree_utils/arg_utils.c pre_tree/pre_tree_utils/arg_utils2.c pre_tree/pre_tree_utils/makers.c pre_tree/pre_tree_utils/little_utils.c
 GC = anti_leaks/cgc.c anti_leaks/linked_list_utils.c anti_leaks/keep_track.c anti_leaks/fdc.c anti_leaks/linked_list_utils_2.c
