@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 02:25:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 04:50:41 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 04:51:45 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_env	*get_star(int mode)
 	return (closedir(current_wd), (head));
 }
 
-void	skip_stars(char *pattern, int *pt_index)
+static void	skip_stars(char *pattern, int *pt_index)
 {
 	while (pattern[*pt_index] == '*')
 		(*pt_index)++;

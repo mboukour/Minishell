@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 05:20:14 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 01:14:26 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 05:02:03 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	init_t_data(t_data *data)
 		ft_putstr_fd(2, "getcwd: cannot access parent directories: ");
 		perror("");
 	}
+	else
+		store_malloced(data->pwd);
 }
 
 bool	is_all_space(char *str)

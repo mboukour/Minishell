@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 21:16:55 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 22:00:38 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 05:01:47 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int	cd_core(char *path, t_env **env, t_data *data)
 		return (perror("cd: "), 1);
 	data->pwd = ft_strdup(wd, MANUAL);
 	free(wd);
+	store_malloced(data->pwd);
 	export_wds(data->pwd, env);
 	return (0);
 }
