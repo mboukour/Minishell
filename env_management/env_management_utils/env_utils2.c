@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:14:33 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 18:15:00 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 02:47:59 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,40 @@ void	ft_lstclear_env(t_env *head)
 		free(temp);
 		temp = NULL;
 	}
+}
+
+t_env	*get_env(t_env *env, char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	while (env)
+	{
+		if (!ft_strncmp(str, env->value, i) && (env->value[i] == '='
+				|| (!env->envyable && !env->value[i])))
+			return (env);
+		env = env->next;
+	}
+	return (NULL);
+}
+
+t_env	*strict_get_env(t_env *env, char *str)
+{
+	int	i;
+	int	str_len;
+
+	i = 0;
+	while (str[i] && str[i] != '=')
+		i++;
+	str_len = i;
+	while (env)
+	{
+		if (!ft_strncmp(str, env->value, str_len)
+			&& env->value[str_len] == '=' && str[str_len] == '\0')
+			return (env);
+		env = env->next;
+	}
+	return (NULL);
 }

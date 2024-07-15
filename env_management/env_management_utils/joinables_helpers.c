@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 00:23:48 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 00:28:10 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 01:49:29 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	both_joinable_next(t_exp_vars *vars)
 	}
 	else
 	{
-		vars->last_expanded->arg->next = vars->next;
+		ft_lstlast_arg(vars->last_expanded->arg)->next = vars->next;
 		if (is_env(vars->next->content))
 		{
 			vars->next->prev = vars->last_expanded->arg;

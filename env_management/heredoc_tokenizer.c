@@ -6,13 +6,13 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:56:42 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 17:59:55 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 23:27:44 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	heredoc_handle_env(char *input, int *i, t_lex **head, int *join_count)
+void	heredoc_handle_env(char *input, int *i, t_lex **head)
 {
 	t_lex	*current_node;
 	int		hold;
@@ -26,11 +26,11 @@ void	heredoc_handle_env(char *input, int *i, t_lex **head, int *join_count)
 		&& input[*i] != '.' && !is_special(input[*i]))
 		(*i)++;
 	content = ft_substr(input, hold, *i - hold, GC);
-	current_node = ft_lstnew_lex(content, c, *i - hold, *join_count);
+	current_node = ft_lstnew_lex(content, c, *i - hold);
 	ft_lstadd_back_lex(head, current_node);
 }
 
-void	heredoc_handle_word(char *input, int *i, t_lex **head, int *join_count)
+void	heredoc_handle_word(char *input, int *i, t_lex **head)
 {
 	t_lex	*current_node;
 	char	*content;
@@ -42,7 +42,7 @@ void	heredoc_handle_word(char *input, int *i, t_lex **head, int *join_count)
 	while (input[*i] && input[*i] != '$')
 		(*i)++;
 	content = ft_substr(input, hold, *i - hold, GC);
-	current_node = ft_lstnew_lex(content, type, *i - hold, *join_count);
+	current_node = ft_lstnew_lex(content, type, *i - hold);
 	ft_lstadd_back_lex(head, current_node);
 }
 
@@ -58,9 +58,10 @@ t_lex	*heredoc_tokenizer(char *input)
 	while (input[i])
 	{
 		if (input[i] == '$')
-			heredoc_handle_env(input, &i, &head, &join_count);
+			heredoc_handle_env(input, &i, &head);
 		else
-			heredoc_handle_word(input, &i, &head, &join_count);
+			heredoc_handle_word(input, &i, &head);
 	}
+	set_jc(head);
 	return (head);
 }

@@ -8,7 +8,7 @@ GC = anti_leaks/cgc.c anti_leaks/linked_list_utils.c anti_leaks/keep_track.c ant
 ENV =  env_management/ultimate_expander.c  env_management/specefic_expanders.c env_management/general_expanders.c env_management/main_expanders.c env_management/linked_list_env.c env_management/sort_env_list.c env_management/star_matching.c env_management/heredoc_tokenizer.c env_management/env_management_utils/env_utils.c env_management/env_management_utils/env_utils2.c env_management/env_management_utils/little_env_utils.c env_management/env_management_utils/little_env_utils2.c env_management/env_management_utils/little_env_utils3.c env_management/env_management_utils/ll_manip.c env_management/env_management_utils/ll_manip2.c env_management/env_management_utils/star_utils.c env_management/env_management_utils/joinables_utils.c env_management/env_management_utils/joinables_helpers.c env_management/env_management_utils/general_utils.c env_management/env_management_utils/star_makers.c
 BUILTINS = builtins/cd.c builtins/echo.c builtins/env.c builtins/exit.c builtins/export.c builtins/pwd.c builtins/unset.c builtins/builtins_utils/cd_utils.c builtins/builtins_utils/cd_utils2.c builtins/builtins_utils/export_utils.c builtins/builtins_utils/export_utils2.c builtins/builtins_utils/error_utils.c
 EXCUTION = execution/execute_cmd.c execution/get_path.c execution/pipeline_1.c execution/pipeline_2.c execution/redirections_1.c execution/redirections_2.c execution/traverse_tree.c
-SRC = debug.c minishell.c $(LEXER) $(UTILS) $(AST) $(PRE_TREE) $(GC) $(ENV) $(BUILTINS) $(EXCUTION)
+SRC = minishell.c $(LEXER) $(UTILS) $(AST) $(PRE_TREE) $(GC) $(ENV) $(BUILTINS) $(EXCUTION)
 OBJ = $(SRC:.c=.o)
 INCLUDE = minishell.h
 LINKREADLINELIB = $(shell brew --prefix readline)/lib

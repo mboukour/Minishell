@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 20:58:10 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 01:29:32 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 23:52:03 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	handle_look_for(t_exp_vars *vars, t_arg *arg, int after_star)
 int	general_expand(t_exp_vars *vars, t_arg **arg, int after_star)
 {
 	handle_look_for(vars, *arg, after_star);
-	vars->env_node = get_env(vars->env, vars->look_for + 1);
+	vars->env_node = strict_get_env(vars->env, vars->look_for + 1);
 	if (vars->env_node && vars->append_after)
 	{
 		vars->env_node = ft_lstnew_env(vars->env_node->value, GC);

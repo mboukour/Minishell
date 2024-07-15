@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 17:37:19 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 01:42:43 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 01:16:09 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_exp_vars
 	t_arg		*arg;
 	t_arg		*prev;
 	t_arg		*next;
+	t_arg		*next_prev;
 	t_cmd_arg	*expanded_env;
 	t_cmd_arg	*last_expanded;
 	t_cmd_arg	*looping_cmd;
@@ -84,5 +85,5 @@ char		*no_stars(char *path);
 
 void		ambiguous_redirect(t_arg *redir_input, t_treenode *root,
 				t_env **env);
-
+t_env		*strict_get_env(t_env *env, char *str);
 #endif

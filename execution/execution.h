@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 13:17:34 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/07/14 05:27:42 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 02:16:08 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # define DIRECORY_STATUS 126
 
 void	sigquit_handler_cmd(int sig);
-
 
 void	pipeline(t_treenode *root, t_data *data, t_env **env);
 void	get_path(t_treenode *root, t_env *env, t_data *data);
@@ -42,7 +41,7 @@ int		traverse_tree(t_treenode *root, t_data *data, t_env **env);
 void	execute_command(t_treenode *root, t_env **env, t_data *data);
 void	handle_red(t_redir *redir, t_treenode *root, t_env **env);
 void	fd_not_open(t_treenode *root, t_redir *redir, t_env **env);
-void	ft_heredoc_buffer(t_redir *redir, t_env **env, int *fd);
+void	ft_heredoc_buffer(t_redir *redir, t_env **env, int fd);
 void	ft_dup_heredoc(t_treenode *root, t_redir *redir, char *p, t_env **env);
 char	*get_line_from_buffer(char **buffer);
 void	flag_last_here_doc(t_redir *redir);

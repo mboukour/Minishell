@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 17:35:59 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/07/13 19:09:15 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 02:15:59 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,13 @@
 void	fd_not_open(t_treenode *root, t_redir *redir, t_env **env)
 {
 	ft_putstr_fd(2, redir->redir_string);
-	ft_putstr_fd(2, ": ");
-	perror("");
+	perror(": ");
 	change_status(env, 1);
 	init_tree(root);
 	return ;
 }
 
-void	ft_heredoc_buffer(t_redir *redir, t_env **env, int *fd)
+void	ft_heredoc_buffer(t_redir *redir, t_env **env, int fd)
 {
 	char	*buffer;
 	char	*line;
@@ -35,8 +34,8 @@ void	ft_heredoc_buffer(t_redir *redir, t_env **env, int *fd)
 			break ;
 		line = expanded_line(redir, line, *env);
 		if (line)
-			write(*fd, line, ft_strlen(line));
-		write(*fd, "\n", 1);
+			write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
 	}
 }
 

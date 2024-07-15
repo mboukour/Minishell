@@ -6,11 +6,28 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 03:47:17 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 04:12:12 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 02:48:04 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	set_jc(t_lex *lexed)
+{
+	int	join_count;
+
+	join_count = 0;
+	while (lexed)
+	{
+		lexed->join_count = join_count;
+		if (lexed->token == WHITE_SPACE)
+		{
+			lexed->join_count--;
+			join_count++;
+		}
+		lexed = lexed->next;
+	}
+}
 
 void	expand_quotes(t_lex *lex)
 {
@@ -43,10 +60,14 @@ void	expand_quotes(t_lex *lex)
 
 void	quotes_handler(t_lex *lexed)
 {
+	t_lex	*original;
+
+	original = lexed;
 	while (lexed)
 	{
 		if (lexed->token == QUOTE || lexed->token == DOUBLE_QUOTE)
 			expand_quotes(lexed);
 		lexed = lexed->next;
 	}
+	set_jc(original);
 }

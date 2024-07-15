@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 05:22:20 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 02:45:49 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ void	display_error(int error_checker, t_lex *lex, t_env **env);
 void	init_t_data(t_data *data);
 bool	is_all_space(char *str);
 void	sigint_handler(int sig);
-void	save_terminal(struct termios *saved_attributes);
-void	restore_terminal(const struct termios *saved_attributes);
+void	save_terminal(struct termios *saved_attributes, t_env **env);
+void	restore_terminal(const struct termios *saved_attributes,
+			t_env **env);
 int		traverse_tree(t_treenode *root, t_data *data, t_env **env);
-
 
 bool	handle_lex_error(t_lex *lexed, t_env **env)
 {
@@ -80,7 +80,7 @@ int	launch_minishell(t_env **env, t_data *data)
 		globalizer_env(SET, env);
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sigint_handler);
-		save_terminal(&saved_attributes);
+		save_terminal(&saved_attributes, env);
 		input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
 		store_mallocs(input);
 		if (!input)
@@ -93,7 +93,7 @@ int	launch_minishell(t_env **env, t_data *data)
 			g_sigint = 0;
 		}
 		add_history(input);
-		restore_terminal(&saved_attributes);
+		restore_terminal(&saved_attributes, env);
 	}
 	return (0);
 }

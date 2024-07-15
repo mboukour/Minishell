@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 17:28:41 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/07/13 18:31:17 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 02:46:05 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,31 +33,20 @@ char	*get_here_doc_path(void)
 	}
 }
 
-void	ft_redir_in(t_redir *redir, t_treenode *root, t_env **env)
+int	ft_redir_in(t_redir *redir, t_treenode *root, t_env **env)
 {
 	int	fd;
 
 	fd = open(redir->redir_string, O_RDONLY, 0777);
 	if (fd == -1)
-	{
-		ft_putstr_fd(2, redir->redir_string);
-		perror(": ");
-		change_status(env, 1);
-		init_tree(root);
-		return ;
-	}
+		return (fd_not_open(root, redir, env), 0);
 	store_fds(fd);
 	if (dup2(fd, 0) == -1)
-	{
-		ft_putstr_fd(2, redir->redir_string);
-		perror(": ");
-		change_status(env, 1);
-		init_tree(root);
-		return ;
-	}
+		return (fd_not_open(root, redir, env), 0);
 	change_status(env, 0);
 	close(fd);
 	remove_fd_node(fd);
+	return (1);
 }
 
 void	ft_redir_out(t_redir *redir, t_treenode *root, t_env **env)
@@ -70,14 +59,14 @@ void	ft_redir_out(t_redir *redir, t_treenode *root, t_env **env)
 	else if (redir->token == REDIR_OUT)
 		fd = open(redir->redir_string, O_RDWR | O_CREAT | O_TRUNC, 0777);
 	if (fd == -1)
+	{
 		fd_not_open(root, redir, env);
+		return ;
+	}
 	store_fds(fd);
 	if (dup2(fd, 1) == -1)
 	{
-		ft_putstr_fd(2, redir->redir_string);
-		perror(": ");
-		change_status(env, 1);
-		init_tree(root);
+		fd_not_open(root, redir, env);
 		return ;
 	}
 	change_status(env, 0);
@@ -96,7 +85,7 @@ void	ft_heredoc(t_redir *redir, t_treenode *root, t_env **env)
 		fd_not_open(root, redir, env);
 	store_fds(fd);
 	if (redir->here_doc_buffer)
-		ft_heredoc_buffer(redir, env, &fd);
+		ft_heredoc_buffer(redir, env, fd);
 	close(fd);
 	remove_fd_node(fd);
 	ft_dup_heredoc(root, redir, here_doc_path, env);
@@ -107,8 +96,12 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 	flag_last_here_doc(redir);
 	while (redir)
 	{
+		fprintf(stderr, "GOING FOR: %s\n", args_to_str(redir->redir_input));
 		if (redir->token == REDIR_IN)
-			ft_redir_in(redir, root, env);
+		{
+			if (!ft_redir_in(redir, root, env))
+				return ;
+		}
 		else if (redir->token == REDIR_OUT || redir->token == DREDIR_OUT)
 			ft_redir_out(redir, root, env);
 		else if (redir->token == HERE_DOC)

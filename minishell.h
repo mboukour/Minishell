@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 16:15:17 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 04:48:00 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 02:48:37 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,7 @@ void		sigint_handler_c(int sig);
 // LEXER
 t_lex		*tokenizer(char *input);
 void		quotes_handler(t_lex *lexed);
-t_lex		*ft_lstnew_lex(char *content, int token, int len, int join_count);
+t_lex		*ft_lstnew_lex(char *content, int token, int len);
 void		ft_lstadd_back_lex(t_lex **lst, t_lex *new);
 t_lex		*lex_input_checker(t_lex *tokens);
 int			open_checker(t_lex *token);
@@ -257,6 +257,7 @@ void		fake_open(t_lex *lex, t_lex *final);
 t_lex		*skip_sp(t_lex *lex, int mode);
 void		remove_lex_node(t_lex **head, t_lex *node);
 bool		is_redir(t_lex *lex);
+void		set_jc(t_lex *lexed);
 
 t_middle	*ft_lstnew_middle(t_arg *command, t_cmd_arg *cmd_arg, int token);
 void		ft_lstadd_back_middle(t_middle **lst, t_middle *new);
@@ -334,12 +335,13 @@ void		set_joinables(char *str,
 t_env		*ft_lstlast_env(t_env *lst);
 t_env		*copy_env(t_env *env);
 
-void *globalizer_env(int mode, void *env);
+void		*globalizer_env(int mode, void *env);
 
-
-void ft_lstiter_lex(t_lex *lex);
-void ft_lstiter_middle(t_middle *first);
-void ft_lstiter_arg(t_arg *arg);
-void ft_lstiter_cmd_arg(t_cmd_arg *cmd_arg);
-void print_ascii_tree(t_treenode *root, int level);
+// DEBUGGING FUNCTIONS
+// void ft_lstiter_lex(t_lex *lex);
+// void ft_lstiter_middle(t_middle *first);
+// void ft_lstiter_arg(t_arg *arg);
+// void ft_lstiter_cmd_arg(t_cmd_arg *cmd_arg);
+// void print_ascii_tree(t_treenode *root, int level);
+// const char* tokenToString(int t);
 #endif

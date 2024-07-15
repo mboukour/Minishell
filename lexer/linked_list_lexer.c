@@ -6,13 +6,13 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 01:58:32 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 02:11:39 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 23:21:04 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lexer.h"
 
-t_lex	*ft_lstnew_lex(char *content, int token, int len, int join_count)
+t_lex	*ft_lstnew_lex(char *content, int token, int len)
 {
 	t_lex	*new_node;
 
@@ -21,7 +21,7 @@ t_lex	*ft_lstnew_lex(char *content, int token, int len, int join_count)
 	new_node->len = len;
 	new_node->token = token;
 	new_node->to_replace = REPLACE_ALL;
-	new_node->join_count = join_count;
+	new_node->join_count = NONE;
 	new_node->here_doc_fd = NONE;
 	new_node->next = NULL;
 	new_node->prev = NULL;

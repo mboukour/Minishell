@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 00:13:16 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 01:03:13 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 01:16:50 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	process_arg(t_arg *arg, t_exp_vars *vars)
 
 	while (arg)
 	{
+		vars->next_prev = NULL;
 		vars->go = true;
 		vars->move = (arg)->next;
 		after_star = after_env_star((arg)->content);
@@ -50,10 +51,7 @@ void	process_arg(t_arg *arg, t_exp_vars *vars)
 				continue ;
 		}
 		else if ((arg)->to_replace == ONLY_ENV)
-		{
-			fprintf(stderr, "ONLY ENV: {%s}\n", arg->content);
 			expand_only_env(&vars->looping_cmd->arg, vars->env, arg);
-		}
 		arg = vars->move;
 	}
 }

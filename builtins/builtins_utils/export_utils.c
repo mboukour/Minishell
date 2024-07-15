@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 00:09:24 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 05:54:24 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 22:55:28 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,13 @@ bool	underscore_before_equal(char *str)
 
 bool	initial_check(char *str, int i, int count)
 {
+	while (str[i] && str[i] != '=')
+	{
+		if (str[i] == '-')
+			return (false);
+		i++;
+	}
+	i = 0;
 	while (str[i] && str[i] != '+' && str[i] != '=')
 		i++;
 	if (str[i] == '+')

@@ -6,28 +6,11 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 00:13:50 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 16:32:43 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 23:50:31 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../builtins.h"
-
-t_env	*get_env(t_env *env, char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] && str[i] != '=')
-		i++;
-	while (env)
-	{
-		if (!ft_strncmp(str, env->value, i) && (env->value[i] == '='
-				|| (!env->envyable && !env->value[i])))
-			return (env);
-		env = env->next;
-	}
-	return (NULL);
-}
 
 char	*get_look_for(char *str)
 {

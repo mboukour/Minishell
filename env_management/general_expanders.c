@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 01:32:55 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 01:36:47 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/14 23:52:00 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static void	handle_broken_env(t_exp_vars *vars, t_lex **hold,
 				ft_strlen(broken->content), GC);
 	}
 	vars->go = true;
-	vars->env_node = get_env(vars->env, vars->look_for + 1);
+	vars->env_node = strict_get_env(vars->env, vars->look_for + 1);
 	if (vars->env_node && vars->env_node->envyable)
 		broken->content = ft_strjoin(get_real_env(vars->env_node->value),
 				vars->append_after, GC);
@@ -90,8 +90,6 @@ void	expand_only_env(t_arg **arg_head, t_env *env, t_arg *arg)
 			vars.broken_next = broken->next;
 			if (broken->token == ENV)
 				handle_broken_env(&vars, &hold, broken, after_star);
-			else
-				fprintf(stderr, "NOT ENV: %s\n", broken->content);
 			broken = vars.broken_next;
 		}
 		if (!vars.go)
