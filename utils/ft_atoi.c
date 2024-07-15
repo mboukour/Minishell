@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 04:04:59 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 04:05:07 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 23:53:24 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ static void	set_error(bool *error_status)
 	if (error_status)
 		*error_status = true;
 }
-
 
 static int	str_to_int(const char *str, int i, int sign, bool *error_status)
 {

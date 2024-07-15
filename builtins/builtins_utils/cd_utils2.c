@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:50:40 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/15 06:48:09 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 23:53:46 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	check_removed(char *path, t_data *data, t_env **env)
 	char	*dir;
 	int		r;
 
-	if(!data->pwd)
+	if (!data->pwd)
 		return (3);
 	dir = getcwd(NULL, 0);
 	r = 0;

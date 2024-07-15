@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/15 06:17:22 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/16 00:21:02 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ bool	handle_lex_error(t_lex *lexed, t_env **env)
 		fake_open(lexed, we_check_lex);
 		if (dup2(in1, STDIN_FILENO) == -1 || g_sigint)
 			export_core(env, "?=1");
+		close(in1);
 		g_sigint = 0;
 		display_error(NONE, we_check_lex, env);
 		return (false);
@@ -63,6 +64,7 @@ t_treenode	*parsing(char *input, t_env **env)
 		valid_here_doc(middled);
 		if (dup2(in1, STDIN_FILENO) == -1 || g_sigint)
 			return (export_core(env, "?=1"), NULL);
+		close(in1);
 		g_sigint = 0;
 		return (ruined_tree(middled));
 	}

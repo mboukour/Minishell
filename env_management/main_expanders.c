@@ -6,11 +6,13 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 01:29:40 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 01:39:21 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/16 00:26:37 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "env_management.h"
+
+void	empty_env_with_args(t_treenode *root);
 
 static t_arg	*expand_args(t_cmd_arg *cmd_arg, t_env *env)
 {
@@ -67,7 +69,6 @@ static void	expand_command(t_treenode *root, t_arg **tmp_arg)
 	*tmp_arg = root->command->next;
 	root->command->next = NULL;
 	root->args = *tmp_arg;
-	ft_lstiter_arg(root->args);
 }
 
 void	expand_node(t_treenode *root, t_env **env)
@@ -91,15 +92,8 @@ void	expand_node(t_treenode *root, t_env **env)
 		root->args = tmp_arg;
 	}
 	expand_arg_as_star(&root->args);
-	if(!root->command && root->args)
-	{
-    	root->command = root->args;
-		root->content = root->command->content;
-		root->args = root->args->next;
-		if (root->args != NULL)
-			root->args->prev = NULL;
-    	root->command->next = NULL;
-	}
+	if (!root->command && root->args)
+		empty_env_with_args(root);
 	else
 		export_core(env, "?=0");
 	expand_redirs(root->before_redir, env, root);

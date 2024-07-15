@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:14:33 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/15 02:47:59 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 23:52:49 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,14 @@ t_env	*strict_get_env(t_env *env, char *str)
 		env = env->next;
 	}
 	return (NULL);
+}
+
+void	empty_env_with_args(t_treenode *root)
+{
+	root->command = root->args;
+	root->content = root->command->content;
+	root->args = root->args->next;
+	if (root->args != NULL)
+		root->args->prev = NULL;
+	root->command->next = NULL;
 }

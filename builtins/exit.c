@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 21:16:32 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 23:53:34 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ bool	is_num(char *str)
 	i = 0;
 	if (str[0] == '-' || str[0] == '+')
 		i++;
-	while(str[i] >= '0' && str[i] <= '9')
+	while (str[i] >= '0' && str[i] <= '9')
 		i++;
 	while (str[i])
 	{
@@ -50,7 +50,7 @@ int	count_sp(char *str)
 	return (i);
 }
 
-static void exit_syntax(char *str)
+static void	exit_syntax(char *str)
 {
 	ft_putstr_fd(2, "exit: ");
 	ft_putstr_fd(2, str);
