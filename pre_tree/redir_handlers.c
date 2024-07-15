@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 04:47:41 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 16:30:51 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 06:00:01 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,6 @@ void	process_redirection_token(t_lex **lex, t_middle **head, int token)
 	}
 	current->redirections = arg_head;
 	ft_lstadd_back_middle(head, current);
-	if (token != HERE_DOC)
+	if (token != HERE_DOC && token != REDIR_IN)
 		after_command(lex, head, current);
 }

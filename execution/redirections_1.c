@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 17:28:41 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/07/15 02:46:05 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 06:04:16 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env)
 	flag_last_here_doc(redir);
 	while (redir)
 	{
-		fprintf(stderr, "GOING FOR: %s\n", args_to_str(redir->redir_input));
 		if (redir->token == REDIR_IN)
 		{
 			if (!ft_redir_in(redir, root, env))
