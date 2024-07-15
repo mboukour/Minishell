@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 21:16:55 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 05:01:47 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 06:43:16 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,5 @@ int	cd(t_treenode *cd_root, t_env **env, t_data *data)
 	args = cd_root->args;
 	if (!args)
 		return (cd_home(env, data));
-	else if (!args->next)
-		return (cd_core(args->content, env, data));
-	ft_putstr_fd(2, "cd: too many arguments\n");
-	return (1);
+	return (cd_core(args->content, env, data));
 }

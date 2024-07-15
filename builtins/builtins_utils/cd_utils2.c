@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:50:40 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 02:12:05 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 06:48:09 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	handle_directory_change(char *path, t_data *data)
 		cd_error(NULL);
 	}
 	else
-		ft_putstr_fd(2, "cd: no such file or directory\n");
+		ft_putstr_fd(2, "cd: No such file or directory\n");
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/15 02:45:49 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/15 06:17:22 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	launch_minishell(t_env **env, t_data *data)
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sigint_handler);
 		save_terminal(&saved_attributes, env);
-		input = readline("\x1b[34m🐐 GoatShell\x1b[0m ");
+		input = readline("GoatShell 🐐: ");
 		store_mallocs(input);
 		if (!input)
 			return (ft_putstr_fd(1, "exit\n"), exit_core(0), 0);
