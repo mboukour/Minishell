@@ -84,6 +84,8 @@ int	check_removed(char *path, t_data *data, t_env **env)
 	char	*dir;
 	int		r;
 
+	if(!data->pwd)
+		return (3);
 	dir = getcwd(NULL, 0);
 	r = 0;
 	if (!dir)

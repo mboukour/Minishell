@@ -67,6 +67,7 @@ static void	expand_command(t_treenode *root, t_arg **tmp_arg)
 	*tmp_arg = root->command->next;
 	root->command->next = NULL;
 	root->args = *tmp_arg;
+	ft_lstiter_arg(root->args);
 }
 
 void	expand_node(t_treenode *root, t_env **env)
@@ -74,26 +75,33 @@ void	expand_node(t_treenode *root, t_env **env)
 	char		*no_star;
 	t_arg		*tmp_arg;
 	t_cmd_arg	*for_command;
+	bool		no_first;
 
+	no_first = false;
+	tmp_arg = NULL;
 	for_command = ft_lstnew_cmd_arg(root->command);
 	root->command = expand_args(for_command, *env);
-	if (!root->command)
-	{
-		root->command = ft_lstnew_arg(NULL);
-		export_core(env, "?=0");
-	}
+	if (root->command)
+		expand_command(root, &tmp_arg);
+	if (!tmp_arg)
+		root->args = expand_args(root->cmd_arg, *env);
 	else
 	{
-		expand_command(root, &tmp_arg);
-		if (!tmp_arg)
-			root->args = expand_args(root->cmd_arg, *env);
-		else
-		{
-			tmp_arg->next = expand_args(root->cmd_arg, *env);
-			root->args = tmp_arg;
-		}
-		expand_arg_as_star(&root->args);
+		tmp_arg->next = expand_args(root->cmd_arg, *env);
+		root->args = tmp_arg;
 	}
+	expand_arg_as_star(&root->args);
+	if(!root->command && root->args)
+	{
+    	root->command = root->args;
+		root->content = root->command->content;
+		root->args = root->args->next;
+		if (root->args != NULL)
+			root->args->prev = NULL;
+    	root->command->next = NULL;
+	}
+	else
+		export_core(env, "?=0");
 	expand_redirs(root->before_redir, env, root);
 	expand_redirs(root->after_redir, env, root);
 }

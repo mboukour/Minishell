@@ -18,6 +18,7 @@ static void	set_error(bool *error_status)
 		*error_status = true;
 }
 
+
 static int	str_to_int(const char *str, int i, int sign, bool *error_status)
 {
 	unsigned long long	nb;
