@@ -6,11 +6,11 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/15 23:53:34 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/16 03:45:32 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "builtins.h"
 
 int	exit_core(int status)
 {

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/28 07:51:20 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/07/14 05:29:16 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/16 03:53:26 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	sigint_handler_cmd(int sig)
 void	sigquit_handler_cmd(int sig)
 {
 	(void)sig;
-	printf("Quit\n");
+	write(1, "Quit\n", 6);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 }

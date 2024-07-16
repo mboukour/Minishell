@@ -6,11 +6,11 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:53:40 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 17:54:52 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/16 03:45:22 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "builtins.h"
 
 char	*get_pwd(void)
 {

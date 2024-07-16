@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 05:20:14 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/15 01:59:38 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/16 01:09:34 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,4 @@ void	restore_terminal(const struct termios *saved_attributes, t_env **env)
 		perror("Failed to set terminal attributes");
 		export_core(env, "?=1");
 	}
-	smart_close();
-	smart_free();
 }

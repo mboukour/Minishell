@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/16 00:21:02 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/16 04:06:34 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	save_terminal(struct termios *saved_attributes, t_env **env);
 void	restore_terminal(const struct termios *saved_attributes,
 			t_env **env);
 int		traverse_tree(t_treenode *root, t_data *data, t_env **env);
+int		no_envp_export(t_env **env, t_data *data);
 
 bool	handle_lex_error(t_lex *lexed, t_env **env)
 {
@@ -63,12 +64,20 @@ t_treenode	*parsing(char *input, t_env **env)
 			return (perror("dup:"), export_core(env, "?=1"), NULL);
 		valid_here_doc(middled);
 		if (dup2(in1, STDIN_FILENO) == -1 || g_sigint)
-			return (export_core(env, "?=1"), NULL);
+			return (close(in1), export_core(env, "?=1"), NULL);
 		close(in1);
 		g_sigint = 0;
 		return (ruined_tree(middled));
 	}
 	return (NULL);
+}
+
+void	usual_start(t_env **env, struct termios *saved_attributes)
+{
+	globalizer_env(SET, env);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, sigint_handler);
+	save_terminal(saved_attributes, env);
 }
 
 int	launch_minishell(t_env **env, t_data *data)
@@ -79,40 +88,24 @@ int	launch_minishell(t_env **env, t_data *data)
 
 	while (true)
 	{
-		globalizer_env(SET, env);
-		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, sigint_handler);
-		save_terminal(&saved_attributes, env);
+		usual_start(env, &saved_attributes);
 		input = readline("GoatShell 🐐: ");
-		store_mallocs(input);
-		if (!input)
+		if (!store_mallocs(input))
 			return (ft_putstr_fd(1, "exit\n"), exit_core(0), 0);
 		else if (!is_all_space(input) && ft_strcmp(input, ""))
 		{
 			root = parsing(input, env);
 			if (root)
+			{
 				traverse_tree(root, data, env);
+				restore_terminal(&saved_attributes, env);
+			}
 			g_sigint = 0;
+			add_history(input);
 		}
-		add_history(input);
-		restore_terminal(&saved_attributes, env);
+		smart_close();
+		smart_free();
 	}
-	return (0);
-}
-
-int	no_envp_export(t_env **env, t_data *data)
-{
-	char	*pwd;
-
-	if (data->pwd)
-	{
-		pwd = ft_strjoin("PWD=", data->pwd, MANUAL);
-		null_protector(pwd);
-		export_core(env, pwd);
-		free(pwd);
-	}
-	export_core(env, "SHLVL=1");
-	export_core(env, SECURE_PATH);
 	return (0);
 }
 

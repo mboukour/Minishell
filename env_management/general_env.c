@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort_env_list.c                                    :+:      :+:    :+:   */
+/*   general_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 18:00:20 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 18:02:10 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/16 03:47:25 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,20 @@ void	sort_env_list(t_env *head)
 		}
 		lptr = ptr1;
 	}
+}
+
+int	no_envp_export(t_env **env, t_data *data)
+{
+	char	*pwd;
+
+	if (data->pwd)
+	{
+		pwd = ft_strjoin("PWD=", data->pwd, MANUAL);
+		null_protector(pwd);
+		export_core(env, pwd);
+		free(pwd);
+	}
+	export_core(env, "SHLVL=1");
+	export_core(env, SECURE_PATH);
+	return (0);
 }

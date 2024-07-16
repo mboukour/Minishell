@@ -6,11 +6,11 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:55:13 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 00:15:32 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/16 03:45:05 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "builtins.h"
 
 void	remove_env_node(t_env **env, t_env *node_to_remove)
 {
@@ -26,16 +26,32 @@ void	remove_env_node(t_env **env, t_env *node_to_remove)
 	free(node_to_remove);
 }
 
+bool	unset_checker(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!ft_isalpha(str[i]) && str[i] != '_')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
 int	unset_core(t_env **env, char *to_unset)
 {
 	t_env	*unset_env;
 
 	if (!to_unset)
 		return (1);
-	if (!ft_strcmp("?", to_unset))
+	if (!unset_checker(to_unset))
 	{
-		ft_putstr_fd(2, "unset: `?': not a valid identifier\n");
-		return (0);
+		ft_putstr_fd(2, "unset: `");
+		ft_putstr_fd(2, to_unset);
+		ft_putstr_fd(2, "': not a valid identifier\n");
+		return (1);
 	}
 	unset_env = get_env(*env, to_unset);
 	if (!unset_env)
@@ -47,14 +63,17 @@ int	unset_core(t_env **env, char *to_unset)
 int	unset(t_env **env, t_treenode *unset_root)
 {
 	t_arg	*arg;
+	int		r;
 
+	r = 0;
 	arg = unset_root->args;
 	if (!arg)
 		return (0);
 	while (arg)
 	{
-		unset_core(env, arg->content);
+		if (unset_core(env, arg->content))
+			r = 1;
 		arg = arg->next;
 	}
-	return (0);
+	return (r);
 }
