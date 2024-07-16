@@ -91,7 +91,7 @@ int	launch_minishell(t_env **env, t_data *data)
 		usual_start(env, &saved_attributes);
 		input = readline("GoatShell 🐐: ");
 		if (!store_mallocs(input))
-			return (ft_putstr_fd(1, "exit\n"), exit_core(0), 0);
+			return (ft_putstr_fd(1, "exit\n"), exit_core(data->status), 0);
 		else if (!is_all_space(input) && ft_strcmp(input, ""))
 		{
 			root = parsing(input, env);
