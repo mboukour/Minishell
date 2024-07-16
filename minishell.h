@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 16:15:17 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/15 02:48:37 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/16 04:41:48 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 # define PARA_ERROR "Parse error: open parantheses\n"
 # define SYNTAX_ERROR_STATUS 258
 # define NUMERIC_ARG_STATUS 255
-# define FORK_ERROR_STATUS 254
+# define FORK_ERROR_STATUS 1
 # define PERMISSION_STATUS 126
 
 enum e_token

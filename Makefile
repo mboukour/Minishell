@@ -15,17 +15,17 @@ LINKREADLINELIB = $(shell brew --prefix readline)/lib
 LINKREADLINEINCLUDE = $(shell brew --prefix readline)/include
 RL_FLAGS = -I$(LINKREADLINEINCLUDE) -L$(LINKREADLINELIB)
 CFLAGS = -I$(LINKREADLINEINCLUDE)
-LDFLAGS = -L$(LINKREADLINELIB) -lreadline -g
+LDFLAGS = -L$(LINKREADLINELIB) -lreadline 
 
 all: $(NAME)
 
 %.o: %.c $(INCLUDE)
 	@echo "Compiling $<"
-	@$(CC) $(CFLAGS) -g -c $< -o $@
+	@$(CC) $(CFLAGS) -g -fsanitize=address -c $< -o $@
 
 $(NAME): $(OBJ)
 	@echo "Linking $@"
-	@$(CC) $(OBJ) $(LDFLAGS) -o $@
+	@$(CC) $(OBJ) $(LDFLAGS) -g -fsanitize=address -o $@
 
 clean:
 	@echo "Cleaning objects"

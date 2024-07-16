@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:36:34 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/15 02:46:44 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 00:28:51 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	after_env_star(char *str)
 	int		i;
 	char	*make_sure;
 
-	i = 1;
+	i = 0;
 	while (str[i] && str[i] != '.' && str[i] != '*'
 		&& str[i] != '/' && str[i] != '=')
 		i++;

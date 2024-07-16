@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:50:40 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/15 23:53:46 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 00:44:12 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	handle_directory_change(char *path, t_data *data)
 	else if (is_all_points(path))
 	{
 		data->pwd = ft_strjoin(add_slash_if_needed(data->pwd), path, MANUAL);
-		store_malloced(&data->pwd);
+		store_malloced(data->pwd);
 		cd_error(NULL);
 	}
 	else
