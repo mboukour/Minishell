@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:39:16 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 23:52:12 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 16:19:35 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ bool	is_nextable(t_arg *arg, t_env *env)
 {
 	t_env	*env_node;
 
-	env_node = strict_get_env(env, arg->content + 1);
+	env_node = strict_get_env(env, arg->content);
 	if (!env_node)
 		return (true);
 	else if (env_node->before_joinable)

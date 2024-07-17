@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 12:55:53 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 16:57:02 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	restore_terminal(const struct termios *saved_attributes,
 int		traverse_tree(t_treenode *root, t_data *data, t_env **env);
 int		no_envp_export(t_env **env, t_data *data);
 
-bool	handle_lex_error(t_lex *lexed, t_env **env)
+static bool	handle_lex_error(t_lex *lexed, t_env **env)
 {
 	t_lex	*we_check_lex;
 	int		in1;
@@ -45,7 +45,7 @@ bool	handle_lex_error(t_lex *lexed, t_env **env)
 	return (true);
 }
 
-t_treenode	*parsing(char *input, t_env **env)
+static t_treenode	*parsing(char *input, t_env **env)
 {
 	t_lex		*lexed;
 	t_middle	*middled;
@@ -74,23 +74,32 @@ t_treenode	*parsing(char *input, t_env **env)
 	return (NULL);
 }
 
-void	usual_start(t_env **env, struct termios *saved_attributes)
+static void	usual(t_env **env, struct termios *saved_attributes, int mode)
 {
-	globalizer_env(SET, env);
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, sigint_handler);
-	save_terminal(saved_attributes, env);
+	if (mode == 0)
+	{
+		globalizer_env(SET, env);
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, sigint_handler);
+	}
+	else
+	{
+		smart_close();
+		smart_free();
+		g_sigint = 0;
+	}
 }
 
-int	launch_minishell(t_env **env, t_data *data)
+static int	launch_minishell(t_env **env, t_data *data)
 {
 	char			*input;
 	t_treenode		*root;
 	struct termios	saved_attributes;
 
+	save_terminal(&saved_attributes, env);
 	while (true)
 	{
-		usual_start(env, &saved_attributes);
+		usual(env, &saved_attributes, 0);
 		input = readline("GoatShell 🐐: ");
 		if (!store_mallocs(input))
 			return (ft_putstr_fd(1, "exit\n"), exit_core(data->status), 0);
@@ -104,9 +113,7 @@ int	launch_minishell(t_env **env, t_data *data)
 			}
 			add_history(input);
 		}
-		smart_close();
-		smart_free();
-		g_sigint = 0;
+		usual(NULL, NULL, 1);
 	}
 	return (0);
 }
