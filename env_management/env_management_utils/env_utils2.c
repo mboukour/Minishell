@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:14:33 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/15 23:52:49 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 11:15:17 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,11 @@ t_env	*strict_get_env(t_env *env, char *str)
 	{
 		if (!ft_strncmp(str, env->value, str_len)
 			&& env->value[str_len] == '=' && str[str_len] == '\0')
+		{
+			if (str_len + 1 == ft_strlen(env->value))
+				return (NULL);
 			return (env);
+		}
 		env = env->next;
 	}
 	return (NULL);

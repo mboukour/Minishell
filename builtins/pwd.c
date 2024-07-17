@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:53:40 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/16 03:45:22 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 11:04:37 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,9 @@ int	pwd(t_data *data)
 		pwd = get_pwd();
 		if (!pwd)
 		{
-			perror("pwd: error retrieving current directory: getcwd: ");
+			ft_putstr_fd(2, "error retrieving current directory: ");
+			ft_putstr_fd(2, "getcwd: cannot access parent directories: ");
+			perror("");
 			return (1);
 		}
 		printf("%s\n", pwd);
