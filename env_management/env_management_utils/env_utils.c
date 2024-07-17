@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 17:37:05 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 00:45:04 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 08:40:23 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,15 @@ char	*new_shlvl(char *new_lvl)
 {
 	char	*new_shlvl;
 	char	*lvl;
+	int		number;
 
-	lvl = ft_itoa(ft_atoi(new_lvl + 6, NULL) + 1, MANUAL);
+	number = ft_atoi(new_lvl + 6, NULL);
+	if (number < 0)
+		lvl = ft_strdup("0", MANUAL);
+	else if (number == 999)
+		lvl = ft_strdup("", MANUAL);
+	else
+		lvl = ft_itoa(number + 1, MANUAL);
 	null_protector(lvl);
 	new_shlvl = ft_strjoin("SHLVL=", lvl, MANUAL);
 	null_protector(new_shlvl);

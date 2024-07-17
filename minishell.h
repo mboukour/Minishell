@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 16:15:17 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/16 04:41:48 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 09:00:07 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,8 @@ t_lex		*skip_sp(t_lex *lex, int mode);
 void		remove_lex_node(t_lex **head, t_lex *node);
 bool		is_redir(t_lex *lex);
 void		set_jc(t_lex *lexed);
+void		exceeded_heredoc(t_lex *lex);
+void		exceed_heredoc_syntax_error(t_lex *lex, t_lex *final);
 
 t_middle	*ft_lstnew_middle(t_arg *command, t_cmd_arg *cmd_arg, int token);
 void		ft_lstadd_back_middle(t_middle **lst, t_middle *new);

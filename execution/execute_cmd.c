@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 17:43:12 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/07/14 05:29:05 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 08:51:44 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ void	execute_cmd_p3(t_treenode *root, t_env **env, t_data *data)
 	args->content = ft_strdup(root->content, GC);
 	args->next = root->args;
 	data->cmd = args_to_arr(args);
-	execve(root->content, data->cmd, data->env);
 	get_path(root, *env, data);
 	if (!access(data->path, F_OK) && access(data->path, X_OK) == -1)
 	{

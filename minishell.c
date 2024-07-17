@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 00:46:52 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 09:00:17 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ bool	handle_lex_error(t_lex *lexed, t_env **env)
 	we_check_lex = lex_input_checker(lexed);
 	if (we_check_lex)
 	{
+		exceed_heredoc_syntax_error(lexed, we_check_lex);
 		in1 = dup(STDIN_FILENO);
 		if (in1 == -1)
 			return (perror("dup:"), export_core(env, "?=1"), NULL);

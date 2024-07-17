@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 02:00:02 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 02:11:05 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 08:43:11 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	fake_open(t_lex *lex, t_lex *final)
 {
 	while (lex)
 	{
-		if (lex == final)
+		if (lex == final || g_sigint)
 			break ;
 		if (lex->token == HERE_DOC)
 		{

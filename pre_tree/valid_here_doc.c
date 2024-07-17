@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 03:49:11 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 01:05:41 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 08:54:15 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,12 @@ char	*get_here_doc_input(t_middle *middle)
 
 void	valid_here_doc(t_middle *middle)
 {
+	int	count;
+
 	while (middle)
 	{
+		if (g_sigint)
+			return ;
 		if (middle->token == HERE_DOC)
 			middle->here_doc_buffer = get_here_doc_input(middle);
 		middle = middle->next;
