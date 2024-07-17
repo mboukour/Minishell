@@ -1,0 +1,21 @@
+total 752
+drwxr-xr-x  20 mboukour  candidate     680 Jul 17 09:23 .
+drwxr-xr-x  69 mboukour  candidate    2414 Jul 17 09:23 ..
+drwxr-xr-x  15 mboukour  candidate     510 Jul 17 09:01 .git
+-rw-r--r--   1 mboukour  candidate    3048 Jul 17 00:23 Makefile
+-rw-r--r--   1 mboukour  candidate       8 Jul 16 04:07 PROBLEMS
+drwxr-xr-x  13 mboukour  candidate     442 Jul 17 09:23 anti_leaks
+drwxr-xr-x   9 mboukour  candidate     306 Jul 17 09:23 ast
+drwxr-xr-x  18 mboukour  candidate     612 Jul 17 09:23 builtins
+-rw-r--r--   1 mboukour  candidate    4827 Jul 15 06:06 debug
+drwxr-xr-x  20 mboukour  candidate     680 Jul 17 09:23 env_management
+drwxr-xr-x  17 mboukour  candidate     578 Jul 17 09:23 execution
+drwxr-xr-x  19 mboukour  candidate     646 Jul 17 09:23 lexer
+-rwxr-xr-x   1 mboukour  candidate  327816 Jul 17 09:23 minishell
+-rw-r--r--   1 mboukour  candidate    3790 Jul 17 09:22 minishell.c
+-rw-r--r--   1 mboukour  candidate    8303 Jul 17 09:00 minishell.h
+-rw-r--r--   1 mboukour  candidate   16152 Jul 17 09:23 minishell.o
+-rwxr-xr-x   1 mboukour  candidate       0 Jul 17 09:23 out
+drwxr-xr-x  14 mboukour  candidate     476 Jul 17 09:23 pre_tree
+-rwxrwxrwx   1 mboukour  candidate     141 Jul 16 00:45 try
+drwxr-xr-x  28 mboukour  candidate     952 Jul 17 09:23 utils

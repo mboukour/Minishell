@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 09:00:17 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 10:49:28 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ t_treenode	*parsing(char *input, t_env **env)
 	quotes_handler(lexed);
 	if (handle_lex_error(lexed, env))
 	{
+		exceeded_heredoc(lexed);
 		middled = make_middle(lexed);
 		in1 = dup(STDIN_FILENO);
 		if (in1 == -1)
@@ -92,7 +93,7 @@ int	launch_minishell(t_env **env, t_data *data)
 		usual_start(env, &saved_attributes);
 		input = readline("GoatShell 🐐: ");
 		if (!store_mallocs(input))
-			return (ft_putstr_fd(1, "exit\n"), exit_core(0), 0);
+			return (ft_putstr_fd(1, "exit\n"), exit_core(data->status), 0);
 		else if (!is_all_space(input) && ft_strcmp(input, ""))
 		{
 			root = parsing(input, env);

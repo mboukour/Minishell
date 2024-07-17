@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:26:52 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 17:48:53 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 10:50:26 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ t_treenode	*parse_command(t_middle **middled)
 	return (l_node);
 }
 
-// <pipeline>  ::= <command> {"|" <command>}
 t_treenode	*parse_pipeline(t_middle **middled)
 {
 	t_treenode	*l_node;
@@ -86,7 +85,7 @@ t_treenode	*parse_cmdline(t_middle **middled)
 	return (l_node);
 }
 
-t_treenode	*ruined_tree(t_middle *middled)
+t_treenode	*ruined_tree(t_middle *middled) // 
 {
 	t_treenode	*root;
 
