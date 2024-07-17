@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 16:15:17 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 09:00:07 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 12:58:36 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ enum e_token
 	DREDIR_OUT,
 };
 
-extern int	g_sigint;
+int	g_sigint;
 
 enum e_state
 {

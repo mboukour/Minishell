@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 10:49:28 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 12:55:53 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,11 @@ int	launch_minishell(t_env **env, t_data *data)
 				traverse_tree(root, data, env);
 				restore_terminal(&saved_attributes, env);
 			}
-			g_sigint = 0;
 			add_history(input);
 		}
 		smart_close();
 		smart_free();
+		g_sigint = 0;
 	}
 	return (0);
 }

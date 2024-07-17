@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 04:47:41 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/15 06:00:01 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 13:03:00 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,24 +34,37 @@ static t_cmd_arg	*get_redir_cmd_arg(t_lex **lex)
 	return (after_head);
 }
 
+static int	append_additional_redir_str(t_middle *current,
+		t_cmd_arg *after_head)
+{
+	t_middle	*prev;
+
+	prev = current->prev;
+	while (prev && (prev->token == REDIR_OUT || prev->to_replace == DREDIR_OUT))
+		prev = prev->prev;
+	if (prev && prev->token == COMMAND)
+	{
+		if (!prev->cmd_arg)
+			prev->cmd_arg = after_head;
+		else
+			prev->cmd_arg->next = after_head;
+		return (1);
+	}
+	return (0);
+}
+
 static void	after_command(t_lex **lex, t_middle **head, t_middle *current)
 {
 	t_cmd_arg	*after_head;
 	t_middle	*new_cmd;
 	t_arg		*arg;
+	t_middle	*prev;
 
 	arg = NULL;
 	after_head = get_redir_cmd_arg(lex);
 	if (after_head)
 	{
-		if (current->prev && current->prev->token == COMMAND)
-		{
-			if (!current->prev->cmd_arg)
-				current->prev->cmd_arg = after_head;
-			else
-				current->prev->cmd_arg->next = after_head;
-		}
-		else
+		if (!append_additional_redir_str(current, after_head))
 		{
 			new_cmd = ft_lstnew_middle(after_head->arg,
 					after_head->next, COMMAND);

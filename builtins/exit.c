@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/16 03:45:32 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/17 12:29:34 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	exit_cmd(t_treenode *root, t_data *data)
 		exit_core(data->status);
 	actual = args->content + count_sp(args->content);
 	exit_status = ft_atoi(actual, &status);
-	if (!is_num(actual) || status)
+	if (!(*actual) || !is_num(actual) || status)
 		return (exit_syntax(args->content), 1);
 	else if (args->next)
 	{
