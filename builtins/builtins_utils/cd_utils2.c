@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:50:40 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 18:10:26 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 20:36:31 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ char	*add_slash_if_needed(char *path)
 	return (path);
 }
 
-int	handle_directory_change(char *path, t_data *data, t_env **env,t_arg *cd_args)
+int	handle_directory_change(char *path, t_data *data, t_env **env,
+		t_arg *cd_args)
 {
 	char	*new;
 

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:14:33 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 18:14:25 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 20:36:14 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void	ft_lstiter_env(t_env *env, t_data *data)
 	{
 		if (ft_strncmp(env->value, "?=", 2) && env->envyable)
 		{
-			if (ft_strncmp("PWD", env->value, 3) && ft_strncmp("OLDPWD", env->value, 3))
+			if (ft_strncmp("PWD", env->value, 3)
+				&& ft_strncmp("OLDPWD", env->value, 3))
 				printf("%s\n", env->value);
 			else if (!ft_strncmp("PWD", env->value, 3) && data->show_pwd)
 				printf("%s\n", env->value);

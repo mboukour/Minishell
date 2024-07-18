@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:47:50 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 18:14:51 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 20:36:54 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int		get_i_till(int mode, char **sp_res);
 char	*remove_last_slash(char *str);
 void	export_wds(char *pwd, t_env **env, t_data *data);
 int		check_removed(char *path, t_data *data, t_env **env, t_arg *cd_args);
-int		handle_directory_change(char *path, t_data *data, t_env **env, t_arg *cd_args);
+int		handle_directory_change(char *path, t_data *data, t_env **env,
+			t_arg *cd_args);
 void	cd_error(char *path);
 char	*get_new_path(char *pwd, char *original);
 bool	no_equal(char *str);

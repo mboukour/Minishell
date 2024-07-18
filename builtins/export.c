@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 01:20:44 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 18:58:36 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 20:37:08 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ void	export_no_arg(t_env *env, t_data *data)
 	while (env)
 	{
 		if (ft_strncmp(env->value, "?=", 2) && ft_strncmp(env->value, "_=", 2)
-		&& ft_strncmp(env->value, "PWD=", 4) && ft_strncmp(env->value, "OLDPWD=", 7))
+			&& ft_strncmp(env->value, "PWD=", 4)
+			&& ft_strncmp(env->value, "OLDPWD=", 7))
 			print_env_variable(env->value);
 		else if (!ft_strncmp(env->value, "PWD=", 4) && data->show_pwd)
 			print_env_variable(env->value);
@@ -108,7 +109,7 @@ int	export(t_env **env, t_treenode *export_root, t_data *data)
 		}
 		else
 		{
-			if(data)
+			if (data)
 				restore_show_pwds(data, args->content);
 			ret = export_core(env, args->content, data);
 		}

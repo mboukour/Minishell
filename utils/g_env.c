@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 22:16:27 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 18:59:24 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 20:34:31 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	exceed_heredoc_syntax_error(t_lex *lex, t_lex *final)
 		lex = lex->next;
 	}
 }
+
 int	get_latest_status(t_env *env)
 {
 	char	*value;
@@ -69,7 +70,7 @@ int	get_latest_status(t_env *env)
 	return (ft_atoi(q_env->value + 2, NULL));
 }
 
-void exp_w_null(t_env **env, char *exp_arg)
+void	exp_w_null(t_env **env, char *exp_arg)
 {
 	export_core(env, exp_arg, NULL);
 }

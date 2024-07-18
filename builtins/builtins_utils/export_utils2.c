@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 00:13:50 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 18:58:05 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 20:35:35 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,15 +77,16 @@ void	update_existing_env(t_env *find, char *final)
 	set_joinables(find->value, &find->before_joinable, &find->after_joinable);
 	find->envyable = true;
 }
+
 void	restore_show_pwds(t_data *data, char *content)
 {
-	if(!ft_strncmp("PWD=", content, 4)
-	|| (!ft_strncmp("PWD+=", content, 4))
-	|| (!ft_strcmp("PWD", content) && ft_strlen(content) == 3)
+	if (!ft_strncmp("PWD=", content, 4)
+		|| (!ft_strncmp("PWD+=", content, 4))
+		|| (!ft_strcmp("PWD", content) && ft_strlen(content) == 3)
 	)
 		data->show_pwd = true;
-	else if(!ft_strncmp("OLDPWD=", content, 7)
-	|| (!ft_strcmp("OLDPWD", content) && ft_strlen(content) == 7)
-	|| !ft_strncmp("OLDPWD+=", content, 4))
+	else if (!ft_strncmp("OLDPWD=", content, 7)
+		|| (!ft_strcmp("OLDPWD", content) && ft_strlen(content) == 7)
+		|| !ft_strncmp("OLDPWD+=", content, 4))
 		data->show_oldpwd = true;
 }
