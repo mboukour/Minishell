@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 01:32:55 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 20:44:26 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 20:45:01 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ void	expand_only_env(t_arg **arg_head, t_env *env, t_arg *arg)
 			vars.arg->content = ft_strdup("", GC);
 	}
 }
-
 
 int	handle_arg_star(t_exp_vars *vars, t_cmd_arg **cmd_arg, t_arg *arg)
 {
