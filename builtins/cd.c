@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 21:16:55 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 00:43:41 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 17:15:27 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,12 @@ char	*get_new_path(char *pwd, char *original)
 	return (path);
 }
 
-int	cd_core(char *path, t_env **env, t_data *data)
+int	cd_core(char *path, t_env **env, t_data *data, t_arg *args)
 {
 	char	*wd;
 	int		check;
 
-	check = check_removed(path, data, env);
+	check = check_removed(path, data, env, args);
 	if (check == 1)
 		return (1);
 	else if (check == 2)
@@ -98,7 +98,7 @@ int	cd_home(t_env **env, t_data *data)
 		ft_putstr_fd(2, "cd: HOME not set\n");
 		return (1);
 	}
-	return (cd_core(home_env->value + 5, env, data));
+	return (cd_core(home_env->value + 5, env, data, NULL));
 }
 
 int	cd(t_treenode *cd_root, t_env **env, t_data *data)
@@ -108,5 +108,5 @@ int	cd(t_treenode *cd_root, t_env **env, t_data *data)
 	args = cd_root->args;
 	if (!args)
 		return (cd_home(env, data));
-	return (cd_core(args->content, env, data));
+	return (cd_core(args->content, env, data, args));
 }

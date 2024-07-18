@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:47:27 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 22:16:09 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 17:19:23 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,18 @@ void	export_wds(char *pwd, t_env **env)
 	null_protector(result);
 	export_core(env, result);
 	free(result);
+}
+int	cd_home_on_no_dir(t_env *env, t_data *data)
+{
+	t_env	*home_env;
+	home_env = get_env(env, "HOME");
+	if (!home_env)
+	{
+		ft_putstr_fd(2, "cd: HOME not set\n");
+		return (1);
+	}
+	if(chdir(home_env->value + 5))
+		return (cd_error(home_env->value + 5), 1);
+	data->pwd = getcwd(NULL, 0);
+	return (0);
 }

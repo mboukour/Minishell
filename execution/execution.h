@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 13:17:34 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/07/15 02:16:08 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:16:07 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int		env(t_env *env);
 int		export(t_env **env, t_treenode *export_root);
 int		unset(t_env **env, t_treenode *unset_root);
 int		echo(t_treenode *echo_root);
-int		exit_cmd(t_treenode *root, t_data *data);
+int		exit_cmd(t_treenode *root, t_data *data, t_env *env);
 
 void	pipeline(t_treenode *root, t_data *data, t_env **env);
 void	get_path(t_treenode *root, t_env *env, t_data *data);

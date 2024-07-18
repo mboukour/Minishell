@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 12:29:34 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:16:28 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void	exit_syntax(char *str)
 	exit_core(NUMERIC_ARG_STATUS);
 }
 
-int	exit_cmd(t_treenode *root, t_data *data)
+int	exit_cmd(t_treenode *root, t_data *data, t_env *env)
 {
 	t_arg	*args;
 	bool	status;
@@ -69,7 +69,7 @@ int	exit_cmd(t_treenode *root, t_data *data)
 	status = false;
 	ft_putstr_fd(1, "exit\n");
 	if (!args)
-		exit_core(data->status);
+		exit_core(get_latest_status(env));
 	actual = args->content + count_sp(args->content);
 	exit_status = ft_atoi(actual, &status);
 	if (!(*actual) || !is_num(actual) || status)

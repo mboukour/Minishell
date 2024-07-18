@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:50:40 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 00:44:12 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 17:18:13 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*add_slash_if_needed(char *path)
 	return (path);
 }
 
-int	handle_directory_change(char *path, t_data *data)
+int	handle_directory_change(char *path, t_data *data, t_env **env,t_arg *cd_args)
 {
 	char	*new;
 
@@ -74,12 +74,14 @@ int	handle_directory_change(char *path, t_data *data)
 		store_malloced(data->pwd);
 		cd_error(NULL);
 	}
+	else if (!cd_args)
+		return (cd_home_on_no_dir(*env, data), 2);
 	else
 		ft_putstr_fd(2, "cd: No such file or directory\n");
 	return (1);
 }
 
-int	check_removed(char *path, t_data *data, t_env **env)
+int	check_removed(char *path, t_data *data, t_env **env, t_arg *cd_args)
 {
 	char	*dir;
 	int		r;
@@ -90,7 +92,7 @@ int	check_removed(char *path, t_data *data, t_env **env)
 	r = 0;
 	if (!dir)
 	{
-		r = handle_directory_change(path, data);
+		r = handle_directory_change(path, data, env, cd_args);
 		export_wds(data->pwd, env);
 	}
 	safe_free(&dir);

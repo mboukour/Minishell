@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 16:15:17 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 12:58:36 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:15:21 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -338,6 +338,7 @@ t_env		*ft_lstlast_env(t_env *lst);
 t_env		*copy_env(t_env *env);
 
 void		*globalizer_env(int mode, void *env);
+int			get_latest_status(t_env *env);
 
 // DEBUGGING FUNCTIONS
 // void ft_lstiter_lex(t_lex *lex);

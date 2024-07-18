@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 17:43:12 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/07/17 08:51:44 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:16:15 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	execute_builtin(t_treenode *root, t_env **envp, t_data *data)
 	else if (!ft_strcmp(command, "cd"))
 		data->status = cd(root, envp, data);
 	else if (!ft_strcmp(command, "exit"))
-		data->status = exit_cmd(root, data);
+		data->status = exit_cmd(root, data, *envp);
 	else
 		return (NONE);
 	change_status(envp, data->status);

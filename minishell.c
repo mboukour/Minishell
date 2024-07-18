@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 16:57:02 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 16:15:29 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ static int	launch_minishell(t_env **env, t_data *data)
 		usual(env, &saved_attributes, 0);
 		input = readline("GoatShell 🐐: ");
 		if (!store_mallocs(input))
-			return (ft_putstr_fd(1, "exit\n"), exit_core(data->status), 0);
+			return (ft_putstr_fd(1, "exit\n"), exit_core(get_latest_status(*env)), 0);
 		else if (!is_all_space(input) && ft_strcmp(input, ""))
 		{
 			root = parsing(input, env);
