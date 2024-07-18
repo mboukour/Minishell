@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 22:16:27 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 16:15:06 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:59:24 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,9 @@ int	get_latest_status(t_env *env)
 
 	q_env = get_env(env, "?");
 	return (ft_atoi(q_env->value + 2, NULL));
+}
+
+void exp_w_null(t_env **env, char *exp_arg)
+{
+	export_core(env, exp_arg, NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 13:17:34 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/07/18 16:16:07 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:36:26 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ void	handle_red(t_redir *redir, t_treenode *root, t_env **env);
 
 int		cd(t_treenode *cd_root, t_env **env, t_data *data);
 int		pwd(t_data *data);
-int		env(t_env *env);
-int		export(t_env **env, t_treenode *export_root);
-int		unset(t_env **env, t_treenode *unset_root);
+int		env(t_env *env, t_data *data);
+int		export(t_env **env, t_treenode *export_root, t_data *data);
+int		unset(t_env **env, t_treenode *unset_root, t_data *data);
 int		echo(t_treenode *echo_root);
 int		exit_cmd(t_treenode *root, t_data *data, t_env *env);
 

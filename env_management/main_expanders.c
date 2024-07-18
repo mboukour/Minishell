@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 01:29:40 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/16 00:26:37 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:08:41 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	expand_node(t_treenode *root, t_env **env)
 	if (!root->command && root->args)
 		empty_env_with_args(root);
 	else
-		export_core(env, "?=0");
+		exp_w_null(env, "?=0");
 	expand_redirs(root->before_redir, env, root);
 	expand_redirs(root->after_redir, env, root);
 }

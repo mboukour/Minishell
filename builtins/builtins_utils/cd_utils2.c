@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:50:40 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 17:18:13 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:10:26 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	check_removed(char *path, t_data *data, t_env **env, t_arg *cd_args)
 	if (!dir)
 	{
 		r = handle_directory_change(path, data, env, cd_args);
-		export_wds(data->pwd, env);
+		export_wds(data->pwd, env, data);
 	}
 	safe_free(&dir);
 	return (r);

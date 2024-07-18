@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 17:43:12 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/07/18 16:16:15 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:36:51 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,15 @@ int	execute_builtin(t_treenode *root, t_env **envp, t_data *data)
 
 	command = root->content;
 	if (!ft_strcmp(command, "env"))
-		data->status = env(*envp);
+		data->status = env(*envp, data);
 	else if (!ft_strcmp(command, "echo"))
 		data->status = echo(root);
 	else if (!ft_strcmp(command, "pwd"))
 		data->status = pwd(data);
 	else if (!ft_strcmp(command, "export"))
-		data->status = export(envp, root);
+		data->status = export(envp, root, data);
 	else if (!ft_strcmp(command, "unset"))
-		data->status = unset(envp, root);
+		data->status = unset(envp, root, data);
 	else if (!ft_strcmp(command, "cd"))
 		data->status = cd(root, envp, data);
 	else if (!ft_strcmp(command, "exit"))
@@ -116,7 +116,7 @@ void	execute_command(t_treenode *root, t_env **env, t_data *data)
 		under = root->content;
 	exp = ft_strjoin("_=", under, MANUAL);
 	null_protector(exp);
-	export_core(env, exp);
+	exp_w_null(env, exp);
 	free(exp);
 	if (!execute_builtin(root, env, data))
 		return ;

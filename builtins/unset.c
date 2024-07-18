@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:55:13 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/16 03:45:05 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:44:12 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ bool	unset_checker(char *str)
 	return (true);
 }
 
-int	unset_core(t_env **env, char *to_unset)
+int	unset_core(t_env **env, char *to_unset, t_data *data)
 {
 	t_env	*unset_env;
 
@@ -55,12 +55,19 @@ int	unset_core(t_env **env, char *to_unset)
 	}
 	unset_env = get_env(*env, to_unset);
 	if (!unset_env)
+	{
+		printf("NO\n");
 		return (0);
+	}
+	if (!ft_strcmp("PWD", to_unset))
+		data->show_pwd = false;
+	else if (!ft_strcmp("OLDPWD", to_unset))
+		data->show_oldpwd = false;
 	remove_env_node(env, unset_env);
 	return (0);
 }
 
-int	unset(t_env **env, t_treenode *unset_root)
+int	unset(t_env **env, t_treenode *unset_root, t_data *data)
 {
 	t_arg	*arg;
 	int		r;
@@ -71,7 +78,7 @@ int	unset(t_env **env, t_treenode *unset_root)
 		return (0);
 	while (arg)
 	{
-		if (unset_core(env, arg->content))
+		if (unset_core(env, arg->content, data))
 			r = 1;
 		arg = arg->next;
 	}

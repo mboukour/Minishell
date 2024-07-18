@@ -6,11 +6,13 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 01:20:44 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 12:38:12 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:58:36 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
+
+void	restore_show_pwds(t_data *data, char *content);
 
 void	handle_find_case(t_env **env, char *exp_arg, t_env *find, int exp_type)
 {
@@ -30,7 +32,7 @@ void	handle_find_case(t_env **env, char *exp_arg, t_env *find, int exp_type)
 		add_new_env(env, exp_arg, exp_type);
 }
 
-int	export_core(t_env **env, char *exp_arg)
+int	export_core(t_env **env, char *exp_arg, t_data *data)
 {
 	t_env	*find;
 	int		exp_type;
@@ -71,19 +73,24 @@ void	print_env_variable(char *value)
 		printf("\n");
 }
 
-void	export_no_arg(t_env *env)
+void	export_no_arg(t_env *env, t_data *data)
 {
 	env = copy_env(env);
 	sort_env_list(env);
 	while (env)
 	{
-		if (ft_strncmp(env->value, "?=", 2) && ft_strncmp(env->value, "_=", 2))
+		if (ft_strncmp(env->value, "?=", 2) && ft_strncmp(env->value, "_=", 2)
+		&& ft_strncmp(env->value, "PWD=", 4) && ft_strncmp(env->value, "OLDPWD=", 7))
+			print_env_variable(env->value);
+		else if (!ft_strncmp(env->value, "PWD=", 4) && data->show_pwd)
+			print_env_variable(env->value);
+		else if (!ft_strncmp(env->value, "OLDPWD=", 7) && data->show_oldpwd)
 			print_env_variable(env->value);
 		env = env->next;
 	}
 }
 
-int	export(t_env **env, t_treenode *export_root)
+int	export(t_env **env, t_treenode *export_root, t_data *data)
 {
 	t_arg	*args;
 	int		ret;
@@ -91,7 +98,7 @@ int	export(t_env **env, t_treenode *export_root)
 	ret = 0;
 	args = export_root->args;
 	if (!args)
-		return (export_no_arg(*env), 0);
+		return (export_no_arg(*env, data), 0);
 	while (args)
 	{
 		if (args->content[0] == '?' && args->content[1] == '=')
@@ -100,7 +107,11 @@ int	export(t_env **env, t_treenode *export_root)
 			ret = 1;
 		}
 		else
-			ret = export_core(env, args->content);
+		{
+			if(data)
+				restore_show_pwds(data, args->content);
+			ret = export_core(env, args->content, data);
+		}
 		args = args->next;
 	}
 	return (ret);

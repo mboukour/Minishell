@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 20:05:08 by amabrouk          #+#    #+#             */
-/*   Updated: 2024/07/13 18:24:46 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:08:51 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	change_status(t_env **env, int new_status)
 	final = ft_strjoin("?=", current_status, MANUAL);
 	null_protector(final);
 	free(current_status);
-	export_core(env, final);
+	exp_w_null(env, final);
 	free(final);
 }
 

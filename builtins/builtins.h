@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 20:47:50 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 17:18:22 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:14:51 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	safe_free(char **ptr);
 void	remove_additional_slashes(char *path);
 int		get_i_till(int mode, char **sp_res);
 char	*remove_last_slash(char *str);
-void	export_wds(char *pwd, t_env **env);
+void	export_wds(char *pwd, t_env **env, t_data *data);
 int		check_removed(char *path, t_data *data, t_env **env, t_arg *cd_args);
 int		handle_directory_change(char *path, t_data *data, t_env **env, t_arg *cd_args);
 void	cd_error(char *path);
@@ -36,4 +36,5 @@ void	update_existing_env(t_env *find, char *final);
 void	export_error(char *str);
 bool	unset_checker(char *str);
 int		cd_home_on_no_dir(t_env *env, t_data *data);
+void	ft_lstiter_env(t_env *env, t_data *data);
 #endif

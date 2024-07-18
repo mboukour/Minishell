@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 05:20:14 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 16:50:31 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:48:02 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	init_t_data(t_data *data)
 	data->cmd = NULL;
 	data->path = NULL;
 	data->env = NULL;
+	data->show_oldpwd = true;
+	data->show_pwd = true;
 	data->pwd = getcwd(NULL, 0);
 	if (!data->pwd)
 	{
@@ -53,7 +55,7 @@ void	sigint_handler(int sig)
 
 	(void)sig;
 	env = globalizer_env(GET, NULL);
-	export_core(env, "?=1");
+	exp_w_null(env, "?=1");
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -65,7 +67,7 @@ void	save_terminal(struct termios *saved_attributes, t_env **env)
 	if (tcgetattr(STDIN_FILENO, saved_attributes) != 0)
 	{
 		perror("Failed to get terminal attributes");
-		export_core(env, "?=1");
+		exp_w_null(env, "?=1");
 	}
 }
 
@@ -74,6 +76,6 @@ void	restore_terminal(const struct termios *saved_attributes, t_env **env)
 	if (tcsetattr(STDIN_FILENO, TCSANOW, saved_attributes) != 0)
 	{
 		perror("Failed to set terminal attributes");
-		export_core(env, "?=1");
+		exp_w_null(env, "?=1");
 	}
 }

@@ -6,18 +6,25 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:14:33 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 17:08:48 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:14:25 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../env_management.h"
 
-void	ft_lstiter_env(t_env *env)
+void	ft_lstiter_env(t_env *env, t_data *data)
 {
 	while (env)
 	{
 		if (ft_strncmp(env->value, "?=", 2) && env->envyable)
-			printf("%s\n", env->value);
+		{
+			if (ft_strncmp("PWD", env->value, 3) && ft_strncmp("OLDPWD", env->value, 3))
+				printf("%s\n", env->value);
+			else if (!ft_strncmp("PWD", env->value, 3) && data->show_pwd)
+				printf("%s\n", env->value);
+			else if (!ft_strncmp("OLDPWD", env->value, 3) && data->show_oldpwd)
+				printf("%s\n", env->value);
+		}
 		env = env->next;
 	}
 }

@@ -6,14 +6,14 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:52:17 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/12 17:52:19 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:16:35 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "builtins.h"
 
-int	env(t_env *env)
+int	env(t_env *env, t_data *data)
 {
-	ft_lstiter_env(env);
+	ft_lstiter_env(env, data);
 	return (0);
 }

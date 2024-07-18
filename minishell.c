@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:53:09 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 16:15:29 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:09:39 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ static bool	handle_lex_error(t_lex *lexed, t_env **env)
 		exceed_heredoc_syntax_error(lexed, we_check_lex);
 		in1 = dup(STDIN_FILENO);
 		if (in1 == -1)
-			return (perror("dup:"), export_core(env, "?=1"), NULL);
+			return (perror("dup:"), exp_w_null(env, "?=1"), NULL);
 		fake_open(lexed, we_check_lex);
 		if (dup2(in1, STDIN_FILENO) == -1 || g_sigint)
-			export_core(env, "?=1");
+			exp_w_null(env, "?=1");
 		close(in1);
 		g_sigint = 0;
 		display_error(NONE, we_check_lex, env);
@@ -63,10 +63,10 @@ static t_treenode	*parsing(char *input, t_env **env)
 		middled = make_middle(lexed);
 		in1 = dup(STDIN_FILENO);
 		if (in1 == -1)
-			return (perror("dup:"), export_core(env, "?=1"), NULL);
+			return (perror("dup:"), exp_w_null(env, "?=1"), NULL);
 		valid_here_doc(middled);
 		if (dup2(in1, STDIN_FILENO) == -1 || g_sigint)
-			return (close(in1), export_core(env, "?=1"), NULL);
+			return (close(in1), exp_w_null(env, "?=1"), NULL);
 		close(in1);
 		g_sigint = 0;
 		return (ruined_tree(middled));
@@ -141,7 +141,7 @@ int	main(int ac, char **av, char **envp)
 		if (!env)
 			return (ft_putstr_fd(2, FAILURE_MSG), 1);
 	}
-	export_core(&env, "?=0");
+	exp_w_null(&env, "?=0");
 	launch_minishell(&env, &data);
 	return (0);
 }

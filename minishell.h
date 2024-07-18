@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 16:15:17 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 16:15:21 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:59:41 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,6 +239,8 @@ typedef struct s_data
 	int		status;
 	char	*pwd;
 	char	*old_pwd;
+	bool	show_pwd;
+	bool	show_oldpwd;
 }				t_data;
 
 // SINGALS
@@ -319,11 +321,10 @@ char		*get_real_env(char *value);
 void		expand_node(t_treenode *root, t_env **env);
 t_lex		*heredoc_tokenizer(char *input);
 
-int			export_core(t_env **env, char *exp_arg);
+int			export_core(t_env **env, char *exp_arg, t_data *data);
 int			exit_core(int status);
 
 t_env		*array_to_env(char **env);
-void		ft_lstiter_env(t_env *env);
 void		ft_lstclear_env(t_env *env);
 t_env		*ft_lstnew_env(char *env, int mode);
 void		ft_lstadd_back_env(t_env **lst, t_env *new);
@@ -339,6 +340,7 @@ t_env		*copy_env(t_env *env);
 
 void		*globalizer_env(int mode, void *env);
 int			get_latest_status(t_env *env);
+void		exp_w_null(t_env **env, char *exp_arg);
 
 // DEBUGGING FUNCTIONS
 // void ft_lstiter_lex(t_lex *lex);

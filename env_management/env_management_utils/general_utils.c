@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 00:53:15 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 01:39:42 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:08:46 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ambiguous_redirect(t_arg *redir_input, t_treenode *root, t_env **env)
 {
 	ft_putstr_fd(2, args_to_str(redir_input));
 	ft_putstr_fd(2, ": ambiguous redirect\n");
-	export_core(env, "?=1");
+	exp_w_null(env, "?=1");
 	init_tree(root);
 	return ;
 }

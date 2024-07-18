@@ -6,7 +6,7 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 18:00:20 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/16 03:47:25 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:08:22 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,10 @@ int	no_envp_export(t_env **env, t_data *data)
 	{
 		pwd = ft_strjoin("PWD=", data->pwd, MANUAL);
 		null_protector(pwd);
-		export_core(env, pwd);
+		exp_w_null(env, pwd);
 		free(pwd);
 	}
-	export_core(env, "SHLVL=1");
-	export_core(env, SECURE_PATH);
+	exp_w_null(env, "SHLVL=1");
+	exp_w_null(env, SECURE_PATH);
 	return (0);
 }
