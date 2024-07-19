@@ -6,11 +6,11 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:56:42 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/14 23:27:44 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/19 09:45:28 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "env_management.h"
 
 void	heredoc_handle_env(char *input, int *i, t_lex **head)
 {

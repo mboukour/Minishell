@@ -6,11 +6,11 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:36:23 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/13 00:03:57 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/19 09:44:34 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "builtins.h"
 
 bool	is_all_n(char *content)
 {

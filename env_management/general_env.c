@@ -6,11 +6,11 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 18:00:20 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 18:08:22 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/19 09:44:51 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "env_management.h"
 
 void	swap(t_env *a, t_env *b)
 {

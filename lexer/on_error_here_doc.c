@@ -6,11 +6,11 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 02:00:02 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/17 08:43:11 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/19 09:45:16 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "lexer.h"
 
 void	fake_readline(char *line, char *delimiter)
 {

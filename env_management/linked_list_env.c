@@ -6,11 +6,11 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 18:13:16 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/18 18:59:37 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/19 09:45:07 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "env_management.h"
 
 t_env	*ft_lstnew_env(char *env, int mode)
 {

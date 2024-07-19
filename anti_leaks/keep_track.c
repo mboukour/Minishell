@@ -6,11 +6,11 @@
 /*   By: mboukour <mboukour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 17:03:06 by mboukour          #+#    #+#             */
-/*   Updated: 2024/07/16 00:25:33 by mboukour         ###   ########.fr       */
+/*   Updated: 2024/07/19 09:44:23 by mboukour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "cgc.h"
 
 void	*globalizer_manual(int mode, void *ptr)
 {
