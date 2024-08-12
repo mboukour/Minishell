@@ -65,7 +65,7 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	@echo "Linking $@"
 	@$(CC) $(OBJ) $(LDFLAGS) -g -fsanitize=address -o $@
-	@touch ~/.reset
+
 
 $(OBJ_LEXER): $(HEADER_LEXER)
 $(OBJ_UTILS): $(HEADER_MAIN)
