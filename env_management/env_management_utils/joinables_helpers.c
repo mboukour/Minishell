@@ -51,7 +51,6 @@ void	only_joinable_after_next(t_exp_vars *vars)
 void	both_joinable_prev(t_exp_vars *vars)
 {
 	vars->prev->next = NULL;
-	vars->prev = ft_lstfirst_arg(vars->prev);
 	vars->prev->next = vars->expanded_env->arg;
 	vars->expanded_env->arg->prev = vars->prev;
 	vars->expanded_env->arg = vars->prev;
