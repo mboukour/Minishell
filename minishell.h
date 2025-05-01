@@ -61,7 +61,7 @@ enum e_token
 	DREDIR_OUT,
 };
 
-int	g_sigint;
+extern int	g_sigint;
 
 enum e_state
 {
