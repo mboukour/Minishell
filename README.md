@@ -81,16 +81,6 @@ make
 - External functions limited to an approved list
 - Follow Bash behavior wherever applicable
 
-## 📁 File Structure
-
-```
-minishell/
-├── src/                # Source files
-├── include/            # Header files
-├── Makefile            # Build rules
-└── minishell           # Final executable
-```
-
 ## 📜 License
 
 This project is part of the **42 School Curriculum** and adheres to their academic integrity rules. Sharing or using this code outside the intended scope is discouraged.
